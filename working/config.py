@@ -20,8 +20,8 @@ LEARNING_RATE        = 1e-3
 MAX_EPOCHS           = 4
 
 N_CLASSES            = 5
-TRAIN_BATCH_SIZE     = 32
-VALID_BATCH_SIZE     = 32
+TRAIN_BATCH_SIZE     = 16
+VALID_BATCH_SIZE     = 16
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
 CPU_WORKERS          = 4
