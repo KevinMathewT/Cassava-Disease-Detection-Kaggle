@@ -17,6 +17,10 @@ from .utils import *
 from .loss import get_train_criterion, get_valid_criterion
 from .models.models import nets, GeneralizedCassavaClassifier
 
+from adabelief_pytorch import AdaBelief
+from ranger_adabelief import RangerAdaBelief
+
+
 class CassavaLitModule(pl.LightningModule):
     def __init__(self, net, fold):
         super(CassavaLitModule, self).__init__()
@@ -37,7 +41,7 @@ class CassavaLitModule(pl.LightningModule):
 
 #     def configure_optimizers(self):
 #         optimizer = torch.optim.Adam(
-#             params=self.parameters(), 
+#             params=self.parameters(),
 #             lr=LEARNING_RATE,
 #             weight_decay=WEIGHT_DECAY
 #         )
@@ -54,37 +58,44 @@ class CassavaLitModule(pl.LightningModule):
 #        }
 
     def configure_optimizers(self):
-        optimizer = optim.AdamW(self.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=5, eta_min=0)
+        # optimizer = optim.AdamW(
+        #     self.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+        optimizer = AdaBelief(self.parameters(
+        ), lr=1e-3, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False)
+        # optimizer = RangerAdaBelief(
+        #     self.parameters(), lr=1e-3, eps=1e-12, betas=(0.9, 0.999))
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=5, eta_min=0)
 
         return [optimizer], [scheduler]
 
     # def configure_optimizers(self):
     #     optimizer = torch.optim.Adam(
-    #         params=self.parameters(), 
+    #         params=self.parameters(),
     #         lr=LEARNING_RATE,
     #         weight_decay=WEIGHT_DECAY
     #     )
     #     steps_per_epoch = len(self.train_dataloader())
     #     # steps_per_epoch = len(self.train_dataloader())//self.trainer.accumulate_grad_batches
     #     scheduler = torch.optim.lr_scheduler.OneCycleLR(
-    #         optimizer=optimizer, 
-    #         pct_start=0.1, 
-    #         div_factor=1e3, 
+    #         optimizer=optimizer,
+    #         pct_start=0.1,
+    #         div_factor=1e3,
     #         max_lr=1e-2,
-    #         steps_per_epoch=steps_per_epoch, 
+    #         steps_per_epoch=steps_per_epoch,
     #         epochs=MAX_EPOCHS
     #     )
     #     scheduler = {"scheduler": scheduler, "interval" : "step" }
     #     return [optimizer], [scheduler]
 
-    def training_step(self, batch, batch_idx):        
+    def training_step(self, batch, batch_idx):
         inputs, targets = batch
         outputs = self(inputs)
 
         loss = self.train_criterion(outputs, targets)
 
-        self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=False, logger=True)
+        self.log('train_loss', loss, on_step=True,
+                 on_epoch=True, prog_bar=False, logger=True)
         self.train_losses.append(loss.item())
         return loss
 
@@ -104,7 +115,8 @@ class CassavaLitModule(pl.LightningModule):
 
         loss = self.valid_criterion(outputs, targets)
 
-        self.log('val_loss', loss, on_step=True, on_epoch=True, prog_bar=False, logger=True)
+        self.log('val_loss', loss, on_step=True,
+                 on_epoch=True, prog_bar=False, logger=True)
         self.valid_losses.append(loss.item())
         return loss
 
@@ -116,7 +128,8 @@ class CassavaLitModule(pl.LightningModule):
 
         losses /= len(outputs)
 
-        self.log('val_loss_epoch', losses, on_epoch=True, prog_bar=False, logger=True)
+        self.log('val_loss_epoch', losses, on_epoch=True,
+                 prog_bar=False, logger=True)
 
         if self.best_valid_loss is not None:
             self.best_valid_loss = min(self.best_valid_loss, losses)
@@ -134,6 +147,7 @@ class CassavaLitModule(pl.LightningModule):
         valid_fold_loss = sum(self.valid_losses) / len(self.valid_losses)
         best_valid_fold_loss = self.best_valid_loss
         print(f"[{self.fold+1:>1}/{FOLDS:>1}] Training Loss: {train_fold_loss:>.10f} | Validation Loss: {valid_fold_loss:>.10f} | Best Validation Loss: {best_valid_fold_loss:>.10f}")
+
 
 def get_net(name, fold, pretrained=False):
     if name not in nets.keys():
