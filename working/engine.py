@@ -9,6 +9,7 @@ import pytorch_lightning as pl
 from pytorch_lightning import seed_everything
 from pytorch_lightning import loggers as pl_loggers
 from pytorch_lightning import Callback
+from pytorch_lightning import metrics
 from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
@@ -99,9 +100,12 @@ class CassavaLitModule(pl.LightningModule):
         outputs = self(inputs)
 
         loss = self.train_criterion(outputs, targets)
+        accuracy = metrics.accuracy(outputs, targets)
 
-        self.log('train_loss', loss, on_step=True,
-                 on_epoch=True, prog_bar=False, logger=True)
+        self.log('train_loss', loss, on_step=False,
+                 on_epoch=True, prog_bar=True, logger=True)
+        self.log("train_acc", accuracy, on_step=False,
+                 on_epoch=True, prog_bar=True, logger=True)
         self.train_losses.append(loss.item())
         return loss
 
@@ -120,9 +124,12 @@ class CassavaLitModule(pl.LightningModule):
         outputs = self(inputs)
 
         loss = self.valid_criterion(outputs, targets)
+        accuracy = metrics.accuracy(outputs, targets)
 
-        self.log('val_loss', loss, on_step=True,
-                 on_epoch=True, prog_bar=False, logger=True)
+        self.log('val_loss', loss, on_step=False,
+                 on_epoch=True, prog_bar=True, logger=True)
+        self.log("val_acc", accuracy, on_step=False,
+                 on_epoch=True, prog_bar=True, logger=True)
         self.valid_losses.append(loss.item())
         return loss
 

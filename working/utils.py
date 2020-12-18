@@ -19,6 +19,6 @@ def seed_everything(seed):
     torch.backends.cudnn.benchmark = True
     
 def get_img(path):
-    im_bgr = cv2.imread(path)
-    im_rgb = im_bgr[:, :, ::-1]
+    im_bgr = cv2.imread(path, cv2.IMREAD_COLOR)
+    im_rgb = cv2.cvtColor(im_bgr, cv2.COLOR_BGR2RGB)
     return im_rgb
