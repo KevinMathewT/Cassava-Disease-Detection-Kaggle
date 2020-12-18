@@ -16,16 +16,16 @@ W                    = 512
 
 LEARNING_RATE        = 1e-4
 WEIGHT_DECAY         = 1e-5
-MAX_EPOCHS           = 1
+MAX_EPOCHS           = 30
 
 N_CLASSES            = 5
 TRAIN_BATCH_SIZE     = 16
 VALID_BATCH_SIZE     = 16
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
-CPU_WORKERS          = 0
-# NET                  = 'SEResNeXt50_32x4d'
-NET                  = 'gluon_resnet18_v1b'
+CPU_WORKERS          = 4
+NET                  = 'SEResNeXt50_32x4d'
+# NET                  = 'gluon_resnet18_v1b'
 
 SEED                 = 2020
 FOLDS                = 8

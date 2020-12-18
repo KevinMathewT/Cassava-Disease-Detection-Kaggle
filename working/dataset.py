@@ -26,6 +26,7 @@ class CassavaTrain(Dataset):
             self, data, data_root=TRAIN_IMAGES_DIR, transforms=None) -> None:
 
         self.data = data[:SUBSET_SIZE] if USE_SUBSET else data
+        print("Cassava Train: ", len(self.data))
         self.data_root = data_root
         self.transforms = transforms
 
@@ -49,6 +50,7 @@ class CassavaTest(Dataset):
             self, data, data_root=TRAIN_IMAGES_DIR, transforms=None) -> None:
 
         self.data = data[:SUBSET_SIZE] if USE_SUBSET else data
+        print("Cassava Test: ", len(self.data))
         self.data_root = data_root
         self.transforms = transforms
 

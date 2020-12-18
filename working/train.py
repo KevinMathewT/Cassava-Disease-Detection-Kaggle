@@ -37,6 +37,7 @@ def run_fold(fold, predictions):
     net.to("cuda")
     pred_ids = valid.image_id.to_numpy().reshape(-1, 1)
     pred_ids = pred_ids[:SUBSET_SIZE, :] if USE_SUBSET else pred_ids
+    print("Prediction IDs: ", len(pred_ids))
 
     preds = []
     with torch.no_grad():
