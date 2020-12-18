@@ -3,7 +3,7 @@ from pytorch_lightning import seed_everything
 
 INPUT_PATH           = "../input/"
 GENERATED_FILES_PATH = "./generated/"
-DATASET_PATH         = "./input/cassava-leaf-disease-classification/"
+DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
 TRAIN_IMAGES_DIR     = os.path.join(DATASET_PATH, "train_images")
 TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
