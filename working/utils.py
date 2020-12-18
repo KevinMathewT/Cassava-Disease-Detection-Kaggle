@@ -7,7 +7,6 @@ import cv2
 from torch.utils.data import DataLoader, Dataset
 
 from .config import *
-from .dataset import CassavaTrain
 from .transforms import *
 
 def seed_everything(seed):
