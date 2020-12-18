@@ -9,7 +9,7 @@ TRAIN_IMAGES_DIR     = os.path.join(DATASET_PATH, "train_images")
 TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
 TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
-GPUS                 = 1
+GPUS                 = 0
 
 H                    = 512
 W                    = 512
