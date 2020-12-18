@@ -9,7 +9,7 @@ TRAIN_IMAGES_DIR     = os.path.join(DATASET_PATH, "train_images")
 TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
 TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
-GPUS                 = 0
+GPUS                 = 1
 
 H                    = 512
 W                    = 512
@@ -21,7 +21,7 @@ MAX_EPOCHS           = 1
 N_CLASSES            = 5
 TRAIN_BATCH_SIZE     = 16
 VALID_BATCH_SIZE     = 16
-USE_SUBSET           = True
+USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
 CPU_WORKERS          = 0
 # NET                  = 'SEResNeXt50_32x4d'

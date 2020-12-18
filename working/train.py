@@ -57,4 +57,4 @@ if __name__ == "__main__":
         predictions = run_fold(fold, predictions)
 
     predictions = pd.DataFrame(predictions, columns=["image_id", "0", "1", "2", "3", "4"])
-    predictions.to_csv(os.path.join(INPUT_PATH, f"{NET}-predictions.csv"), index=False)
+    predictions.to_csv(os.path.join(GENERATED_FILES_PATH, f"{NET}-predictions.csv"), index=False)
