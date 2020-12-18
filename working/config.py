@@ -14,9 +14,10 @@ GPUS                 = 1
 H                    = 512
 W                    = 512
 
-LEARNING_RATE        = 1e-4
-WEIGHT_DECAY         = 1e-5
-MAX_EPOCHS           = 30
+OPTIMIZER            = "AdaBelief"
+SCHEDULER            = "CosineAnnealingLR"
+LEARNING_RATE        = 1e-3
+MAX_EPOCHS           = 4
 
 N_CLASSES            = 5
 TRAIN_BATCH_SIZE     = 16
@@ -25,6 +26,7 @@ USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
 CPU_WORKERS          = 4
 NET                  = 'SEResNeXt50_32x4d'
+NET                  = 'resnext50_32x4d'
 # NET                  = 'gluon_resnet18_v1b'
 
 SEED                 = 2020

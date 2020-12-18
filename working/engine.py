@@ -39,54 +39,60 @@ class CassavaLitModule(pl.LightningModule):
     def forward(self, x):
         return self.net(x)
 
-#     def configure_optimizers(self):
-#         optimizer = torch.optim.Adam(
-#             params=self.parameters(),
-#             lr=LEARNING_RATE,
-#             weight_decay=WEIGHT_DECAY
-#         )
-#         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-#             optimizer,
-#             patience=0,
-#             factor=SCHEDULER_FACTOR,
-#             verbose=LEARNING_VERBOSE
-#         )
-#         return {
-#            'optimizer': optimizer,
-#            'lr_scheduler': scheduler,
-#            'monitor': 'val_loss'
-#        }
-
     def configure_optimizers(self):
-        # optimizer = optim.AdamW(
-        #     self.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
-        optimizer = AdaBelief(self.parameters(
-        ), lr=1e-3, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False)
-        # optimizer = RangerAdaBelief(
-        #     self.parameters(), lr=1e-3, eps=1e-12, betas=(0.9, 0.999))
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max=5, eta_min=0)
+        if OPTIMIZER == "Adam":
+            optimizer = torch.optim.Adam(
+                params=self.parameters(),
+                lr=LEARNING_RATE,
+                weight_decay=1e-5
+            )
+        elif OPTIMIZER == "AdamW":
+            optimizer = optim.AdamW(
+                self.parameters(), lr=LEARNING_RATE, weight_decay=1e-5)
+        elif OPTIMIZER == "AdaBelief":
+            optimizer = AdaBelief(self.parameters(
+            ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False)
+        elif OPTIMIZER == "RangerAdaBelief":
+            optimizer = RangerAdaBelief(
+                self.parameters(), lr=LEARNING_RATE, eps=1e-12, betas=(0.9, 0.999))
+        else:
+            optimizer = optim.SGD(
+                self.parameters(), lr=LEARNING_RATE)
 
-        return [optimizer], [scheduler]
+        if SCHEDULER == "ReduceLROnPlateau":
+            scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+                optimizer,
+                patience=0,
+                factor=0.1,
+                verbose=LEARNING_VERBOSE
+            )
+            return {
+                'optimizer': optimizer,
+                'lr_scheduler': scheduler,
+                'monitor': 'val_loss'
+            }
 
-    # def configure_optimizers(self):
-    #     optimizer = torch.optim.Adam(
-    #         params=self.parameters(),
-    #         lr=LEARNING_RATE,
-    #         weight_decay=WEIGHT_DECAY
-    #     )
-    #     steps_per_epoch = len(self.train_dataloader())
-    #     # steps_per_epoch = len(self.train_dataloader())//self.trainer.accumulate_grad_batches
-    #     scheduler = torch.optim.lr_scheduler.OneCycleLR(
-    #         optimizer=optimizer,
-    #         pct_start=0.1,
-    #         div_factor=1e3,
-    #         max_lr=1e-2,
-    #         steps_per_epoch=steps_per_epoch,
-    #         epochs=MAX_EPOCHS
-    #     )
-    #     scheduler = {"scheduler": scheduler, "interval" : "step" }
-    #     return [optimizer], [scheduler]
+        elif SCHEDULER == "CosineAnnealingLR":
+            scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
+                optimizer, T_max=5, eta_min=0)
+
+            return [optimizer], [scheduler]
+
+        elif SCHEDULER == "OneCycleLR":
+            steps_per_epoch = len(self.train_dataloader())
+            # steps_per_epoch = len(self.train_dataloader())//self.trainer.accumulate_grad_batches
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(
+                optimizer=optimizer,
+                pct_start=0.1,
+                div_factor=1e3,
+                max_lr=1e-2,
+                steps_per_epoch=steps_per_epoch,
+                epochs=MAX_EPOCHS
+            )
+            scheduler = {"scheduler": scheduler, "interval": "step"}
+            return [optimizer], [scheduler]
+        else:
+            return optimizer
 
     def training_step(self, batch, batch_idx):
         inputs, targets = batch
