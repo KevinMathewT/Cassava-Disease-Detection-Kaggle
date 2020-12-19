@@ -23,8 +23,8 @@ MAX_EPOCHS           = 4
 PARALLEL_FOLD_TRAIN  = False
 
 N_CLASSES            = 5
-TRAIN_BATCH_SIZE     = 16
-VALID_BATCH_SIZE     = 16
+TRAIN_BATCH_SIZE     = 4
+VALID_BATCH_SIZE     = 4
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
 CPU_WORKERS          = 4
