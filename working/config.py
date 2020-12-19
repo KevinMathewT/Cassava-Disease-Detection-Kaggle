@@ -11,6 +11,7 @@ TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
 TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 GPUS                 = 1
+TPUS                 = 8
 PARALLEL_FOLD_TRAIN  = False
 SEED                 = 2020
 FOLDS                = 8
@@ -44,7 +45,7 @@ EARLY_STOPPING       = 10
 USE_EARLY_STOPPING   = False
 
 
-if PARALLEL_FOLD_TRAIN:
-    TRAIN_BATCH_SIZE /= FOLDS
-    VALID_BATCH_SIZE /= FOLDS
+if not PARALLEL_FOLD_TRAIN:
+    TRAIN_BATCH_SIZE /= TPUS
+    VALID_BATCH_SIZE /= TPUS
 seed_everything(SEED)
