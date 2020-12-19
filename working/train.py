@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     print(f"Training Model : {NET}")
 
-    n_jobs = (FOLDS / 2) if PARALLEL_FOLD_TRAIN else 1
+    n_jobs = (FOLDS // 2) if PARALLEL_FOLD_TRAIN else 1
     predictions = np.concatenate(Parallel(n_jobs=n_jobs, backend="threading")(
         delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
     predictions = pd.DataFrame(predictions, columns=[
