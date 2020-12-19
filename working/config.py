@@ -33,9 +33,9 @@ VALID_BATCH_SIZE     = 32
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
 CPU_WORKERS          = 8
-# NET                  = 'SEResNeXt50_32x4d'
+NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
-NET                  = 'tf_efficientnet_b0_ns'
+# NET                  = 'tf_efficientnet_b0_ns'
 # NET                  = 'gluon_resnet18_v1b'
 
 PRETRAINED           = True
