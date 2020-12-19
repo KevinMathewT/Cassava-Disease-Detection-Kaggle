@@ -1,7 +1,7 @@
 import os
 from pytorch_lightning import seed_everything
 
-INPUT_PATH           = "./cassava-leaf-disease-classification/"
+INPUT_PATH           = "./"
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
