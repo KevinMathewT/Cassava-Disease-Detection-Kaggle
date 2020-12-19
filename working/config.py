@@ -14,7 +14,7 @@ GPUS                 = 1
 TPUS                 = 8
 PARALLEL_FOLD_TRAIN  = False
 SEED                 = 2020
-FOLDS                = 8
+FOLDS                = 5
 SEEDS                = 1
 
 H                    = 512
