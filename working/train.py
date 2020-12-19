@@ -13,7 +13,8 @@ from joblib import Parallel, delayed
 import warnings
 warnings.filterwarnings("ignore")
 
-
+@delayed
+@wrap_non_picklable_objects
 def run_fold(fold):
     predictions = np.empty((0, 6))
     train = train_folds[train_folds.fold != fold]
@@ -61,7 +62,7 @@ if __name__ == "__main__":
 
     print(f"Training Model : {NET}")
 
-    predictions = np.concatenate(Parallel(n_jobs=10)(
+    predictions = np.concatenate(Parallel(n_jobs=FOLDS, backend="threading")(
         delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
     predictions = pd.DataFrame(predictions, columns=[
                                "image_id", "0", "1", "2", "3", "4"])

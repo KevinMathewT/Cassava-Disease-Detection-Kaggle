@@ -66,7 +66,7 @@ def get_trainer(net, fold, name):
         logger=tb_logger,
         max_epochs=MAX_EPOCHS,
         # gpus=GPUS, # -1 if torch.cuda.is_available() else None,
-        tpu_cores=[fold],
+        tpu_cores=[fold + 1],
         callbacks=callbacks,
         progress_bar_refresh_rate=0,
         checkpoint_callback=checkpoint_callback,  # Do not save any checkpoints,
