@@ -1,6 +1,7 @@
 from albumentations import (
     HorizontalFlip, VerticalFlip, IAAPerspective, ShiftScaleRotate, CLAHE, RandomRotate90, RandomBrightness, 
-    Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue, RandomContrast, GaussianBlur,
+    Transpose, ShiftScaleRotate, Blur, OpticalDistortion, GridDistortion, HueSaturationValue, RandomContrast, 
+    # GaussianBlur,
     IAAAdditiveGaussianNoise, GaussNoise, MotionBlur, MedianBlur, IAAPiecewiseAffine, RandomResizedCrop,
     IAASharpen, IAAEmboss, RandomBrightnessContrast, Flip, OneOf, Compose, Normalize, Cutout, CoarseDropout, ShiftScaleRotate, CenterCrop, Resize
 )
@@ -26,7 +27,9 @@ def get_train_transforms():
     return Compose([
             Resize(H, W, p=1.),
             OneOf([RandomBrightness(limit=0.1, p=1), RandomContrast(limit=0.1, p=1)]),
-            OneOf([MotionBlur(blur_limit=3), MedianBlur(blur_limit=3), GaussianBlur(blur_limit=3)], p=0.5),
+            OneOf([MotionBlur(blur_limit=3), MedianBlur(blur_limit=3), 
+            # GaussianBlur(blur_limit=3)
+            ], p=0.5),
             VerticalFlip(p=0.5),
             HorizontalFlip(p=0.5),
             ShiftScaleRotate(
