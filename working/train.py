@@ -60,14 +60,15 @@ if __name__ == "__main__":
 
     print(f"Training Model : {NET}")
 
-    if PARALLEL_FOLD_TRAIN:
-        n_jobs = FOLDS
-        predictions = np.concatenate(Parallel(n_jobs=n_jobs, backend="threading")(
-            delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
-        predictions = pd.DataFrame(predictions, columns=[
-                                "image_id", "0", "1", "2", "3", "4"])
-        predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
-                                        f"{NET}-predictions.csv"), index=False)
+    # if PARALLEL_FOLD_TRAIN:
+        # n_jobs = FOLDS
+        # predictions = np.concatenate(Parallel(n_jobs=n_jobs, backend="threading")(
+        #     delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)        
 
-    else:
-        predictions = np.concatenate([run_fold(fold) for fold in range(FOLDS)], axis=0)
+    # else:
+    predictions = np.concatenate([run_fold(fold) for fold in range(FOLDS)], axis=0)
+
+    predictions = pd.DataFrame(predictions, columns=[
+                            "image_id", "0", "1", "2", "3", "4"])
+    predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
+                                    f"{NET}-predictions.csv"), index=False)
