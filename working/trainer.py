@@ -61,12 +61,14 @@ def get_trainer(net, fold, name):
     if USE_EARLY_STOPPING:
         callbacks.append(early_stop_callback)
 
+    tpu_cores = [fold + 1] if PARALLEL_FOLD_TRAIN else 8
+
     trainer = pl.Trainer(
         num_sanity_val_steps=0,
         logger=tb_logger,
         max_epochs=MAX_EPOCHS,
         # gpus=GPUS, # -1 if torch.cuda.is_available() else None,
-        tpu_cores=[fold + 1],
+        tpu_cores=tpu_cores,
         precision=16, 
         callbacks=callbacks,
         # progress_bar_refresh_rate=1,

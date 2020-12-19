@@ -20,6 +20,8 @@ SCHEDULER            = "CosineAnnealingLR"
 LEARNING_RATE        = 1e-3
 MAX_EPOCHS           = 4
 
+PARALLEL_FOLD_TRAIN  = True
+
 N_CLASSES            = 5
 TRAIN_BATCH_SIZE     = 16
 VALID_BATCH_SIZE     = 16
