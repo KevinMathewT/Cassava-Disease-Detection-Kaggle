@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import StratifiedKFold
+from tqdm import tqdm
 
 from .config import *
 
@@ -11,7 +12,7 @@ if __name__ == "__main__":
     X = train['image_id']
     y = train["label"]
 
-    for fold, (train_index, test_index) in enumerate(skf.split(X, y)):
+    for fold, (train_index, test_index) in enumerate(tqdm(skf.split(X, y))):
         train.loc[test_index, "fold"] = fold
 
     train.to_csv(TRAIN_FOLDS, index=False)
