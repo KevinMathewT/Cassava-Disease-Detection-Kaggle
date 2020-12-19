@@ -8,16 +8,24 @@
 
 # print(net)
 
-from joblib import Parallel, delayed
-from math import sqrt
-from time import sleep
+# from joblib import Parallel, delayed
+# from math import sqrt
+# from time import sleep
 
-x = 10
+# x = 10
 
-def f(i):
-    print(f"Called {i}")
-    sleep((x - i))
-    print(f"Finished {i}")
-    return i
+# def f(i):
+#     print(f"Called {i}")
+#     sleep((x - i))
+#     print(f"Finished {i}")
+#     return i
 
-print(Parallel(n_jobs=10)(delayed(f)(i) for i in range(x)))
+# print(Parallel(n_jobs=10)(delayed(f)(i) for i in range(x)))
+
+import timm
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4)
+list = timm.list_models()
+
+pp.pprint(list)
