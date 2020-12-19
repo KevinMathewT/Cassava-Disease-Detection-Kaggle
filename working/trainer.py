@@ -66,7 +66,8 @@ def get_trainer(net, fold, name):
             num_sanity_val_steps=0,
             logger=tb_logger,
             max_epochs=MAX_EPOCHS,
-            gpus=GPUS, # -1 if torch.cuda.is_available() else None,
+            # gpus=GPUS, # -1 if torch.cuda.is_available() else None,
+            tpu_cores=8,
             callbacks=[lr_monitor, metrics_callback],
             checkpoint_callback=checkpoint_callback, # Do not save any checkpoints,
         )
