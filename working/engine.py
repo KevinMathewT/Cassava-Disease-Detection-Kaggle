@@ -103,9 +103,9 @@ class CassavaLitModule(pl.LightningModule):
         loss = self.train_criterion(outputs, targets)
         accuracy = self.accuracy(outputs, targets)
 
-        self.log('train_loss', loss, on_step=False,
+        self.log('train_loss', loss, on_step=True,
                  on_epoch=True, prog_bar=True, logger=True)
-        self.log("train_acc", accuracy, on_step=False,
+        self.log("train_acc", accuracy, on_step=True,
                  on_epoch=True, prog_bar=True, logger=True)
         self.train_losses.append(loss.item())
         return loss
@@ -127,9 +127,9 @@ class CassavaLitModule(pl.LightningModule):
         loss = self.valid_criterion(outputs, targets)
         accuracy = self.accuracy(outputs, targets)
 
-        self.log('val_loss', loss, on_step=False,
+        self.log('val_loss', loss, on_step=True,
                  on_epoch=True, prog_bar=True, logger=True)
-        self.log("val_acc", accuracy, on_step=False,
+        self.log("val_acc", accuracy, on_step=True,
                  on_epoch=True, prog_bar=True, logger=True)
         self.valid_losses.append(loss.item())
         return loss

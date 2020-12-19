@@ -61,7 +61,8 @@ if __name__ == "__main__":
 
     print(f"Training Model : {NET}")
 
-    predictions = np.concatenate(Parallel(n_jobs=10)(delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
+    predictions = np.concatenate(Parallel(n_jobs=10)(
+        delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
     predictions = pd.DataFrame(predictions, columns=[
                                "image_id", "0", "1", "2", "3", "4"])
     predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
