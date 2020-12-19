@@ -69,7 +69,7 @@ def get_trainer(net, fold, name):
         num_sanity_val_steps=0,
         logger=tb_logger,
         max_epochs=MAX_EPOCHS,
-        gpus=-1 if torch.cuda.is_available() else None,
+        gpus=torch.cuda.device_count() if torch.cuda.is_available() else None,
         # tpu_cores=tpu_cores,
         precision=16, 
         callbacks=callbacks,
