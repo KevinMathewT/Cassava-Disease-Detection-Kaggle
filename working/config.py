@@ -1,7 +1,8 @@
 import os
 from pytorch_lightning import seed_everything
 
-INPUT_PATH           = "./"
+INPUT_PATH           = "../input" # Kaggle
+# INPUT_PATH           = "."        # Colab
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
