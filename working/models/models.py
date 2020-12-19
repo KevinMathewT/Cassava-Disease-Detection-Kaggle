@@ -48,8 +48,8 @@ class GeneralizedCassavaClassifier(nn.Module):
         super().__init__()
         self.name = model_arch
         self.model = timm.create_model(model_arch, pretrained=pretrained)
-        n_features = self.model.fc.in_features
-        self.model.fc = nn.Linear(n_features, N_CLASSES)
+        n_features = self.model.classifier.in_features
+        self.model.classifier = nn.Linear(n_features, N_CLASSES)
         
     def forward(self, x):
         x = self.model(x)
