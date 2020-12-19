@@ -53,10 +53,10 @@ class CassavaLitModule(pl.LightningModule):
                 self.parameters(), lr=LEARNING_RATE, weight_decay=1e-5)
         elif OPTIMIZER == "AdaBelief":
             optimizer = AdaBelief(self.parameters(
-            ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False)
+            ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log = False)
         elif OPTIMIZER == "RangerAdaBelief":
             optimizer = RangerAdaBelief(
-                self.parameters(), lr=LEARNING_RATE, eps=1e-12, betas=(0.9, 0.999))
+                self.parameters(), lr=LEARNING_RATE, eps=1e-12, betas=(0.9, 0.999), print_change_log = False)
         else:
             optimizer = optim.SGD(
                 self.parameters(), lr=LEARNING_RATE)

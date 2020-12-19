@@ -69,7 +69,7 @@ def get_trainer(net, fold, name):
         tpu_cores=[fold + 1],
         precision=16, 
         callbacks=callbacks,
-        progress_bar_refresh_rate=0,
+        progress_bar_refresh_rate=10,
         checkpoint_callback=checkpoint_callback,  # Do not save any checkpoints,
     )
     trainer.use_native_amp = False
