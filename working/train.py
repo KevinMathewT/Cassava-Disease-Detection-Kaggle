@@ -9,11 +9,13 @@ from tqdm import tqdm
 import pandas as pd
 import numpy as np
 from scipy.special import softmax
+from joblib import Parallel, delayed
 import warnings
 warnings.filterwarnings("ignore")
 
 
-def run_fold(fold, predictions):
+def run_fold(fold):
+    predictions = np.empty((0, 6))
     train = train_folds[train_folds.fold != fold]
     valid = train_folds[train_folds.fold == fold]
 
@@ -58,11 +60,8 @@ if __name__ == "__main__":
     train_folds = pd.read_csv(TRAIN_FOLDS)
 
     print(f"Training Model : {NET}")
-    predictions = np.empty((0, 6))
 
-    for fold in range(1):
-        predictions = run_fold(fold, predictions)
-
+    predictions = np.concatenate(Parallel(n_jobs=10)(delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
     predictions = pd.DataFrame(predictions, columns=[
                                "image_id", "0", "1", "2", "3", "4"])
     predictions.to_csv(os.path.join(GENERATED_FILES_PATH,

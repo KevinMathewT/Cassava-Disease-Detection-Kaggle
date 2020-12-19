@@ -6,6 +6,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 
 from .config import *
 
+
 class MetricsCallback(Callback):
     def __init__(self):
         super().__init__()
@@ -25,10 +26,11 @@ class MetricsCallback(Callback):
             self.lr = lr
         self.metrics.append(trainer.callback_metrics)
 
+
 def get_trainer(net, fold, name):
     tb_logger = pl_loggers.TensorBoardLogger(
-        save_dir="tb_logs", 
-        name=f"base_fold_{fold}", 
+        save_dir="tb_logs",
+        name=f"base_fold_{fold}",
         version=0
     )
 
@@ -39,7 +41,8 @@ def get_trainer(net, fold, name):
     metrics_callback = MetricsCallback()
 
     checkpoint_callback = ModelCheckpoint(
-        filepath=f'./working/models/{name}/cldc-net={name}-fold={fold}-' + '{epoch:03d}-{val_loss_epoch:.4f}',
+        filepath=f'./working/models/{name}/cldc-net={name}-fold={fold}-' +
+        '{epoch:03d}-{val_loss_epoch:.4f}',
         monitor='val_loss_epoch',
         save_top_k=SAVE_TOP_K,
         verbose=LEARNING_VERBOSE
@@ -53,25 +56,19 @@ def get_trainer(net, fold, name):
         verbose=LEARNING_VERBOSE
     )
 
-    if USE_EARLY_STOPPING:
-        trainer = pl.Trainer(
-            logger=tb_logger,
-            max_epochs=MAX_EPOCHS,
-            gpus=GPUS, # -1 if torch.cuda.is_available() else None,
-            callbacks=[lr_monitor, metrics_callback, early_stop_callback],
-            checkpoint_callback=checkpoint_callback, # Do not save any checkpoints,
-        )
-    else:
-        trainer = pl.Trainer(
-            num_sanity_val_steps=0,
-            logger=tb_logger,
-            max_epochs=MAX_EPOCHS,
-            # gpus=GPUS, # -1 if torch.cuda.is_available() else None,
-            tpu_cores=8,
-            callbacks=[lr_monitor, metrics_callback],
-            checkpoint_callback=checkpoint_callback, # Do not save any checkpoints,
-        )
-    
-    return trainer, checkpoint_callback, metrics_callback
+    callbacks = [lr_monitor, metrics_callback]
 
-    
+    if USE_EARLY_STOPPING:
+        callbacks.append(early_stop_callback)
+
+    trainer = pl.Trainer(
+        num_sanity_val_steps=0,
+        logger=tb_logger,
+        max_epochs=MAX_EPOCHS,
+        # gpus=GPUS, # -1 if torch.cuda.is_available() else None,
+        tpu_cores=8,
+        callbacks=callbacks,
+        checkpoint_callback=checkpoint_callback,  # Do not save any checkpoints,
+    )
+
+    return trainer, checkpoint_callback, metrics_callback
