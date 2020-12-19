@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     print(f"Training Model : {NET}")
 
-    predictions = np.concatenate(Parallel(n_jobs=FOLDS, backend="threading")(
+    predictions = np.concatenate(Parallel(n_jobs=1, backend="threading")(
         delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
     predictions = pd.DataFrame(predictions, columns=[
                                "image_id", "0", "1", "2", "3", "4"])
