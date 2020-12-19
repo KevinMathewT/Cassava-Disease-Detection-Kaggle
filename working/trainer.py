@@ -67,9 +67,11 @@ def get_trainer(net, fold, name):
         max_epochs=MAX_EPOCHS,
         # gpus=GPUS, # -1 if torch.cuda.is_available() else None,
         tpu_cores=[fold + 1],
+        precision=16, 
         callbacks=callbacks,
         progress_bar_refresh_rate=0,
         checkpoint_callback=checkpoint_callback,  # Do not save any checkpoints,
     )
+    trainer.use_native_amp = False
 
     return trainer, checkpoint_callback, metrics_callback
