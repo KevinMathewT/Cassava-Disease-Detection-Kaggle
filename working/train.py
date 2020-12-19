@@ -13,8 +13,6 @@ from joblib import Parallel, delayed
 import warnings
 warnings.filterwarnings("ignore")
 
-@delayed
-@wrap_non_picklable_objects
 def run_fold(fold):
     predictions = np.empty((0, 6))
     train = train_folds[train_folds.fold != fold]
