@@ -27,8 +27,8 @@ MAX_EPOCHS           = 4
 
 N_CLASSES            = 5
 
-TRAIN_BATCH_SIZE     = 64
-VALID_BATCH_SIZE     = 64
+TRAIN_BATCH_SIZE     = 32
+VALID_BATCH_SIZE     = 32
 
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
