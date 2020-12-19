@@ -69,6 +69,7 @@ def get_trainer(net, fold, name):
         num_sanity_val_steps=0,
         tpu_cores=[fold],
         callbacks=callbacks,
+        progress_bar_refresh_rate=0,
         checkpoint_callback=checkpoint_callback,  # Do not save any checkpoints,
     )
 
