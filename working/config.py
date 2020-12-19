@@ -11,6 +11,10 @@ TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
 TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 GPUS                 = 1
+PARALLEL_FOLD_TRAIN  = False
+SEED                 = 2020
+FOLDS                = 8
+SEEDS                = 1
 
 H                    = 512
 W                    = 512
@@ -20,22 +24,18 @@ SCHEDULER            = "CosineAnnealingLR"
 LEARNING_RATE        = 1e-3
 MAX_EPOCHS           = 4
 
-PARALLEL_FOLD_TRAIN  = False
-
 N_CLASSES            = 5
-TRAIN_BATCH_SIZE     = 4
-VALID_BATCH_SIZE     = 4
+
+TRAIN_BATCH_SIZE     = 32
+VALID_BATCH_SIZE     = 32
+
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
-CPU_WORKERS          = 4
+CPU_WORKERS          = 8
 # NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
 NET                  = 'tf_efficientnet_b0_ns'
 # NET                  = 'gluon_resnet18_v1b'
-
-SEED                 = 2020
-FOLDS                = 8
-SEEDS                = 1
 
 PRETRAINED           = True
 SAVE_TOP_K           = 1
@@ -43,4 +43,8 @@ LEARNING_VERBOSE     = False
 EARLY_STOPPING       = 10
 USE_EARLY_STOPPING   = False
 
+
+if PARALLEL_FOLD_TRAIN:
+    TRAIN_BATCH_SIZE /= FOLDS
+    VALID_BATCH_SIZE /= FOLDS
 seed_everything(SEED)
