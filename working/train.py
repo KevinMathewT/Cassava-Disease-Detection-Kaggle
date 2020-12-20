@@ -19,7 +19,8 @@ warnings.filterwarnings("ignore")
 def run_fold(fold):
     train_loader, valid_loader = get_loaders(fold)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    net = get_net(name=NET, pretrained=PRETRAINED)
+    # device = torch.device('cpu')
+    net = get_net(name=NET, pretrained=PRETRAINED).to(device)
     scaler = torch.cuda.amp.GradScaler()
     optimizer, scheduler = get_optimizer_and_scheduler(net=net)
 

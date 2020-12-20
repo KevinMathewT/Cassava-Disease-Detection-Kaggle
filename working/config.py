@@ -2,8 +2,9 @@ import os
 from pytorch_lightning import seed_everything
 import torch
 
+INPUT_PATH           = "./input" # PC
 # INPUT_PATH           = "../input" # Kaggle
-INPUT_PATH           = "."        # Colab
+# INPUT_PATH           = "."        # Colab
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
@@ -18,6 +19,7 @@ SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
 ACCUMULATE_ITERATION = 2
+MIXED_PRECISION_TRAIN= True
 
 H                    = 512
 W                    = 512
@@ -47,7 +49,7 @@ USE_EARLY_STOPPING   = False
 
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
-CPU_WORKERS          = 8
+CPU_WORKERS          = 0
 
 # if not PARALLEL_FOLD_TRAIN:
 #     TRAIN_BATCH_SIZE //= TPUS

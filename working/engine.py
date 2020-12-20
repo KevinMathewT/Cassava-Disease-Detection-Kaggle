@@ -25,26 +25,43 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
         image_labels = image_labels.to(device).long()
 
         #print(image_labels.shape, exam_label.shape)
-        with torch.cuda.amp.autocast():
+        if MIXED_PRECISION_TRAIN:
+            with torch.cuda.amp.autocast():
+                image_preds = model(imgs)
+                loss = loss_fn(image_preds, image_labels)
+                accuracy = get_accuracy(image_preds.detach().cpu().numpy(), image_labels.detach().cpu().numpy())
+
+                scaler.scale(loss).backward()
+                running_loss = loss.item() if running_loss is None else (
+                    running_loss * .99 + loss.item() * .01)
+
+                if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
+                    scaler.step(optimizer)
+                    scaler.update()
+                    optimizer.zero_grad()
+
+                    if scheduler is not None and schd_batch_update:
+                        scheduler.step()
+        
+        else:
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
             accuracy = get_accuracy(image_preds.detach().cpu().numpy(), image_labels.detach().cpu().numpy())
 
-            scaler.scale(loss).backward()
+            loss.backward()
             running_loss = loss.item() if running_loss is None else (
                 running_loss * .99 + loss.item() * .01)
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
-                scaler.step(optimizer)
-                scaler.update()
+                optimizer.step()
                 optimizer.zero_grad()
 
                 if scheduler is not None and schd_batch_update:
                     scheduler.step()
 
-            if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
-                description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
-                pbar.set_description(description)
+        if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
+            description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
+            pbar.set_description(description)
 
     if scheduler is not None and not schd_batch_update:
         scheduler.step()
