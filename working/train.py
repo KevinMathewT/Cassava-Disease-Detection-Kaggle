@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # for fold in range(FOLDS):
     #     run_fold(fold)
 
-    run_fold(1)
+    run_fold(2)
 
     # if PARALLEL_FOLD_TRAIN:
         # n_jobs = FOLDS
