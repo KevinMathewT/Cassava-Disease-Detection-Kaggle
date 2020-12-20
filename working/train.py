@@ -21,7 +21,7 @@ def run_fold(fold):
     train_loader, valid_loader = get_loaders(fold)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     net = get_net(name=NET, pretrained=PRETRAINED)
-    optimizer, scheduler = get_optimizer_and_scheduler()
+    optimizer, scheduler = get_optimizer_and_scheduler(net)
     scaler = torch.cuda.amp.GradScaler()
 
     loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
