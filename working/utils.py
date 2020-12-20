@@ -31,7 +31,7 @@ def get_accuracy(predictions, targets, normalize=True):
 
 def create_dirs():
     try:
-        os.mkdir(f'./working/models/weights/')
-        os.mkdir(f'./working/models/weights/{NET}/')
+        os.mkdir(WEIGHTS_PATH)
+        os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
     except:
         return
