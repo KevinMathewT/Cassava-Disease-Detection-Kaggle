@@ -29,7 +29,8 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
             with torch.cuda.amp.autocast():
                 image_preds = model(imgs)
                 loss = loss_fn(image_preds, image_labels)
-                accuracy = get_accuracy(image_preds.detach().cpu(), image_labels.detach().cpu())
+                accuracy = get_accuracy(
+                    image_preds.detach().cpu(), image_labels.detach().cpu())
 
             scaler.scale(loss).backward()
             running_loss = loss.item() if running_loss is None else (
@@ -42,11 +43,12 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
 
                 if scheduler is not None and schd_batch_update:
                     scheduler.step()
-        
+
         else:
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
-            accuracy = get_accuracy(image_preds.detach().cpu().numpy(), image_labels.detach().cpu().numpy())
+            accuracy = get_accuracy(image_preds.detach().cpu(
+            ).numpy(), image_labels.detach().cpu().numpy())
 
             loss.backward()
             running_loss = loss.item() if running_loss is None else (
@@ -97,8 +99,8 @@ def valid_one_epoch(epoch, model, loss_fn, valid_loader, device, scheduler=None,
 
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
-    print('[{epoch}/{MAX_EPOCHS}] Validation Multi-Class Accuracy = {:.4f}'.format(
-        (image_preds_all == image_targets_all).mean()))
+    print('[{}/{}] Validation Multi-Class Accuracy = {:.4f}'.format(epoch, MAX_EPOCHS,
+                                                                    (image_preds_all == image_targets_all).mean()))
 
     if scheduler is not None:
         if schd_loss_update:
@@ -129,10 +131,10 @@ def get_optimizer_and_scheduler(net):
             net.parameters(), lr=LEARNING_RATE, weight_decay=1e-5)
     elif OPTIMIZER == "AdaBelief":
         optimizer = AdaBelief(net.parameters(
-        ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log = False)
+        ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
     elif OPTIMIZER == "RangerAdaBelief":
         optimizer = RangerAdaBelief(
-            net.parameters(), lr=LEARNING_RATE, eps=1e-12, betas=(0.9, 0.999), print_change_log = False)
+            net.parameters(), lr=LEARNING_RATE, eps=1e-12, betas=(0.9, 0.999), print_change_log=False)
     else:
         optimizer = optim.SGD(
             net.parameters(), lr=LEARNING_RATE)

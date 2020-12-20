@@ -19,7 +19,6 @@ warnings.filterwarnings("ignore")
 def run_fold(fold):
     train_loader, valid_loader = get_loaders(fold)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-    # device = torch.device('cpu')
     net = get_net(name=NET, pretrained=PRETRAINED).to(device)
     scaler = torch.cuda.amp.GradScaler()
     optimizer, scheduler = get_optimizer_and_scheduler(net=net)
@@ -33,7 +32,7 @@ def run_fold(fold):
 
         with torch.no_grad():
             valid_one_epoch(epoch, net, loss_fn, valid_loader,
-                            device, scheduler=None, schd_loss_update=False)
+                            device, scheduler=None, schd_loss_update=True)
 
         torch.save(net.state_dict(
         ), './working/models/weights/{}/{}_fold_{}_{}'.format(NET, NET, fold, epoch))

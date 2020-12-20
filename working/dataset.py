@@ -186,6 +186,7 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
         num_workers=CPU_WORKERS,
         shuffle=False)
 
+
 def get_loaders(fold):
     train_folds = pd.read_csv(TRAIN_FOLDS)
     train = train_folds[train_folds.fold != fold]
@@ -195,5 +196,5 @@ def get_loaders(fold):
         train.drop(['fold'], axis=1))
     valid_loader = get_valid_dataloader(
         valid.drop(['fold'], axis=1))
-    
+
     return train_loader, valid_loader
