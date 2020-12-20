@@ -90,7 +90,7 @@ def get_train_transforms():
         
 def get_valid_transforms():
     return Compose([
-            CenterCrop(H, W, p=1.),
+            CenterCrop(config.H, config.W, p=1.),
             Resize(H, W),
             Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225], max_pixel_value=255.0, p=1.0),
             ToTensorV2(p=1.0),
@@ -98,7 +98,7 @@ def get_valid_transforms():
 
 def get_inference_transforms():
     return Compose([
-            RandomResizedCrop(H, W),
+            RandomResizedCrop(config.H, config.W),
             Transpose(p=0.5),
             HorizontalFlip(p=0.5),
             VerticalFlip(p=0.5),
