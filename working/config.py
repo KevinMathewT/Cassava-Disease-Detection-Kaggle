@@ -19,7 +19,7 @@ SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
 ACCUMULATE_ITERATION = 2
-MIXED_PRECISION_TRAIN= True
+MIXED_PRECISION_TRAIN= False
 
 H                    = 512
 W                    = 512
