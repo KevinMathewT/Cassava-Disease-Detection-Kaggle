@@ -46,7 +46,7 @@ def run_fold(fold):
 if __name__ == "__main__":
     print(f"Training Model : {NET}")
 
-    for fold in FOLDS:
+    for fold in range(FOLDS):
         run_fold(fold)
 
     # if PARALLEL_FOLD_TRAIN:
