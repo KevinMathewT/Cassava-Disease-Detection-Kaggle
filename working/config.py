@@ -1,5 +1,5 @@
 import os
-from pytorch_lightning import seed_everything
+from .utils import seed_everything
 import torch
 
 # INPUT_PATH           = "./input"  # PC
