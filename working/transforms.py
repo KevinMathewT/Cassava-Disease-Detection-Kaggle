@@ -9,6 +9,7 @@ import cv2
 
 from .config import *
 from .utils import *
+from working import config
 
 
 # def get_train_transforms():
@@ -73,7 +74,7 @@ from .utils import *
 
 def get_train_transforms():
     return Compose([
-            RandomResizedCrop(H, W),
+            RandomResizedCrop(config.H, config.W),
             Transpose(p=0.5),
             HorizontalFlip(p=0.5),
             VerticalFlip(p=0.5),

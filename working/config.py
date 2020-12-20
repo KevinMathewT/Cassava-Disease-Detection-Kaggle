@@ -1,6 +1,5 @@
 import os
 from .utils import seed_everything
-import torch
 
 # INPUT_PATH           = "./input"  # PC
 # INPUT_PATH           = "../input" # Kaggle
