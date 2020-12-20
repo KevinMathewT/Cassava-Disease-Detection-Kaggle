@@ -3,6 +3,8 @@ import random
 import numpy as np
 import torch
 import cv2
+from sklearn.metrics import accuracy_score
+from torch.nn.functional import normalize
 
 from torch.utils.data import DataLoader, Dataset
 
@@ -22,3 +24,7 @@ def get_img(path):
     im_bgr = cv2.imread(path, cv2.IMREAD_COLOR)
     im_rgb = cv2.cvtColor(im_bgr, cv2.COLOR_BGR2RGB)
     return im_rgb
+
+def get_accuracy(predictions, targets, normalize=True):
+    predictions = torch.argmax(predictions, dim=1)
+    return accuracy_score(targets, predictions, normalize=normalize)

@@ -1,5 +1,6 @@
 import os
 from pytorch_lightning import seed_everything
+import torch
 
 # INPUT_PATH           = "../input" # Kaggle
 INPUT_PATH           = "."        # Colab
@@ -16,6 +17,7 @@ PARALLEL_FOLD_TRAIN  = False
 SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
+ACCUMULATE_ITERATION = 2
 
 H                    = 512
 W                    = 512
@@ -23,27 +25,29 @@ W                    = 512
 OPTIMIZER            = "AdaBelief"
 SCHEDULER            = "CosineAnnealingLR"
 LEARNING_RATE        = 1e-4
-MAX_EPOCHS           = 32
+MAX_EPOCHS           = 10
 
 N_CLASSES            = 5
 
-TRAIN_BATCH_SIZE     = 28
+TRAIN_BATCH_SIZE     = 16
 VALID_BATCH_SIZE     = 32
 
-USE_SUBSET           = False
-SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
-CPU_WORKERS          = 8
 # NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
-NET                  = 'tf_efficientnet_b3_ns'
+NET                  = 'tf_efficientnet_b4_ns'
 # NET                  = 'gluon_resnet18_v1b'
 
 PRETRAINED           = True
 SAVE_TOP_K           = 1
 LEARNING_VERBOSE     = False
+VERBOSE_STEP         = 1
 EARLY_STOPPING       = 10
 USE_EARLY_STOPPING   = False
 
+
+USE_SUBSET           = False
+SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
+CPU_WORKERS          = 8
 
 # if not PARALLEL_FOLD_TRAIN:
 #     TRAIN_BATCH_SIZE //= TPUS

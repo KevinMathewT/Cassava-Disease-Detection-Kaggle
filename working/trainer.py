@@ -47,7 +47,7 @@ def get_trainer(net, fold, name):
         '{epoch:03d}-{val_loss_epoch:.4f}',
         monitor='val_loss_epoch',
         save_top_k=SAVE_TOP_K,
-        verbose=LEARNING_VERBOSE
+        verbose=False
     )
 
     early_stop_callback = EarlyStopping(
@@ -55,7 +55,7 @@ def get_trainer(net, fold, name):
         min_delta=0.00,
         mode='min',
         patience=EARLY_STOPPING,
-        verbose=LEARNING_VERBOSE
+        verbose=False
     )
 
     callbacks = [lr_monitor, metrics_callback]

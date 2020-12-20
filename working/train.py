@@ -1,74 +1,63 @@
-from .dataset import get_train_dataloader, get_valid_dataloader
-from .engine import get_net
+from tqdm import tqdm
+from joblib import Parallel, delayed
+import numpy as np
+from scipy.special import softmax
+
+import torch
+import torch.nn as nn
+
+from .dataset import get_loaders
+from .engine import get_net, get_optimizer_and_scheduler, train_one_epoch, valid_one_epoch
 from .trainer import get_trainer
 from .config import *
 from .utils import *
-from torch.utils.data import DataLoader
-import torch
-from tqdm import tqdm
-import pandas as pd
-import numpy as np
-from scipy.special import softmax
-from joblib import Parallel, delayed
+
 import warnings
 warnings.filterwarnings("ignore")
 
+
 def run_fold(fold):
     predictions = np.empty((0, 6))
-    train = train_folds[train_folds.fold != fold]
-    valid = train_folds[train_folds.fold == fold]
+    train_loader, valid_loader = get_loaders(fold)
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    net = get_net(name=NET, pretrained=PRETRAINED)
+    optimizer, scheduler = get_optimizer_and_scheduler()
+    scaler = torch.cuda.amp.GradScaler()
 
-    train_loader = get_train_dataloader(
-        train.drop(['fold'], axis=1).to_numpy())
-    valid_loader = get_valid_dataloader(
-        valid.drop(['fold'], axis=1).to_numpy())
+    loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
+    loss_fn = nn.CrossEntropyLoss().to(device)
 
-    net = get_net(name=NET, fold=fold, pretrained=PRETRAINED)
-    trainer, checkpoint_callback, metrics_callback = get_trainer(
-        net=net, fold=fold, name=NET)
+    for epoch in range(MAX_EPOCHS):
+        train_one_epoch(epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
+                        scheduler=scheduler, schd_batch_update=False)
 
-    trainer.fit(net, train_loader, valid_loader)
+        with torch.no_grad():
+            valid_one_epoch(epoch, net, loss_fn, valid_loader,
+                            device, scheduler=None, schd_loss_update=False)
 
-    print(
-        f"Best Model for Fold #{fold} saved at {checkpoint_callback.best_model_path}.")
+        torch.save(net.state_dict(
+        ), './working/models/weights/{}/{}_fold_{}_{}'.format(NET, NET, fold, epoch))
 
-    net = get_net(name=NET, fold=fold, pretrained=PRETRAINED)
-    net.load_state_dict(torch.load(
-        checkpoint_callback.best_model_path)["state_dict"])
-    net.to("cuda")
-    pred_ids = valid.image_id.to_numpy().reshape(-1, 1)
-    pred_ids = pred_ids[:SUBSET_SIZE, :] if USE_SUBSET else pred_ids
-    print("Prediction IDs: ", len(pred_ids))
-
-    preds = []
-    with torch.no_grad():
-        for data in tqdm(valid_loader):
-            image, _ = data
-            image = image.cuda()
-            outputs = softmax(net(image).cpu().detach().numpy(), axis=1)
-            preds.append(outputs)
-
-    preds = np.concatenate(preds, axis=0)
-    preds = np.concatenate([pred_ids, preds], axis=1)
-    predictions = np.concatenate([predictions, preds], axis=0)
-
-    return predictions
+    #torch.save(model.cnn_model.state_dict(),'{}/cnn_model_fold_{}_{}'.format(CFG['model_path'], fold, CFG['tag']))
+    del net, optimizer, train_loader, valid_loader, scheduler
+    torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":
-    train_folds = pd.read_csv(TRAIN_FOLDS)
-
     print(f"Training Model : {NET}")
+
+    for fold in FOLDS:
+        run_fold(fold)
 
     # if PARALLEL_FOLD_TRAIN:
         # n_jobs = FOLDS
         # predictions = np.concatenate(Parallel(n_jobs=n_jobs, backend="threading")(
-        #     delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)        
+        #     delayed(run_fold)(fold) for fold in range(FOLDS)), axis=0)
 
     # else:
-    predictions = np.concatenate([run_fold(fold) for fold in range(FOLDS)], axis=0)
+    # predictions = np.concatenate([run_fold(fold) for fold in range(FOLDS)], axis=0)
 
-    predictions = pd.DataFrame(predictions, columns=[
-                            "image_id", "0", "1", "2", "3", "4"])
-    predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
-                                    f"{NET}-predictions.csv"), index=False)
+    # predictions = pd.DataFrame(predictions, columns=[
+    #                         "image_id", "0", "1", "2", "3", "4"])
+    # predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
+    #                                 f"{NET}-predictions.csv"), index=False)
