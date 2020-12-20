@@ -31,7 +31,7 @@ MAX_EPOCHS           = 10
 
 N_CLASSES            = 5
 
-TRAIN_BATCH_SIZE     = 32
+TRAIN_BATCH_SIZE     = 16
 VALID_BATCH_SIZE     = 32
 
 # NET                  = 'SEResNeXt50_32x4d'

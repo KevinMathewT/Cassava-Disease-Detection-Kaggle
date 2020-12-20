@@ -31,17 +31,17 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
                 loss = loss_fn(image_preds, image_labels)
                 accuracy = get_accuracy(image_preds.detach().cpu(), image_labels.detach().cpu())
 
-                scaler.scale(loss).backward()
-                running_loss = loss.item() if running_loss is None else (
-                    running_loss * .99 + loss.item() * .01)
+            scaler.scale(loss).backward()
+            running_loss = loss.item() if running_loss is None else (
+                running_loss * .99 + loss.item() * .01)
 
-                if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
-                    scaler.step(optimizer)
-                    scaler.update()
-                    optimizer.zero_grad()
+            if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
+                scaler.step(optimizer)
+                scaler.update()
+                optimizer.zero_grad()
 
-                    if scheduler is not None and schd_batch_update:
-                        scheduler.step()
+                if scheduler is not None and schd_batch_update:
+                    scheduler.step()
         
         else:
             image_preds = model(imgs)
