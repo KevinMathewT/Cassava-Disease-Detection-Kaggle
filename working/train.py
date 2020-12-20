@@ -29,6 +29,7 @@ def run_fold(fold):
             valid_one_epoch(epoch, net, loss_fn, valid_loader,
                             device, scheduler=None, schd_loss_update=True)
 
+        print(os.path.join(WEIGHTS_PATH, f'/{NET}/{NET}_fold_{fold}_{epoch}'))
         torch.save(net.state_dict(
         ), os.path.join(WEIGHTS_PATH, f'/{NET}/{NET}_fold_{fold}_{epoch}'))
 
