@@ -32,5 +32,9 @@ def get_accuracy(predictions, targets, normalize=True):
 def create_dirs():
     try:
         os.mkdir(WEIGHTS_PATH)
+    except:
+        pass
     try:
         os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
+    except:
+        pass
