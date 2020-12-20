@@ -17,6 +17,7 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
 
     t = time.time()
     running_loss = None
+    running_accuracy = None
     total_steps = len(train_loader)
 
     pbar = tqdm(enumerate(train_loader), total=total_steps)
@@ -35,6 +36,8 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
             scaler.scale(loss).backward()
             running_loss = loss.item() if running_loss is None else (
                 running_loss * .99 + loss.item() * .01)
+            running_accuracy = loss.item() if running_accuracy is None else (
+                running_accuracy * .99 + accuracy * .01)
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
                 scaler.step(optimizer)
@@ -53,6 +56,8 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
             loss.backward()
             running_loss = loss.item() if running_loss is None else (
                 running_loss * .99 + loss.item() * .01)
+            running_accuracy = loss.item() if running_accuracy is None else (
+                running_accuracy * .99 + accuracy * .01)
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
                 optimizer.step()
@@ -62,7 +67,7 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
                     scheduler.step()
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
-            description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
+            description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {running_accuracy:.4f}'
             pbar.set_description(description)
 
     if scheduler is not None and not schd_batch_update:
