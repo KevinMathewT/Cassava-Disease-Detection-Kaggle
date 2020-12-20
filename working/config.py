@@ -41,7 +41,7 @@ NET                  = 'tf_efficientnet_b4_ns'
 
 PRETRAINED           = True
 SAVE_TOP_K           = 1
-LEARNING_VERBOSE     = False
+LEARNING_VERBOSE     = True
 VERBOSE_STEP         = 1
 EARLY_STOPPING       = 10
 USE_EARLY_STOPPING   = False

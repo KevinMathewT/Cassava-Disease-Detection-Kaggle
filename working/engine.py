@@ -1,6 +1,6 @@
 import time
 from working.utils import get_accuracy
-from tqdm import tqdm
+from tqdm.notebook import tqdm
 import numpy as np
 
 import torch
