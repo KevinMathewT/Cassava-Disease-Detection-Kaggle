@@ -29,7 +29,7 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
             with torch.cuda.amp.autocast():
                 image_preds = model(imgs)
                 loss = loss_fn(image_preds, image_labels)
-                accuracy = get_accuracy(image_preds.detach().cpu().numpy(), image_labels.detach().cpu().numpy())
+                accuracy = get_accuracy(image_preds.detach().cpu(), image_labels.detach().cpu())
 
                 scaler.scale(loss).backward()
                 running_loss = loss.item() if running_loss is None else (
