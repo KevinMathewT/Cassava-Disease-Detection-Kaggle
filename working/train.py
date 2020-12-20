@@ -26,8 +26,7 @@ def run_fold(fold):
 
     loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     loss_fn = nn.CrossEntropyLoss().to(device)
-    os.mkdir(f'./working/models/weights/')
-    os.mkdir(f'./working/models/weights/{NET}/')
+    create_dirs()
 
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,

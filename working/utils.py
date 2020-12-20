@@ -28,3 +28,10 @@ def get_img(path):
 def get_accuracy(predictions, targets, normalize=True):
     predictions = torch.argmax(predictions, dim=1)
     return accuracy_score(targets, predictions, normalize=normalize)
+
+def create_dirs():
+    try:
+        os.mkdir(f'./working/models/weights/')
+        os.mkdir(f'./working/models/weights/{NET}/')
+    except:
+        return
