@@ -192,8 +192,8 @@ def get_loaders(fold):
     valid = train_folds[train_folds.fold == fold]
 
     train_loader = get_train_dataloader(
-        train.drop(['fold'], axis=1).to_numpy())
+        train.drop(['fold'], axis=1))
     valid_loader = get_valid_dataloader(
-        valid.drop(['fold'], axis=1).to_numpy())
+        valid.drop(['fold'], axis=1))
     
     return train_loader, valid_loader
