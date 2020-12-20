@@ -1,3 +1,4 @@
+import os
 from tqdm import tqdm
 from joblib import Parallel, delayed
 import numpy as np
@@ -25,6 +26,7 @@ def run_fold(fold):
 
     loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     loss_fn = nn.CrossEntropyLoss().to(device)
+    os.mkdir(f'./working/models/weights/{NET}/')
 
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
@@ -35,7 +37,7 @@ def run_fold(fold):
                             device, scheduler=None, schd_loss_update=True)
 
         torch.save(net.state_dict(
-        ), './working/models/weights/{}/{}_fold_{}_{}'.format(NET, NET, fold, epoch))
+        ), f'./working/models/weights/{NET}/{NET}_fold_{fold}_{epoch}')
 
     #torch.save(model.cnn_model.state_dict(),'{}/cnn_model_fold_{}_{}'.format(CFG['model_path'], fold, CFG['tag']))
     del net, optimizer, train_loader, valid_loader, scheduler
