@@ -30,5 +30,7 @@ def get_accuracy(predictions, targets, normalize=True):
     return accuracy_score(targets, predictions, normalize=normalize)
 
 def create_dirs():
-    os.mkdir(WEIGHTS_PATH)
-    os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
+    try:
+        os.mkdir(WEIGHTS_PATH)
+    try:
+        os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
