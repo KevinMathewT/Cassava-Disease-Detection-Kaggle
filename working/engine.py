@@ -28,7 +28,7 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
         with torch.cuda.amp.autocast():
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
-            accuracy = get_accuracy(image_preds, image_labels)
+            accuracy = get_accuracy(image_preds.detach().cpu().numpy(), image_labels.detach().cpu().numpy())
 
             scaler.scale(loss).backward()
             running_loss = loss.item() if running_loss is None else (
@@ -42,9 +42,9 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
                 if scheduler is not None and schd_batch_update:
                     scheduler.step()
 
-        if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
-            description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
-            pbar.set_description(description)
+            if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
+                description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
+                pbar.set_description(description)
 
     if scheduler is not None and not schd_batch_update:
         scheduler.step()

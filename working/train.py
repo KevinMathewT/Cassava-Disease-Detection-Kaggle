@@ -17,12 +17,11 @@ warnings.filterwarnings("ignore")
 
 
 def run_fold(fold):
-    predictions = np.empty((0, 6))
     train_loader, valid_loader = get_loaders(fold)
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     net = get_net(name=NET, pretrained=PRETRAINED)
-    optimizer, scheduler = get_optimizer_and_scheduler(net=net)
     scaler = torch.cuda.amp.GradScaler()
+    optimizer, scheduler = get_optimizer_and_scheduler(net=net)
 
     loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     loss_fn = nn.CrossEntropyLoss().to(device)
