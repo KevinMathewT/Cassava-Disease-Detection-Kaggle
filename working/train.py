@@ -30,9 +30,9 @@ def run_fold(fold):
                             device, scheduler=None, schd_loss_update=True)
 
         print(WEIGHTS_PATH)
-        print(os.path.join(WEIGHTS_PATH, f'/{NET}/{NET}_fold_{fold}_{epoch}'))
+        print(os.path.join(WEIGHTS_PATH, f'{NET}/{NET}_fold_{fold}_{epoch}'))
         torch.save(net.state_dict(
-        ), os.path.join(WEIGHTS_PATH, f'/{NET}/{NET}_fold_{fold}_{epoch}'))
+        ), os.path.join(WEIGHTS_PATH, f'{NET}/{NET}_fold_{fold}_{epoch}'))
 
     #torch.save(model.cnn_model.state_dict(),'{}/cnn_model_fold_{}_{}'.format(CFG['model_path'], fold, CFG['tag']))
     del net, optimizer, train_loader, valid_loader, scheduler
