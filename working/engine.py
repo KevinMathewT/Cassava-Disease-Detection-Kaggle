@@ -65,8 +65,6 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
             description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
             pbar.set_description(description)
 
-        break
-
     if scheduler is not None and not schd_batch_update:
         scheduler.step()
 
@@ -98,8 +96,6 @@ def valid_one_epoch(epoch, model, loss_fn, valid_loader, device, scheduler=None,
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)):
             description = f'[{epoch}/{MAX_EPOCHS}] | Validation Loss:{loss_sum/sample_num:.4f}'
             pbar.set_description(description)
-
-        break
 
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
