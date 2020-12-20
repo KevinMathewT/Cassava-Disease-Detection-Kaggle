@@ -22,12 +22,12 @@ def run_fold(fold):
     create_dirs()
 
     for epoch in range(MAX_EPOCHS):
-        train_one_epoch(epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
                         scheduler=scheduler, schd_batch_update=False)
         with torch.no_grad():
-            valid_one_epoch(epoch, net, loss_fn, valid_loader,
+            valid_one_epoch(fold, epoch, net, loss_fn, valid_loader,
                             device, scheduler=None, schd_loss_update=True)
-                            
+
         torch.save(net.state_dict(
         ), os.path.join(WEIGHTS_PATH, f'{NET}/{NET}_fold_{fold}_{epoch}'))
 
@@ -39,8 +39,10 @@ def run_fold(fold):
 if __name__ == "__main__":
     print(f"Training Model : {NET}")
 
-    for fold in range(FOLDS):
-        run_fold(fold)
+    # for fold in range(FOLDS):
+    #     run_fold(fold)
+
+    run_fold(1)
 
     # if PARALLEL_FOLD_TRAIN:
         # n_jobs = FOLDS

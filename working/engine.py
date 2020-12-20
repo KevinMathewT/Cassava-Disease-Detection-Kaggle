@@ -12,7 +12,7 @@ from .config import *
 from .models.models import *
 
 
-def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scaler, scheduler=None, schd_batch_update=False):
+def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device, scaler, scheduler=None, schd_batch_update=False):
     model.train()
 
     t = time.time()
@@ -67,7 +67,7 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
                     scheduler.step()
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
-            description = f'[{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {running_accuracy:.4f}'
+            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {running_accuracy:.4f}'
             pbar.set_description(description)
 
         # break
@@ -76,7 +76,7 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
         scheduler.step()
 
 
-def valid_one_epoch(epoch, model, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False):
+def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False):
     model.eval()
 
     t = time.time()
@@ -101,14 +101,14 @@ def valid_one_epoch(epoch, model, loss_fn, valid_loader, device, scheduler=None,
         sample_num += image_labels.shape[0]
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)):
-            description = f'[{epoch}/{MAX_EPOCHS - 1}] Validation Loss: {loss_sum/sample_num:.4f}'
+            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Loss: {loss_sum/sample_num:.4f}'
             pbar.set_description(description)
 
         # break
 
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
-    print(f'[{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {(image_preds_all == image_targets_all).mean():.4f}')
+    print(f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {(image_preds_all == image_targets_all).mean():.4f}')
 
     if scheduler is not None:
         if schd_loss_update:
