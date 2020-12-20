@@ -44,7 +44,7 @@ class SEResNeXt50_32x4d(nn.Module):
         return output
 
 class GeneralizedCassavaClassifier(nn.Module):
-    def __init__(self, model_arch, n_class, pretrained=False):
+    def __init__(self, model_arch, n_class=N_CLASSES, pretrained=False):
         super().__init__()
         self.name = model_arch
         self.model = timm.create_model(model_arch, pretrained=pretrained)
