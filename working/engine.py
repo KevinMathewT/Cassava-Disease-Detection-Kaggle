@@ -65,6 +65,8 @@ def train_one_epoch(epoch, model, loss_fn, optimizer, train_loader, device, scal
             description = f'[{epoch}/{MAX_EPOCHS}][{step+1}/{total_steps}] Loss: {running_loss:.4f} | Accuracy: {accuracy:.4f}'
             pbar.set_description(description)
 
+        return
+
     if scheduler is not None and not schd_batch_update:
         scheduler.step()
 
