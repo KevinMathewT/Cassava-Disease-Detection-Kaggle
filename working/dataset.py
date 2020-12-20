@@ -165,7 +165,7 @@ class CassavaDataset(Dataset):
             return img
 
 
-def get_train_dataloader(train, data_root):
+def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
     return DataLoader(
         CassavaDataset(train, data_root, transforms=get_train_transforms(
         ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
@@ -176,7 +176,7 @@ def get_train_dataloader(train, data_root):
         shuffle=True)
 
 
-def get_valid_dataloader(valid, data_root):
+def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
     return DataLoader(
         CassavaDataset(valid, data_root, transforms=get_valid_transforms(
         ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
