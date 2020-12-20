@@ -26,6 +26,7 @@ def run_fold(fold):
 
     loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     loss_fn = nn.CrossEntropyLoss().to(device)
+    os.mkdir(f'./working/models/weights/')
     os.mkdir(f'./working/models/weights/{NET}/')
 
     for epoch in range(MAX_EPOCHS):
