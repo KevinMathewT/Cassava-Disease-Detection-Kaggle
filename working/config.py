@@ -34,9 +34,9 @@ N_CLASSES            = 5
 TRAIN_BATCH_SIZE     = 16
 VALID_BATCH_SIZE     = 32
 
-# NET                  = 'SEResNeXt50_32x4d'
+NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
-NET                  = 'tf_efficientnet_b4_ns'
+# NET                  = 'tf_efficientnet_b4_ns'
 # NET                  = 'gluon_resnet18_v1b'
 
 PRETRAINED           = True
