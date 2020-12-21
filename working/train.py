@@ -43,6 +43,7 @@ def run_fold(fold):
     torch.cuda.empty_cache()
 
 def train(index):
+    print(f"TPU NODE #{index}")
     print(f"Training Model : {NET}")
 
     # for fold in range(FOLDS):
