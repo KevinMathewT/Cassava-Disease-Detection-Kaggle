@@ -21,7 +21,6 @@ PARALLEL_FOLD_TRAIN  = True
 SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
-ACCUMULATE_ITERATION = 2
 MIXED_PRECISION_TRAIN= True
 
 H                    = 512
@@ -34,7 +33,8 @@ MAX_EPOCHS           = 10
 
 N_CLASSES            = 5
 
-TRAIN_BATCH_SIZE     = 16
+ACCUMULATE_ITERATION = 16
+TRAIN_BATCH_SIZE     = 2
 VALID_BATCH_SIZE     = 32
 
 NET                  = 'SEResNeXt50_32x4d'
