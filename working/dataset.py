@@ -37,7 +37,7 @@ def rand_bbox(size, lam):
 
 def fmix(img, target, labels, df, transforms, fmix_params, data_root):
     with torch.no_grad():
-        # lam, mask = sample_mask(**self.fmix_params)
+        #lam, mask = sample_mask(**self.fmix_params)
 
         lam = np.clip(np.random.beta(
             fmix_params['alpha'], fmix_params['alpha']), 0.6, 0.7)
@@ -62,17 +62,17 @@ def fmix(img, target, labels, df, transforms, fmix_params, data_root):
 
         # print(mask.shape)
 
-        # assert self.output_label==True and self.one_hot_label==True
+        #assert self.output_label==True and self.one_hot_label==True
 
         # mix target
         rate = mask.sum() / H / W
         target = rate * target + (1. - rate) * labels[fmix_ix]
-        # print(target, mask, img)
-        # assert False
+        #print(target, mask, img)
+        #assert False
 
 
 def cutmix(img, target, labels, df, transforms, cutmix_params, data_root):
-    # print(img.sum(), img.shape)
+    #print(img.sum(), img.shape)
     with torch.no_grad():
         cmix_ix = np.random.choice(df.index, size=1)[0]
         cmix_img = get_img(
@@ -89,9 +89,9 @@ def cutmix(img, target, labels, df, transforms, cutmix_params, data_root):
         rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (H * W))
         target = rate * target + (1. - rate) * labels[cmix_ix]
 
-    # print('-', img.sum())
+    #print('-', img.sum())
     # print(target)
-    # assert False
+    #assert False
 
 
 class CassavaDataset(Dataset):
@@ -158,7 +158,7 @@ class CassavaDataset(Dataset):
                                self.transforms, self.fmix_params, self.data_root)
 
         # do label smoothing
-        # print(type(img), type(target))
+        #print(type(img), type(target))
         if self.output_label == True:
             return img, target
         else:
@@ -166,10 +166,9 @@ class CassavaDataset(Dataset):
 
 
 def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
-    dataset = CassavaDataset(train, data_root, transforms=get_train_transforms(
-    ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
     return DataLoader(
-        dataset,
+        CassavaDataset(train, data_root, transforms=get_train_transforms(
+        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
         batch_size=TRAIN_BATCH_SIZE,
         pin_memory=False,
         drop_last=False,
@@ -178,10 +177,9 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
 
 
 def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
-    dataset = CassavaDataset(valid, data_root, transforms=get_valid_transforms(
-    ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
     return DataLoader(
-        dataset,
+        CassavaDataset(valid, data_root, transforms=get_valid_transforms(
+        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
         batch_size=VALID_BATCH_SIZE,
         pin_memory=False,
         drop_last=False,
