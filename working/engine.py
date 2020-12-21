@@ -18,6 +18,8 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
     t = time.time()
     running_loss = None
     running_accuracy = None
+    if USE_TPU:
+        train_loader = pl.ParallelLoader(train_loader, [device]).per_device_loader(device)
     total_steps = len(train_loader)
 
     pbar = tqdm(enumerate(train_loader), total=total_steps)
@@ -26,7 +28,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         image_labels = image_labels.to(device).long()
 
         #print(image_labels.shape, exam_label.shape)
-        if MIXED_PRECISION_TRAIN:
+        if (not USE_TPU) and MIXED_PRECISION_TRAIN:
             with torch.cuda.amp.autocast():
                 image_preds = model(imgs)
                 loss = loss_fn(image_preds, image_labels)
@@ -60,7 +62,10 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 running_accuracy * .99 + accuracy * .01)
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
-                optimizer.step()
+                if USE_TPU:
+                    xm.optimizer_step(optimizer)
+                else:
+                    optimizer.step()
                 optimizer.zero_grad()
 
                 if scheduler is not None and schd_batch_update:
@@ -84,6 +89,8 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
     sample_num = 0
     image_preds_all = []
     image_targets_all = []
+    if USE_TPU:
+        valid_loader = pl.ParallelLoader(valid_loader, [device]).per_device_loader(device)
 
     pbar = tqdm(enumerate(valid_loader), total=len(valid_loader))
     for step, (imgs, image_labels) in pbar:
@@ -174,3 +181,11 @@ def get_optimizer_and_scheduler(net):
         scheduler = None
 
     return optimizer, scheduler
+
+def get_device():
+    if not USE_GPU and USE_TPU:
+        return torch.device('cpu')
+    elif USE_TPU:
+        return xm.xla_device()
+    elif USE_GPU:
+        return torch.device('cuda:0')

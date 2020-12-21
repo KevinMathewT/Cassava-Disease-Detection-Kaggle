@@ -2,9 +2,14 @@ import torch
 import torch.nn as nn
 
 from .dataset import get_loaders
-from .engine import get_net, get_optimizer_and_scheduler, train_one_epoch, valid_one_epoch
+from .engine import get_device, get_net, get_optimizer_and_scheduler, train_one_epoch, valid_one_epoch
 from .config import *
 from .utils import *
+
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
+    import torch_xla.distributed.parallel_loader as pl
+    import torch_xla.distributed.xla_multiprocessing as xmp
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -14,7 +19,7 @@ def run_fold(fold):
     print(f"Training Fold: {fold}")
 
     train_loader, valid_loader = get_loaders(fold)
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = get_device()
     net = get_net(name=NET, pretrained=PRETRAINED).to(device)
     scaler = torch.cuda.amp.GradScaler()
     optimizer, scheduler = get_optimizer_and_scheduler(net=net)
@@ -37,8 +42,7 @@ def run_fold(fold):
     del net, optimizer, train_loader, valid_loader, scheduler
     torch.cuda.empty_cache()
 
-
-if __name__ == "__main__":
+def train(index):
     print(f"Training Model : {NET}")
 
     # for fold in range(FOLDS):
@@ -58,3 +62,10 @@ if __name__ == "__main__":
     #                         "image_id", "0", "1", "2", "3", "4"])
     # predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
     #                                 f"{NET}-predictions.csv"), index=False)
+
+
+if __name__ == "__main__":
+    if USE_TPU:
+        xmp.spawn(train, args=(), nprocs=8, start_method='fork')
+    else:
+        train(0)
