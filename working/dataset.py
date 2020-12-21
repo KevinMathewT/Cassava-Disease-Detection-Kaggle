@@ -177,6 +177,7 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
             num_workers=CPU_WORKERS,
             shuffle=True)
     else:
+        import torch_xla.core.xla_model as xm
         train_sampler = torch.utils.data.distributed.DistributedSampler(
             dataset,
             num_replicas=xm.xrt_world_size(),
@@ -202,6 +203,7 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
             num_workers=CPU_WORKERS,
             shuffle=False)
     else:
+        import torch_xla.core.xla_model as xm
         valid_sampler = torch.utils.data.distributed.DistributedSampler(
             dataset,
             num_replicas=xm.xrt_world_size(),
