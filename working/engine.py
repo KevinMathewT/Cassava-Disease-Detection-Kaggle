@@ -11,6 +11,8 @@ from ranger_adabelief import RangerAdaBelief
 from .config import *
 from .models.models import *
 
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
 
 def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device, scaler, scheduler=None, schd_batch_update=False):
     model.train()
@@ -99,7 +101,7 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
 
         loss = loss_fn(image_preds, image_labels)
 
-        loss_sum += loss.item()*image_labels.shape[0]
+        loss_sum += loss.item() * image_labels.shape[0]
         sample_num += image_labels.shape[0]
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)):
@@ -179,10 +181,15 @@ def get_optimizer_and_scheduler(net):
 
 
 def get_device(n):
+    if not PARALLEL_FOLD_TRAIN:
+        n = 0
     if not USE_GPU and USE_TPU:
         return torch.device('cpu')
     elif USE_TPU:
         import torch_xla.core.xla_model as xm
-        return xm.xla_device(n)
+        if not PARALLEL_FOLD_TRAIN:
+            return xm.xla_device()
+        else:
+            return xm.xla_device(n)
     elif USE_GPU:
         return torch.device('cuda:' + str(n))

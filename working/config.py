@@ -2,8 +2,8 @@ import os
 from .utils import seed_everything
 
 # INPUT_PATH           = "./input"  # PC
-# INPUT_PATH           = "../input" # Kaggle
-INPUT_PATH           = "."        # Colab
+INPUT_PATH           = "../input" # Kaggle
+# INPUT_PATH           = "."        # Colab
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
@@ -27,7 +27,7 @@ H                    = 512
 W                    = 512
 
 OPTIMIZER            = "Adam"
-SCHEDULER            = None
+SCHEDULER            = "CosineAnnealingLR"
 LEARNING_RATE        = 1e-4
 MAX_EPOCHS           = 10
 
