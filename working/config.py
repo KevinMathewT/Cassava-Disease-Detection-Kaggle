@@ -2,8 +2,8 @@ import os
 from .utils import seed_everything
 
 # INPUT_PATH           = "./input"  # PC
-INPUT_PATH           = "../input" # Kaggle
-# INPUT_PATH           = "."        # Colab
+# INPUT_PATH           = "../input" # Kaggle
+INPUT_PATH           = "."        # Colab
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
@@ -13,11 +13,11 @@ TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 # WEIGHTS_PATH         = "./working/models/weights"
 WEIGHTS_PATH         = "/content/drive/My Drive"
-USE_GPU              = False
-USE_TPU              = True
+USE_GPU              = True
+USE_TPU              = False
 GPUS                 = 1
 TPUS                 = 8
-PARALLEL_FOLD_TRAIN  = True
+PARALLEL_FOLD_TRAIN  = False
 SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1

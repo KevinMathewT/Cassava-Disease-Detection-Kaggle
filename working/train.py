@@ -46,24 +46,15 @@ def run_fold(fold):
 def train():
     print(f"Training Model : {NET}")
 
-    # for fold in range(FOLDS):
-    #     run_fold(fold)
-
     if not PARALLEL_FOLD_TRAIN:
+        # for fold in range(FOLDS):
+        #     run_fold(fold)
         run_fold(1)
 
     if PARALLEL_FOLD_TRAIN:
         n_jobs = FOLDS
         parallel = Parallel(n_jobs=n_jobs, backend="threading")
         parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
-
-    # else:
-    # predictions = np.concatenate([run_fold(fold) for fold in range(FOLDS)], axis=0)
-
-    # predictions = pd.DataFrame(predictions, columns=[
-    #                         "image_id", "0", "1", "2", "3", "4"])
-    # predictions.to_csv(os.path.join(GENERATED_FILES_PATH,
-    #                                 f"{NET}-predictions.csv"), index=False)
 
 
 if __name__ == "__main__":
