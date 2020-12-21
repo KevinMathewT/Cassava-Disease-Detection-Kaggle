@@ -182,7 +182,8 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
             dataset,
             num_replicas=xm.xrt_world_size(),
             rank=xm.get_ordinal(),
-            shuffle=True)
+            shuffle=True,
+            drop_last=True)
         return DataLoader(
             dataset,
             batch_size=TRAIN_BATCH_SIZE,
@@ -208,7 +209,8 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
             dataset,
             num_replicas=xm.xrt_world_size(),
             rank=xm.get_ordinal(),
-            shuffle=False)
+            shuffle=False,
+            drop_last=True)
         return DataLoader(
             dataset,
             batch_size=VALID_BATCH_SIZE,
