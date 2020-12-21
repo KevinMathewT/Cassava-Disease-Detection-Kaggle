@@ -11,13 +11,13 @@ TRAIN_IMAGES_DIR     = os.path.join(DATASET_PATH, "train_images")
 TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
 TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
-WEIGHTS_PATH         = "./working/models/weights"
-# WEIGHTS_PATH         = "/content/drive/My Drive"
-USE_GPU              = False
-USE_TPU              = True
+# WEIGHTS_PATH         = "./working/models/weights"
+WEIGHTS_PATH         = "/content/drive/My Drive"
+USE_GPU              = True
+USE_TPU              = False
 GPUS                 = 1
 TPUS                 = 8
-PARALLEL_FOLD_TRAIN  = True
+PARALLEL_FOLD_TRAIN  = False
 SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
@@ -33,9 +33,9 @@ MAX_EPOCHS           = 10
 
 N_CLASSES            = 5
 
-ACCUMULATE_ITERATION = 16
-TRAIN_BATCH_SIZE     = 2
-VALID_BATCH_SIZE     = 2
+ACCUMULATE_ITERATION = 2
+TRAIN_BATCH_SIZE     = 16
+VALID_BATCH_SIZE     = 16
 
 NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
