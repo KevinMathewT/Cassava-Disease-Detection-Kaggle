@@ -13,11 +13,11 @@ TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 # WEIGHTS_PATH         = "./working/models/weights"
 WEIGHTS_PATH         = "/content/drive/My Drive"
-USE_GPU              = False
-USE_TPU              = True
+USE_GPU              = True
+USE_TPU              = False
 GPUS                 = 1
 TPUS                 = 8
-PARALLEL_FOLD_TRAIN  = True
+PARALLEL_FOLD_TRAIN  = False
 SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
@@ -26,8 +26,8 @@ MIXED_PRECISION_TRAIN= True
 H                    = 512
 W                    = 512
 
-OPTIMIZER            = "AdaBelief"
-SCHEDULER            = "CosineAnnealingLR"
+OPTIMIZER            = "Adam"
+SCHEDULER            = None
 LEARNING_RATE        = 1e-4
 MAX_EPOCHS           = 10
 
