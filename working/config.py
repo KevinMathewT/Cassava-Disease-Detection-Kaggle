@@ -2,8 +2,8 @@ import os
 from .utils import seed_everything
 
 # INPUT_PATH           = "./input"  # PC
-# INPUT_PATH           = "../input" # Kaggle
-INPUT_PATH           = "."        # Colab
+INPUT_PATH           = "../input" # Kaggle
+# INPUT_PATH           = "."        # Colab
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                = os.path.join(DATASET_PATH, "train.csv")
@@ -11,13 +11,13 @@ TRAIN_IMAGES_DIR     = os.path.join(DATASET_PATH, "train_images")
 TEST_IMAGES_DIR      = os.path.join(DATASET_PATH, "test_images")
 TEST                 = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS          = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
-# WEIGHTS_PATH         = "./working/models/weights"
-WEIGHTS_PATH         = "/content/drive/My Drive"
-USE_GPU              = True
-USE_TPU              = False
+WEIGHTS_PATH         = "./working/models/weights"
+# WEIGHTS_PATH         = "/content/drive/My Drive"
+USE_GPU              = False
+USE_TPU              = True
 GPUS                 = 1
 TPUS                 = 8
-PARALLEL_FOLD_TRAIN  = False
+PARALLEL_FOLD_TRAIN  = True
 SEED                 = 719
 FOLDS                = 5
 SEEDS                = 1
@@ -33,9 +33,9 @@ MAX_EPOCHS           = 10
 
 N_CLASSES            = 5
 
-ACCUMULATE_ITERATION = 2
-TRAIN_BATCH_SIZE     = 16
-VALID_BATCH_SIZE     = 16
+ACCUMULATE_ITERATION = 16
+TRAIN_BATCH_SIZE     = 2
+VALID_BATCH_SIZE     = 2
 
 NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
