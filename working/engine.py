@@ -50,8 +50,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         else:
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
-            accuracy = get_accuracy(image_preds.detach().cpu(
-            ).numpy(), image_labels.detach().cpu().numpy())
+            accuracy = get_accuracy(image_preds, image_labels)
 
             loss.backward()
             running_loss = loss.item() if running_loss is None else (
