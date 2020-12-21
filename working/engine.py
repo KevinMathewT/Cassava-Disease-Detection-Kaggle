@@ -18,9 +18,6 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
     t = time.time()
     running_loss = None
     running_accuracy = None
-    if USE_TPU:
-        import torch_xla.distributed.parallel_loader as pl
-        train_loader = pl.ParallelLoader(train_loader, [device]).per_device_loader(device)
     total_steps = len(train_loader)
 
     pbar = tqdm(enumerate(train_loader), total=total_steps)
@@ -90,9 +87,6 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
     sample_num = 0
     image_preds_all = []
     image_targets_all = []
-    if USE_TPU:
-        import torch_xla.distributed.parallel_loader as pl
-        valid_loader = pl.ParallelLoader(valid_loader, [device]).per_device_loader(device)
 
     pbar = tqdm(enumerate(valid_loader), total=len(valid_loader))
     for step, (imgs, image_labels) in pbar:
@@ -184,11 +178,12 @@ def get_optimizer_and_scheduler(net):
 
     return optimizer, scheduler
 
-def get_device():
+
+def get_device(n):
     if not USE_GPU and USE_TPU:
         return torch.device('cpu')
     elif USE_TPU:
         import torch_xla.core.xla_model as xm
-        return xm.xla_device()
+        return xm.xla_device(n)
     elif USE_GPU:
-        return torch.device('cuda:0')
+        return torch.device('cuda:' + str(n))

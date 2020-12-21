@@ -168,55 +168,25 @@ class CassavaDataset(Dataset):
 def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
     dataset = CassavaDataset(train, data_root, transforms=get_train_transforms(
     ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
-    if not USE_TPU:
-        return DataLoader(
-            dataset,
-            batch_size=TRAIN_BATCH_SIZE,
-            pin_memory=False,
-            drop_last=False,
-            num_workers=CPU_WORKERS,
-            shuffle=True)
-    else:
-        import torch_xla.core.xla_model as xm
-        train_sampler = torch.utils.data.distributed.DistributedSampler(
-            dataset,
-            num_replicas=xm.xrt_world_size(),
-            rank=xm.get_ordinal(),
-            shuffle=True,
-            drop_last=True)
-        return DataLoader(
-            dataset,
-            batch_size=TRAIN_BATCH_SIZE,
-            sampler=train_sampler,
-            num_workers=CPU_WORKERS,
-            drop_last=True)
+    return DataLoader(
+        dataset,
+        batch_size=TRAIN_BATCH_SIZE,
+        pin_memory=False,
+        drop_last=False,
+        num_workers=CPU_WORKERS,
+        shuffle=True)
 
 
 def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
     dataset = CassavaDataset(valid, data_root, transforms=get_valid_transforms(
     ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
-    if not USE_TPU:
-        return DataLoader(
-            dataset,
-            batch_size=VALID_BATCH_SIZE,
-            pin_memory=False,
-            drop_last=False,
-            num_workers=CPU_WORKERS,
-            shuffle=False)
-    else:
-        import torch_xla.core.xla_model as xm
-        valid_sampler = torch.utils.data.distributed.DistributedSampler(
-            dataset,
-            num_replicas=xm.xrt_world_size(),
-            rank=xm.get_ordinal(),
-            shuffle=False,
-            drop_last=True)
-        return DataLoader(
-            dataset,
-            batch_size=VALID_BATCH_SIZE,
-            sampler=valid_sampler,
-            num_workers=CPU_WORKERS,
-            drop_last=True)
+    return DataLoader(
+        dataset,
+        batch_size=VALID_BATCH_SIZE,
+        pin_memory=False,
+        drop_last=False,
+        num_workers=CPU_WORKERS,
+        shuffle=False)
 
 
 def get_loaders(fold):
