@@ -35,7 +35,7 @@ N_CLASSES            = 5
 
 ACCUMULATE_ITERATION = 16
 TRAIN_BATCH_SIZE     = 2
-VALID_BATCH_SIZE     = 32
+VALID_BATCH_SIZE     = 2
 
 NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'

@@ -49,11 +49,13 @@ def train():
     # for fold in range(FOLDS):
     #     run_fold(fold)
 
-    run_fold(1)
+    if not PARALLEL_FOLD_TRAIN:
+        run_fold(1)
 
-    # n_jobs = FOLDS
-    # parallel = Parallel(n_jobs=n_jobs, backend="threading")
-    # parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
+    if PARALLEL_FOLD_TRAIN:
+        n_jobs = FOLDS
+        parallel = Parallel(n_jobs=n_jobs, backend="threading")
+        parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
 
     # else:
     # predictions = np.concatenate([run_fold(fold) for fold in range(FOLDS)], axis=0)
