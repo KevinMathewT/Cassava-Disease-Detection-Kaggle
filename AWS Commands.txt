@@ -1,0 +1,17 @@
+ssh -i "cassava-disease-det.pem" ec2-user@{Public IPv4 DNS} : To SSH into Amazon Linux VM
+ssh -i "cassava-disease-det.pem" ubuntu@ec2-13-126-198-33.ap-south-1.compute.amazonaws.com   : To SSH into Ubuntu VM
+scp -i cassava-data-download.pem kaggle.json ubuntu@ec2-13-233-45-102.ap-south-1.compute.amazonaws.com:~/.kaggle
+scp -i cassava-data-download.pem ubuntu@ec2-13-233-45-102.ap-south-1.compute.amazonaws.com:~/
+lsblk                                              : To print available disks
+file -s /dev/xvdf                                  : Check type of disk
+mkfs -t ext4 /dev/xvdf                             : To change file system type to ext4
+mount /dev/xvdf ./input                            : To Mount EBS
+df -hT                                             : Check if mounted
+source activate pytorch_latest_p37                 : Activate Pytorch environment
+sudo chown `whoami` ./path/to/folder               : Gives admin access
+
+Set Key="cassava-disease-det.pem"
+Cmd /c Icacls %Key% /c /t /Inheritance:d
+Cmd /c Icacls %Key% /c /t /Grant %UserName%:F
+Cmd /c Icacls %Key%  /c /t /Remove Administrator BUILTIN\Administrators BUILTIN Everyone System Users
+Cmd /c Icacls %Key%
