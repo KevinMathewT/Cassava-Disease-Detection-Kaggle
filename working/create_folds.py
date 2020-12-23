@@ -17,4 +17,4 @@ if __name__ == "__main__":
 
     train.to_csv(TRAIN_FOLDS, index=False)
 
-    print(f"{FOLDS} folds created and saved at: {TRAIN_FOLDS}.")
+    print(f"{FOLDS} folds created and saved at: {TRAIN_FOLDS}.")    
