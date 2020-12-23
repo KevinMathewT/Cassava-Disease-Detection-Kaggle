@@ -6,4 +6,7 @@ sudo mkdir /vol
 sudo mount /dev/xvdf /vol
 sudo df -hT
 sudo cp -a /vol/. ./input/
-
+git init
+git remote add origin https://KevinMathewT:skevin943@github.com/KevinMathewT/Cassava-Disease-Detection.git
+git pull origin master
+mkdir generated

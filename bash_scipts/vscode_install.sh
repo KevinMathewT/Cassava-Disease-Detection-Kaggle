@@ -5,8 +5,8 @@ PORT=8080
 INSTALL_DIR="/home/ubuntu"
 wget https://github.com/cdr/code-server/releases/download/v${VERSION}/code-server-${VERSION}-linux-arm64.tar.gz
 tar -xvzf code-server-${VERSION}-linux-arm64.tar.gz
-rm code-server-${VERSION}-${RELEASE}-linux-arm64.tar.gz
-mv code-server-${VERSION}-${RELEASE}-linux-arm64/  "${INSTALL_DIR}/vscode-server"
+rm code-server-${VERSION}-linux-arm64.tar.gz
+mv code-server-${VERSION}-linux-arm64/  "${INSTALL_DIR}/vscode-server"
 echo "cd \"${INSTALL_DIR}/vscode-server\" \n./code-server --no-auth --port ${PORT} --auth none  --cert & \n echo \"\`curl http://169.254.169.254/latest/meta-data/public-hostname\`:${PORT}\"" > start_vscode.sh
 cd ${INSTALL_DIR}/vscode-server
 ./code-server --no-auth --port ${PORT} --auth none --cert &
