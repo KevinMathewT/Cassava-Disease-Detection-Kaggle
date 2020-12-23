@@ -1,5 +1,5 @@
 ssh -i "cassava-disease-det.pem" ec2-user@{Public IPv4 DNS} : To SSH into Amazon Linux VM
-ssh -i "cassava-disease-det.pem" ubuntu@ec2-13-126-198-33.ap-south-1.compute.amazonaws.com   : To SSH into Ubuntu VM
+ssh -i "cassava-disease-det.pem" ubuntu@ec2-13-233-32-72.ap-south-1.compute.amazonaws.com   : To SSH into Ubuntu VM
 scp -i cassava-data-download.pem kaggle.json ubuntu@ec2-13-233-45-102.ap-south-1.compute.amazonaws.com:~/.kaggle
 scp -i cassava-data-download.pem ubuntu@ec2-13-233-45-102.ap-south-1.compute.amazonaws.com:~/
 lsblk                                              : To print available disks
