@@ -15,3 +15,10 @@ Cmd /c Icacls %Key% /c /t /Inheritance:d
 Cmd /c Icacls %Key% /c /t /Grant %UserName%:F
 Cmd /c Icacls %Key%  /c /t /Remove Administrator BUILTIN\Administrators BUILTIN Everyone System Users
 Cmd /c Icacls %Key%
+
+git init
+git remote add origin https://KevinMathewT:skevin943@github.com/KevinMathewT/Cassava-Disease-Detection.git
+git pull origin master
+mkdir generated
+
+git pull origin master

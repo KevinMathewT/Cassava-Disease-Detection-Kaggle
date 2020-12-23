@@ -1,7 +1,9 @@
 #!/bin/bash
 source activate pytorch_latest_p37
 lsblk
-file -s /dev/xvdf
-mount /dev/xvdf /vol
-df -hT
-mv /vol/ ./input/
+sudo file -s /dev/xvdf
+sudo mkdir /vol
+sudo mount /dev/xvdf /vol
+sudo df -hT
+sudo cp -a /vol/. ./input/
+
