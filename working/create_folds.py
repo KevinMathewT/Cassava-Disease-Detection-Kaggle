@@ -16,3 +16,5 @@ if __name__ == "__main__":
         train.loc[test_index, "fold"] = fold
 
     train.to_csv(TRAIN_FOLDS, index=False)
+
+    print(f"{FOLDS} folds created and saved at: {TRAIN_FOLDS}.")
