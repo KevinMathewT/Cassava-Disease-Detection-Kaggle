@@ -30,13 +30,13 @@ def get_accuracy(predictions, targets, normalize=True):
     return accuracy_score(targets, predictions, normalize=normalize)
 
 def create_dirs():
-    try:
-        os.mkdir(WEIGHTS_PATH)
-        print(f"Created Folder {WEIGHTS_PATH}")
-    except:
-        pass
-    try:
-        os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
-        print(f"Created Folder {os.path.join(WEIGHTS_PATH, f'{NET}')}")
-    except:
-        pass
+    # try:
+    os.mkdir(WEIGHTS_PATH)
+    print(f"Created Folder {WEIGHTS_PATH}")
+    # except:
+    #     pass
+    # try:
+    os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
+    print(f"Created Folder {os.path.join(WEIGHTS_PATH, f'{NET}')}")
+    # except:
+    #     pass
