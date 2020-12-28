@@ -4,7 +4,7 @@
 # # # from .engine import get_net
 
 # # # net = get_net(name=NET, fold=0, pretrained=False)
-# # # net.load_state_dict(torch.load("D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\working\models\gluon_resnet18_v1b\cldc-net=gluon_resnet18_v1b-fold=0-epoch=001-val_loss_epoch=1.6823.ckpt")["state_dict"])
+# # # net.load_state_dict(torch.load("D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\src\models\gluon_resnet18_v1b\cldc-net=gluon_resnet18_v1b-fold=0-epoch=001-val_loss_epoch=1.6823.ckpt")["state_dict"])
 
 # # # print(net)
 
@@ -61,6 +61,6 @@ from .config import *
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 net = get_net(name=NET, pretrained=PRETRAINED).to(device)
-net.load_state_dict(torch.load(f'D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\working\models\weights\\tf_efficientnet_b4_ns\\tf_efficientnet_b4_ns_fold_0_0'))
+net.load_state_dict(torch.load(f'D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\src\models\weights\\tf_efficientnet_b4_ns\\tf_efficientnet_b4_ns_fold_0_0'))
 
 print(net)

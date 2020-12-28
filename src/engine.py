@@ -1,5 +1,5 @@
 import time
-from working.utils import get_accuracy
+from src.utils import get_accuracy
 from tqdm import tqdm
 import numpy as np
 

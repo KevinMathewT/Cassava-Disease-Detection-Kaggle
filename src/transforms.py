@@ -9,7 +9,7 @@ import cv2
 
 from .config import *
 from .utils import *
-from working import config
+from src import config
 
 
 # def get_train_transforms():
