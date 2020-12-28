@@ -1,8 +1,8 @@
 import os
 from .utils import seed_everything
 
-INPUT_PATH           = "./input"  # PC and EC2
-# INPUT_PATH           = "../input" # Kaggle
+# INPUT_PATH           = "./input"  # PC and EC2
+INPUT_PATH           = "../input" # Kaggle
 # INPUT_PATH           = "."        # Colab
 GENERATED_FILES_PATH = "./generated/"
 DATASET_PATH         = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
