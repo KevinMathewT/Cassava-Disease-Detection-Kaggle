@@ -37,7 +37,7 @@ def create_dirs():
     # except:
     #     pass
     # try:
-    os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{NET}'))
-    print(f"Created Folder {os.path.join(config.WEIGHTS_PATH, f'{NET}')}")
+    os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{config.NET}'))
+    print(f"Created Folder {os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}")
     # except:
     #     pass
