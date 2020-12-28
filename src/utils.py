@@ -30,14 +30,14 @@ def get_accuracy(predictions, targets, normalize=True):
     return accuracy_score(targets, predictions, normalize=normalize)
 
 def create_dirs():
-    # try:
-    print(config.WEIGHTS_PATH)
-    os.mkdir(config.WEIGHTS_PATH)
-    print(f"Created Folder {config.WEIGHTS_PATH}")
-    # except:
-    #     pass
-    # try:
-    os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{config.NET}'))
-    print(f"Created Folder {os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}")
-    # except:
-    #     pass
+    try:
+        print(config.WEIGHTS_PATH)
+        os.mkdir(config.WEIGHTS_PATH)
+        print(f"Created Folder {config.WEIGHTS_PATH}")
+    except:
+        print("Oops!", sys.exc_info()[0], "occurred.")
+    try:
+        os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{config.NET}'))
+        print(f"Created Folder {os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}")
+    except:
+        print("Oops!", sys.exc_info()[0], "occurred.")
