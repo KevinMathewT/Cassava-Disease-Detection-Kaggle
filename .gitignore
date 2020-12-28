@@ -140,7 +140,7 @@ cython_debug/
 .kaggle/
 bash_scripts/
 input/cassava-leaf-disease-classification/
-working/models/*/
+src/models/*/
 
 *.pem
 tb_logs/

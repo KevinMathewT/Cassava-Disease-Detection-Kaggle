@@ -17,6 +17,6 @@ sudo mkdir /vol
 sudo mount /dev/xvdf /vol
 sudo df -hT
 sudo rsync -ah --progress /vol/. ./input/
-python -m working.create_folds
+python -m src.create_folds
 git pull origin master
-python -m working.train
+python -m src.train
