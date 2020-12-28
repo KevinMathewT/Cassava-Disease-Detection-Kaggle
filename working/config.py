@@ -34,9 +34,9 @@ MAX_EPOCHS           = 15
 
 N_CLASSES            = 5
 
-ACCUMULATE_ITERATION = 32
-TRAIN_BATCH_SIZE     = 1
-VALID_BATCH_SIZE     = 1
+ACCUMULATE_ITERATION = 1
+TRAIN_BATCH_SIZE     = 32
+VALID_BATCH_SIZE     = 32
 
 NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'resnext50_32x4d'
