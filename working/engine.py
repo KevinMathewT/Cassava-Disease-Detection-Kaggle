@@ -30,7 +30,6 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         #print(image_labels.shape, exam_label.shape)
         if (not USE_TPU) and MIXED_PRECISION_TRAIN:
             with torch.cuda.amp.autocast():
-                print(imgs.size())
                 image_preds = model(imgs)
                 loss = loss_fn(image_preds, image_labels)
                 accuracy = get_accuracy(
