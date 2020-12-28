@@ -5,7 +5,7 @@ import numpy as np
 
 import torch
 from torch import optim
-import AdaBelief
+from adabelief_pytorch import AdaBelief
 from ranger_adabelief import RangerAdaBelief
 
 from .config import *
