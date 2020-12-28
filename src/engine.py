@@ -130,7 +130,7 @@ def get_net(name, pretrained=False):
     return net
 
 
-def get_optimizer_and_scheduler(net):
+def get_optimizer_and_scheduler(net, dataloader):
     # Optimizers
     if OPTIMIZER == "Adam":
         optimizer = torch.optim.Adam(
@@ -163,8 +163,7 @@ def get_optimizer_and_scheduler(net):
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer, T_max=5, eta_min=0)
     elif SCHEDULER == "OneCycleLR":
-        steps_per_epoch = len(self.train_dataloader())
-        # steps_per_epoch = len(self.train_dataloader())//self.trainer.accumulate_grad_batches
+        steps_per_epoch = len(dataloader)
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimizer,
             pct_start=0.1,

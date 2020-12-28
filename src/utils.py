@@ -36,7 +36,7 @@ def create_dirs():
         os.mkdir(config.WEIGHTS_PATH)
         print(f"Created Folder {config.WEIGHTS_PATH}")
     except:
-        print("Oops!", sys.exc_info()[0], "occurred.")
+        print("Error:", sys.exc_info()[0])
     try:
         os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{config.NET}'))
         print(f"Created Folder {os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}")
