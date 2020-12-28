@@ -31,6 +31,7 @@ def get_accuracy(predictions, targets, normalize=True):
 
 def create_dirs():
     # try:
+    print(WEIGHTS_PATH)
     os.mkdir(WEIGHTS_PATH)
     print(f"Created Folder {WEIGHTS_PATH}")
     # except:
