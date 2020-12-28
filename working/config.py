@@ -44,16 +44,12 @@ NET                  = 'SEResNeXt50_32x4d'
 # NET                  = 'gluon_resnet18_v1b'
 
 PRETRAINED           = True
-SAVE_TOP_K           = 1
 LEARNING_VERBOSE     = True
 VERBOSE_STEP         = 1
-EARLY_STOPPING       = 10
-USE_EARLY_STOPPING   = False
-
 
 USE_SUBSET           = False
 SUBSET_SIZE          = TRAIN_BATCH_SIZE * 1
-CPU_WORKERS          = 0
+CPU_WORKERS          = 4
 
 # if not PARALLEL_FOLD_TRAIN:
 #     TRAIN_BATCH_SIZE //= TPUS
