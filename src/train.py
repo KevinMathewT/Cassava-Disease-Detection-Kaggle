@@ -49,7 +49,7 @@ def train():
     if not PARALLEL_FOLD_TRAIN:
         # for fold in range(FOLDS):
         #     run_fold(fold)
-        run_fold(3)
+        run_fold(4)
 
     if PARALLEL_FOLD_TRAIN:
         n_jobs = FOLDS
