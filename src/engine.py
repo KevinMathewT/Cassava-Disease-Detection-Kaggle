@@ -166,11 +166,10 @@ def get_optimizer_and_scheduler(net, dataloader):
         steps_per_epoch = len(dataloader)
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimizer,
-            pct_start=0.1,
-            div_factor=1e3,
             max_lr=1e-2,
+            epochs=MAX_EPOCHS,
             steps_per_epoch=steps_per_epoch,
-            epochs=MAX_EPOCHS
+            pct_start=0.25,
         )
     else:
         scheduler = None
