@@ -30,7 +30,7 @@ W                     = 512
 OPTIMIZER             = "AdaBelief"
 SCHEDULER             = "OneCycleLR"
 LEARNING_RATE         = 1e-3
-MAX_EPOCHS            = 20
+MAX_EPOCHS            = 15
 
 N_CLASSES             = 5
 
