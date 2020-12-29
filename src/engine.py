@@ -47,6 +47,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 optimizer.zero_grad()
 
                 if scheduler is not None and schd_batch_update:
+                    print("Learning Rate Updated")
                     scheduler.step()
 
         else:
@@ -68,6 +69,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 optimizer.zero_grad()
 
                 if scheduler is not None and schd_batch_update:
+                    print("Learning Rate Updated")
                     scheduler.step()
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
@@ -77,6 +79,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         # break
 
     if scheduler is not None and not schd_batch_update:
+        print("Learning Rate Updated 1")
         scheduler.step()
 
 
