@@ -172,7 +172,6 @@ def get_optimizer_and_scheduler(net, dataloader):
             steps_per_epoch=steps_per_epoch,
             epochs=MAX_EPOCHS
         )
-        scheduler = {"scheduler": scheduler, "interval": "step"}
     else:
         scheduler = None
 

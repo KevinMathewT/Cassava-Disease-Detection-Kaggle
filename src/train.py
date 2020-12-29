@@ -26,7 +26,7 @@ def run_fold(fold):
 
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
-                        scheduler=scheduler, schd_batch_update=False)
+                        scheduler=scheduler, schd_batch_update=True)
         with torch.no_grad():
             valid_one_epoch(fold, epoch, net, loss_fn, valid_loader,
                             device, scheduler=None, schd_loss_update=True)
