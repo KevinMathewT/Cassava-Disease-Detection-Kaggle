@@ -27,7 +27,7 @@ MIXED_PRECISION_TRAIN = True
 H                     = 512
 W                     = 512
 
-OPTIMIZER             = "AdaBelief"
+OPTIMIZER             = "Adam"
 SCHEDULER             = "OneCycleLR"
 LEARNING_RATE         = 1e-3
 MAX_EPOCHS            = 15
