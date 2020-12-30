@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from vision_transformer_pytorch import VisionTransformer
 
 import timm
 from ..config import *
@@ -47,8 +48,9 @@ class ViTBase16_BH(nn.Module):
     name = "ViTBase16_BH"
     def __init__(self, pretrained=False):
         super().__init__()
-        self.model_arch = "vit_base_patch16_224"
-        self.net = timm.create_model("vit_base_patch16_224")
+        # self.model_arch = "vit_base_patch16_224"
+        # self.net = timm.create_model("vit_base_patch16_224")
+        self.net = VisionTransformer.from_name('ViT-B_16', num_classes=5) 
         self.net.head = nn.Linear(in_features=768, out_features=768, bias=True)
         self.fea_bn = nn.BatchNorm1d(768)
         self.fea_bn.bias.requires_grad_(False)

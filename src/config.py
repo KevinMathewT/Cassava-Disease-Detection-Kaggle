@@ -28,8 +28,8 @@ H                     = 224
 W                     = 224
 
 OPTIMIZER             = "Adam"
-SCHEDULER             = "CosineAnnealingWarmRestarts"
-LEARNING_RATE         = 1e-5
+SCHEDULER             = "StepLR"
+LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 
 N_CLASSES             = 5

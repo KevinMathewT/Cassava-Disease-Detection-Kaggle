@@ -154,7 +154,7 @@ def get_optimizer_and_scheduler(net, dataloader):
         )
     elif OPTIMIZER == "AdamW":
         optimizer = optim.AdamW(
-            net.parameters(), lr=LEARNING_RATE, weight_decay=1e-5)
+            net.parameters(), lr=LEARNING_RATE, weight_decay=0.001)
     elif OPTIMIZER == "AdaBelief":
         optimizer = AdaBelief(net.parameters(
         ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
@@ -190,6 +190,11 @@ def get_optimizer_and_scheduler(net, dataloader):
             T_mult=1,
             eta_min=1e-6,
             last_epoch=-1)
+    elif SCHEDULER == "StepLR":
+        scheduler = torch.optim.lr_scheduler.StepLR(
+            optimizer, 
+            step_size=2,
+            gamma=0.1)
     else:
         scheduler = None
 
