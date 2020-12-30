@@ -47,7 +47,7 @@ class ViTBase16_BH(nn.Module):
     name = "ViTBase16_BH"
     def __init__(self, pretrained=False):
         super().__init__()
-        self.model_arch = "vit_base_patch16_224"
+        self.model_arch = "seresnext50_32x4d"
         self.net = nn.Sequential(*list(
             timm.create_model(self.model_arch, pretrained=pretrained).children())[:-2])
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
