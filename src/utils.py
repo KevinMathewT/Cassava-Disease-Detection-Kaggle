@@ -74,7 +74,7 @@ class AccuracyMeter:
         self.batch_size = batch_size
         self.count += self.batch_size
         # this part here already got an acc score for the 4 images, so no need divide batch size
-        self.score = accuracy_score(y_true, y_pred)
+        self.score = get_accuracy(y_pred, y_true)
         total_score = self.score * self.batch_size
         self.sum += total_score
         
