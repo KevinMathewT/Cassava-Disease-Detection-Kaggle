@@ -2,8 +2,8 @@ import os
 from .utils import seed_everything
 
 # INPUT_PATH            = "./input"  # PC and EC2
-# INPUT_PATH            = "../input" # Kaggle
-INPUT_PATH            = "."        # Colab
+INPUT_PATH            = "../input" # Kaggle
+# INPUT_PATH            = "."        # Colab
 GENERATED_FILES_PATH  = "./generated/"
 DATASET_PATH          = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN                 = os.path.join(DATASET_PATH, "train.csv")
@@ -11,8 +11,8 @@ TRAIN_IMAGES_DIR      = os.path.join(DATASET_PATH, "train_images")
 TEST_IMAGES_DIR       = os.path.join(DATASET_PATH, "test_images")
 TEST                  = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS           = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
-# WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
-WEIGHTS_PATH          = "/content/drive/My Drive" # For Colab
+WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
+# WEIGHTS_PATH          = "/content/drive/My Drive" # For Colab
 # WEIGHTS_PATH          = "/vol/weights/" # For EC2
 USE_GPU               = False
 USE_TPU               = True
