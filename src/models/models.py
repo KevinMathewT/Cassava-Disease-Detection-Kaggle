@@ -57,7 +57,6 @@ class ViTBase16_BH(nn.Module):
         
     def forward(self, x):
         img_feature = self.net(x)
-        img_feature = self.proj(img_feature)
         fea = self.fea_bn(img_feature)
         # fea = self.dropout(fea)
         output = self.binary_head(fea)
