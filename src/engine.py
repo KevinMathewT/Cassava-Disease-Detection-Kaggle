@@ -80,7 +80,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                     scheduler.step()
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
-            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {running_loss.avg:.4f} | Accuracy: {running_accuracy.avg:.4f}'
+            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {running_loss.avg:.4f} | Accuracy: {running_accuracy.avg():.4f}'
             pbar.set_description(description)
 
         # break

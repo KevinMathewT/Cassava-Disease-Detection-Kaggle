@@ -24,6 +24,8 @@
 
 import timm
 import pprint
+import torch
+import torch.nn as nn
 
 # pp = pprint.PrettyPrinter(indent=4)
 # list = timm.list_models()
@@ -44,14 +46,41 @@ import pprint
 #     print(f"Total Trainable Params: {total_params}")
 #     return total_params
 
-# model = timm.create_model("vit_base_patch16_224")
+# class Identity(nn.Module):
+#     def __init__(self, _modules=None, _forward_pre_hooks=None, _forward_hooks=None, _backward_hooks=None):
+#         self._modules = _modules
+#         self._forward_pre_hooks = _forward_pre_hooks
+#         self._forward_hooks = _forward_hooks
+#         self._backward_hooks = _backward_hooks
+#         return
+
+#     def forward(self, x):
+#         return x
+
+# class Identity(nn.Module):
+#     def __init__(self):
+#         super().__init__()
+
+#     def forward(self, x):
+#         return x
+
+model = timm.create_model("vit_base_patch16_224")
+# model.norm = Identity(_modules={}, _forward_pre_hooks={}, _forward_hooks={}, _backward_hooks={})
+# model.head = Identity(_modules={}, _forward_pre_hooks={}, _forward_hooks={}, _backward_hooks={})
+model.head = nn.Linear()
+# model = nn.Sequential(*list(timm.create_model("vit_base_patch16_224").children()))
 # model = timm.create_model("seresnext50_32x4d")
+# model = nn.Sequential(*list(
+#             timm.create_model("vit_base_patch16_224").children()))
+# avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
 # count_parameters(model)
-# print(model)
+print(model.head)
 
-# batch = torch.ones(4, 512, 512)
-# print(model(batch).size())
+batch = torch.ones(4, 3, 224, 224)
+# batch = avg_pool(batch)
+out = model(batch)
+print(out.size())
 
 # import numpy as np
 

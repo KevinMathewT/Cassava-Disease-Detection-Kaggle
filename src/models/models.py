@@ -50,7 +50,7 @@ class ViTBase16_BH(nn.Module):
         self.model_arch = "vit_base_patch16_224"
         self.net = nn.Sequential(*list(
             timm.create_model(self.model_arch, pretrained=pretrained).children())[:-1])
-        self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
+        self.proj = nn.Linear(in_features=768, out_features=768, bias=True)
         self.fea_bn = nn.BatchNorm1d(768)
         self.fea_bn.bias.requires_grad_(False)
         self.binary_head = BinaryHead(N_CLASSES, emb_size=768, s=1)
@@ -58,8 +58,7 @@ class ViTBase16_BH(nn.Module):
         
     def forward(self, x):
         img_feature = self.net(x)
-        img_feature = self.avg_pool(img_feature)
-        img_feature = img_feature.view(img_feature.size(0), -1)
+        img_feature = self.proj(img_feature)
         fea = self.fea_bn(img_feature)
         # fea = self.dropout(fea)
         output = self.binary_head(fea)
