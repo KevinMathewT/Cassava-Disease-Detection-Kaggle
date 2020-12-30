@@ -51,9 +51,9 @@ class ViTBase16_BH(nn.Module):
         self.net = nn.Sequential(*list(
             timm.create_model(self.model_arch, pretrained=pretrained).children())[:-2])
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
-        self.fea_bn = nn.BatchNorm1d(2048)
+        self.fea_bn = nn.BatchNorm1d(768)
         self.fea_bn.bias.requires_grad_(False)
-        self.binary_head = BinaryHead(N_CLASSES, emb_size=2048, s=1)
+        self.binary_head = BinaryHead(N_CLASSES, emb_size=768, s=1)
         self.dropout = nn.Dropout(p=0.2)
         
     def forward(self, x):

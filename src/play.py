@@ -44,7 +44,7 @@ def count_parameters(model):
     print(f"Total Trainable Params: {total_params}")
     return total_params
 
-model = timm.create_model("seresnext50_32x4d")
+model = timm.create_model("vit_base_patch16_224")
 count_parameters(model)
 print(model)
 
