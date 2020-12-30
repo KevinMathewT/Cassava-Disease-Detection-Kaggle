@@ -7,6 +7,7 @@ from .dataset import get_loaders
 from .engine import get_device, get_net, get_optimizer_and_scheduler, train_one_epoch, valid_one_epoch
 from .config import *
 from .utils import *
+from .loss import FocalCosineLoss
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -20,7 +21,8 @@ def run_fold(fold):
     net                         = get_net(name=NET, pretrained=PRETRAINED).to(device)
     scaler                      = torch.cuda.amp.GradScaler()
     optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
-    loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
+    # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
+    loss_tr                     = FocalCosineLoss().to(device)
     loss_fn                     = nn.CrossEntropyLoss().to(device)
 
     for epoch in range(MAX_EPOCHS):

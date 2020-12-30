@@ -38,8 +38,8 @@ TRAIN_BATCH_SIZE      = 32
 VALID_BATCH_SIZE      = 32
 ACCUMULATE_ITERATION  = 1
 
-# NET                   = 'SEResNeXt50_32x4d_BH'
-NET                   = "ViTBase16_BH"
+NET                   = 'SEResNeXt50_32x4d_BH'
+# NET                   = "ViTBase16_BH"
 # NET                   = 'resnext50_32x4d'
 # NET                   = 'tf_efficientnet_b4_ns'
 # NET                   = 'gluon_resnet18_v1b'

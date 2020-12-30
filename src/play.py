@@ -30,23 +30,28 @@ import pprint
 
 # pp.pprint(list)
 
-from prettytable import PrettyTable
+# from prettytable import PrettyTable
 
-def count_parameters(model):
-    table = PrettyTable(["Modules", "Parameters"])
-    total_params = 0
-    for name, parameter in model.named_parameters():
-        if not parameter.requires_grad: continue
-        param = parameter.numel()
-        table.add_row([name, param])
-        total_params+=param
-    # print(table)
-    print(f"Total Trainable Params: {total_params}")
-    return total_params
+# def count_parameters(model):
+#     table = PrettyTable(["Modules", "Parameters"])
+#     total_params = 0
+#     for name, parameter in model.named_parameters():
+#         if not parameter.requires_grad: continue
+#         param = parameter.numel()
+#         table.add_row([name, param])
+#         total_params+=param
+#     # print(table)
+#     print(f"Total Trainable Params: {total_params}")
+#     return total_params
 
-model = timm.create_model("vit_base_patch16_224")
-count_parameters(model)
-print(model)
+# model = timm.create_model("vit_base_patch16_224")
+# model = timm.create_model("seresnext50_32x4d")
+
+# count_parameters(model)
+# print(model)
+
+# batch = torch.ones(4, 512, 512)
+# print(model(batch).size())
 
 # import numpy as np
 
