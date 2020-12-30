@@ -15,21 +15,20 @@ warnings.filterwarnings("ignore")
 def run_fold(fold):
     print(f"Training Fold: {fold}")
 
-    train_loader, valid_loader = get_loaders(fold)
-    device = get_device(n=fold+1)
-    net = get_net(name=NET, pretrained=PRETRAINED).to(device)
-    scaler = torch.cuda.amp.GradScaler()
-    optimizer, scheduler = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
-
-    loss_tr = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
-    loss_fn = nn.CrossEntropyLoss().to(device)
+    train_loader, valid_loader  = get_loaders(fold)
+    device                      = get_device(n=fold+1)
+    net                         = get_net(name=NET, pretrained=PRETRAINED).to(device)
+    scaler                      = torch.cuda.amp.GradScaler()
+    optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
+    loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
+    loss_fn                     = nn.CrossEntropyLoss().to(device)
 
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
-                        scheduler=scheduler, schd_batch_update=True)
+                        scheduler=scheduler, schd_batch_update=False)
         with torch.no_grad():
             valid_one_epoch(fold, epoch, net, loss_fn, valid_loader,
-                            device, scheduler=None, schd_loss_update=True)
+                            device, scheduler=None, schd_loss_update=False)
 
         if USE_TPU:
              xm.save(net.state_dict(
