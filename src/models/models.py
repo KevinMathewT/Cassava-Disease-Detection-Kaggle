@@ -20,8 +20,8 @@ class BinaryHead(nn.Module):
         logit = self.fc(fea) * self.s
         return logit
 
-class SEResNeXt50_32x4d(nn.Module):
-    name = "SEResNeXt50_32x4d"
+class SEResNeXt50_32x4d_BH(nn.Module):
+    name = "SEResNeXt50_32x4d+Binary_Head"
     def __init__(self, pretrained=False):
         super().__init__()
         self.model_arch = "seresnext50_32x4d"
@@ -56,5 +56,5 @@ class GeneralizedCassavaClassifier(nn.Module):
         return x
 
 nets = {
-    "SEResNeXt50_32x4d": SEResNeXt50_32x4d,
+    "SEResNeXt50_32x4d+Binary_Head": SEResNeXt50_32x4d_BH,
 }

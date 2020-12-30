@@ -27,8 +27,12 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
     pbar = tqdm(enumerate(train_loader), total=total_steps)
     for step, (imgs, image_labels) in pbar:
-        imgs = imgs.to(device).float()
-        image_labels = image_labels.to(device).long()
+        if not USE_TPU:
+            imgs = imgs.to(device).float()
+            image_labels = image_labels.to(device).long()
+        if USE_TPU:
+            imgs = imgs.to(device, dtype=torch.float32)
+            image_labels = image_labels.to(device, dtype=torch.int64)
         curr_batch_size = imgs.size(0)
 
         #print(image_labels.shape, exam_label.shape)
@@ -96,8 +100,12 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
 
     pbar = tqdm(enumerate(valid_loader), total=len(valid_loader))
     for step, (imgs, image_labels) in pbar:
-        imgs = imgs.to(device).float()
-        image_labels = image_labels.to(device).long()
+        if not USE_TPU:
+            imgs = imgs.to(device).float()
+            image_labels = image_labels.to(device).long()
+        if USE_TPU:
+            imgs = imgs.to(device, dtype=torch.float32)
+            image_labels = image_labels.to(device, dtype=torch.int64)
 
         image_preds = model(imgs)
         image_preds_all += [torch.argmax(image_preds,

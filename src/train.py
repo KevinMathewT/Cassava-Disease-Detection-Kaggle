@@ -41,19 +41,32 @@ def run_fold(fold):
     del net, optimizer, train_loader, valid_loader, scheduler
     torch.cuda.empty_cache()
 
+def _mp_fn(rank, flags):
+    torch.set_default_tensor_type("torch.FloatTensor")
+    a = run_fold(2)
 
 def train():
     print(f"Training Model : {NET}")
 
-    if not PARALLEL_FOLD_TRAIN:
-        # for fold in range(FOLDS):
-        #     run_fold(fold)
-        run_fold(2)
+    if not USE_TPU:
+        if not PARALLEL_FOLD_TRAIN:
+            # for fold in range(FOLDS):
+            #     run_fold(fold)
+            run_fold(2)
 
-    if PARALLEL_FOLD_TRAIN:
-        n_jobs = FOLDS
-        parallel = Parallel(n_jobs=n_jobs, backend="threading")
-        parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
+        if PARALLEL_FOLD_TRAIN:
+            n_jobs = FOLDS
+            parallel = Parallel(n_jobs=n_jobs, backend="threading")
+            parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
+    
+    if USE_TPU:
+        import torch_xla.distributed.xla_multiprocessing as xmp
+        
+        os.environ["XLA_USE_BF16"] = "1"
+        os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
+
+        FLAGS = {}
+        xmp.spawn(_mp_fn, args=(FLAGS,), nprocs=8, start_method="fork")
 
 
 if __name__ == "__main__":
