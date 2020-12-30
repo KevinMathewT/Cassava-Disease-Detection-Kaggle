@@ -89,7 +89,8 @@ class FocalCosineLoss(nn.Module):
         return cosine_loss + self.xent * focal_loss
 
 def get_train_criterion():
-    return nn.CrossEntropyLoss()
+    # return nn.CrossEntropyLoss()
+    return FocalCosineLoss()
 
 def get_valid_criterion():
     return nn.CrossEntropyLoss()

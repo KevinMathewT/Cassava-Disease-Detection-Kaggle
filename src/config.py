@@ -28,7 +28,7 @@ H                     = 512
 W                     = 512
 
 OPTIMIZER             = "Adam"
-SCHEDULER             = "OneCycleLR"
+SCHEDULER             = "CosineAnnealingLR"
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 
