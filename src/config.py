@@ -24,8 +24,8 @@ FOLDS                 = 5
 SEEDS                 = 1
 MIXED_PRECISION_TRAIN = True
 
-H                     = 512
-W                     = 512
+H                     = 384
+W                     = 384
 
 OPTIMIZER             = "Adam"
 SCHEDULER             = "CosineAnnealingWarmRestarts"
