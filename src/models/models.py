@@ -48,9 +48,8 @@ class ViTBase16_BH(nn.Module):
     def __init__(self, pretrained=False):
         super().__init__()
         self.model_arch = "vit_base_patch16_224"
-        self.net = nn.Sequential(*list(
-            timm.create_model(self.model_arch, pretrained=pretrained).children())[:-1])
-        self.proj = nn.Linear(in_features=768, out_features=768, bias=True)
+        self.net = timm.create_model("vit_base_patch16_224")
+        self.net.head = nn.Linear(in_features=768, out_features=768, bias=True)
         self.fea_bn = nn.BatchNorm1d(768)
         self.fea_bn.bias.requires_grad_(False)
         self.binary_head = BinaryHead(N_CLASSES, emb_size=768, s=1)
