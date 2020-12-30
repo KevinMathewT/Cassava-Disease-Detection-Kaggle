@@ -22,30 +22,31 @@
 
 # # # print(Parallel(n_jobs=10)(delayed(f)(i) for i in range(x)))
 
-# # import timm
-# # import pprint
+import timm
+import pprint
 
-# # # pp = pprint.PrettyPrinter(indent=4)
-# # # list = timm.list_models()
+# pp = pprint.PrettyPrinter(indent=4)
+# list = timm.list_models()
 
-# # # pp.pprint(list)
+# pp.pprint(list)
 
-# # from prettytable import PrettyTable
+from prettytable import PrettyTable
 
-# # def count_parameters(model):
-# #     table = PrettyTable(["Modules", "Parameters"])
-# #     total_params = 0
-# #     for name, parameter in model.named_parameters():
-# #         if not parameter.requires_grad: continue
-# #         param = parameter.numel()
-# #         table.add_row([name, param])
-# #         total_params+=param
-# #     # print(table)
-# #     print(f"Total Trainable Params: {total_params}")
-# #     return total_params
+def count_parameters(model):
+    table = PrettyTable(["Modules", "Parameters"])
+    total_params = 0
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad: continue
+        param = parameter.numel()
+        table.add_row([name, param])
+        total_params+=param
+    # print(table)
+    print(f"Total Trainable Params: {total_params}")
+    return total_params
 
-# # model = timm.create_model("densenet121")
-# # count_parameters(model)
+model = timm.create_model("seresnext50_32x4d")
+count_parameters(model)
+print(model)
 
 # import numpy as np
 
@@ -54,13 +55,13 @@
 # print(np.clip(np.random.beta(
 #     cutmix_params['alpha'], cutmix_params['alpha']), 0.6, 0.7))
 
-import torch
+# import torch
 
-from .engine import get_net
-from .config import *
+# from .engine import get_net
+# from .config import *
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-net = get_net(name=NET, pretrained=PRETRAINED).to(device)
-net.load_state_dict(torch.load(f'D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\src\models\weights\\tf_efficientnet_b4_ns\\tf_efficientnet_b4_ns_fold_0_0'))
+# device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+# net = get_net(name=NET, pretrained=PRETRAINED).to(device)
+# net.load_state_dict(torch.load(f'D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\src\models\weights\\tf_efficientnet_b4_ns\\tf_efficientnet_b4_ns_fold_0_0'))
 
-print(net)
+# print(net)
