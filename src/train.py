@@ -52,7 +52,7 @@ def _mp_fn(rank, flags):
     a = run_fold(2)
 
 def train():
-    print_fn = print if not USE_TPU else xm.master_print
+    print_fn = print
     print_fn(f"Training Model : {NET}")
 
     if not USE_TPU:
