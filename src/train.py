@@ -69,8 +69,8 @@ def train():
     if USE_TPU:
         import torch_xla.distributed.xla_multiprocessing as xmp
         
-        os.environ["XLA_USE_BF16"] = "1"
-        os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
+        # os.environ["XLA_USE_BF16"] = "1"
+        # os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 
         FLAGS = {}
         xmp.spawn(_mp_fn, args=(FLAGS,), nprocs=8, start_method="fork")
