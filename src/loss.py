@@ -69,13 +69,13 @@ class CosineLoss(nn.Module):
         return cosine_loss + self.xent * cent_loss
 
 class FocalCosineLoss(nn.Module):
-    def __init__(self, alpha=1, gamma=2, xent=.1, reduction="mean"):
+    def __init__(self, alpha=1, gamma=2, xent=.1, reduction="mean", device=torch.device('cpu')):
         super(FocalCosineLoss, self).__init__()
         self.alpha = alpha
         self.gamma = gamma
         self.xent = xent
         self.reduction = reduction
-        self.y = torch.Tensor([1])
+        self.y = torch.Tensor([1]).to(device)
         
     def forward(self, input, target):
         cosine_loss = F.cosine_embedding_loss(input, F.one_hot(target, num_classes=input.size(-1)), self.y, reduction=self.reduction)

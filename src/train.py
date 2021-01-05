@@ -26,7 +26,7 @@ def run_fold(fold):
     scaler                      = torch.cuda.amp.GradScaler()
     optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
     # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
-    loss_tr                     = FocalCosineLoss().to(device)
+    loss_tr                     = FocalCosineLoss(device=device).to(device)
     loss_fn                     = nn.CrossEntropyLoss().to(device)
 
     for epoch in range(MAX_EPOCHS):
