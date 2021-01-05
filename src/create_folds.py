@@ -8,7 +8,7 @@ from .config import *
 if __name__ == "__main__":
     train = pd.read_csv(TRAIN)
     train["fold"] = -1
-    skf = StratifiedKFold(n_splits=FOLDS, random_state=SEED)
+    skf = StratifiedKFold(n_splits=FOLDS, shuffle=True, random_state=SEED)
     X = train['image_id']
     y = train["label"]
 
