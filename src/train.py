@@ -9,12 +9,16 @@ from .config import *
 from .utils import *
 from .loss import FocalCosineLoss
 
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
+
 import warnings
 warnings.filterwarnings("ignore")
 
 
 def run_fold(fold):
-    print(f"Training Fold: {fold}")
+    print_fn = print if not USE_TPU else xm.master_print
+    print_fn(f"Training Fold: {fold}")
 
     train_loader, valid_loader  = get_loaders(fold)
     device                      = get_device(n=fold+1)
@@ -48,7 +52,8 @@ def _mp_fn(rank, flags):
     a = run_fold(2)
 
 def train():
-    print(f"Training Model : {NET}")
+    print_fn = print if not USE_TPU else xm.master_print
+    print_fn(f"Training Model : {NET}")
 
     if not USE_TPU:
         if not PARALLEL_FOLD_TRAIN:
