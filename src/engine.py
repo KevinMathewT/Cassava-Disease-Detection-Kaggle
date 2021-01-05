@@ -76,8 +76,12 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 y_true=image_labels.detach().cpu(),
                 batch_size=curr_batch_size)
 
-        loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
-        acc = xm.mesh_reduce('loss_reduce', running_accuracy.avg, lambda x: sum(x) / len(x))
+        if USE_TPU:
+            loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
+            acc = xm.mesh_reduce('loss_reduce', running_accuracy.avg, lambda x: sum(x) / len(x))
+        else:
+            loss = running_loss.avg
+            acc = running_accuracy.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
             description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {loss:.4f} | Accuracy: {acc:.4f}'
             print_fn(description)
@@ -114,7 +118,10 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
                             batch_size=image_labels.shape[0])
         sample_num += image_labels.shape[0]
 
-        loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
+        if USE_TPU:
+            loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
+        else:
+            loss = running_loss.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)):
             description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Loss: {loss:.4f}'
             print_fn(description)
@@ -123,7 +130,10 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
 
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
-    acc = xm.mesh_reduce('loss_reduce', accuracy_score(image_targets_all, image_preds_all), lambda x: sum(x) / len(x))
+    if USE_TPU:
+        acc = xm.mesh_reduce('loss_reduce', accuracy_score(image_targets_all, image_preds_all), lambda x: sum(x) / len(x))
+    else:
+        acc = accuracy_score(image_targets_all, image_preds_all)
     print_fn(f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {acc:.4f}')
 
     if scheduler is not None:
