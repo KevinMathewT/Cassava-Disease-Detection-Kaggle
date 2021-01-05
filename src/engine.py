@@ -1,7 +1,6 @@
 import time
 from src.utils import get_accuracy
 from sklearn.metrics import accuracy_score
-from tqdm import tqdm
 import numpy as np
 
 import torch
@@ -20,12 +19,13 @@ if USE_TPU:
 def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device, scaler, scheduler=None, schd_batch_update=False):
     model.train()
 
+    print_fn = print if not USE_TPU else xm.master_print
     t = time.time()
     running_loss = AverageLossMeter()
     running_accuracy = AccuracyMeter()
     total_steps = len(train_loader)
+    pbar = enumerate(train_loader)
 
-    pbar = tqdm(enumerate(train_loader), total=total_steps)
     for step, (imgs, image_labels) in pbar:
         if not USE_TPU:
             imgs = imgs.to(device).float()
@@ -35,7 +35,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             image_labels = image_labels.to(device, dtype=torch.int64)
         curr_batch_size = imgs.size(0)
 
-        #print(image_labels.shape, exam_label.shape)
+        # print(image_labels.shape, exam_label.shape)
         if (not USE_TPU) and MIXED_PRECISION_TRAIN:
             with torch.cuda.amp.autocast():
                 image_preds = model(imgs)
@@ -60,13 +60,6 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         else:
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
-            running_loss.update(
-                curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
-            running_accuracy.update(
-                y_pred=image_preds.detach().cpu(),
-                y_true=image_labels.detach().cpu(),
-                batch_size=curr_batch_size)
-
             loss.backward()
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
@@ -78,10 +71,17 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
                 if scheduler is not None and schd_batch_update:
                     scheduler.step()
+            
+            running_loss.update(
+                curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
+            running_accuracy.update(
+                y_pred=image_preds.detach().cpu(),
+                y_true=image_labels.detach().cpu(),
+                batch_size=curr_batch_size)
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
             description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {running_loss.avg:.4f} | Accuracy: {running_accuracy.avg:.4f}'
-            pbar.set_description(description)
+            print_fn(description)
 
         # break
 
@@ -92,13 +92,15 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False):
     model.eval()
 
+    print_fn = print if not USE_TPU else xm.master_print
     t = time.time()
     running_loss = AverageLossMeter()
     sample_num = 0
     image_preds_all = []
     image_targets_all = []
+    total_steps = len(valid_loader)
+    pbar = enumerate(valid_loader)
 
-    pbar = tqdm(enumerate(valid_loader), total=len(valid_loader))
     for step, (imgs, image_labels) in pbar:
         if not USE_TPU:
             imgs = imgs.to(device).float()
@@ -120,13 +122,13 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
 
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)):
             description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Loss: {running_loss.avg:.4f}'
-            pbar.set_description(description)
+            print_fn(description)
 
         # break
 
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
-    print(f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {accuracy_score(image_targets_all, image_preds_all):.4f}')
+    print_fn(f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {accuracy_score(image_targets_all, image_preds_all):.4f}')
 
     if scheduler is not None:
         if schd_loss_update:
@@ -141,6 +143,9 @@ def get_net(name, pretrained=False):
     else:
         net = nets[name](pretrained=pretrained)
 
+    if USE_TPU:
+        import torch_xla.distributed.xla_multiprocessing as xmp
+        net = xmp.MpModelWrapper(net)
     return net
 
 

@@ -26,6 +26,7 @@ import timm
 import pprint
 import torch
 import torch.nn as nn
+from vision_transformer_pytorch import VisionTransformer
 
 # pp = pprint.PrettyPrinter(indent=4)
 # list = timm.list_models()
@@ -64,18 +65,18 @@ import torch.nn as nn
 #     def forward(self, x):
 #         return x
 
-model = timm.create_model("vit_base_patch16_224")
+model = VisionTransformer.from_name('ViT-B_16')
 # model.norm = Identity(_modules={}, _forward_pre_hooks={}, _forward_hooks={}, _backward_hooks={})
 # model.head = Identity(_modules={}, _forward_pre_hooks={}, _forward_hooks={}, _backward_hooks={})
-model.head = nn.Linear()
-# model = nn.Sequential(*list(timm.create_model("vit_base_patch16_224").children()))
+# model.head = nn.Linear()
+model = nn.Sequential(*list(model.children()))
 # model = timm.create_model("seresnext50_32x4d")
 # model = nn.Sequential(*list(
 #             timm.create_model("vit_base_patch16_224").children()))
 # avg_pool = nn.AdaptiveAvgPool2d((1, 1))
 
 # count_parameters(model)
-print(model.head)
+print(model)
 
 batch = torch.ones(4, 3, 224, 224)
 # batch = avg_pool(batch)

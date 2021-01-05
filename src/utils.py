@@ -69,11 +69,8 @@ class AccuracyMeter:
         self.sum = 0
 
     def update(self, y_pred, y_true, batch_size=1):
-        # so we just need to count total num of images / batch_size
-        #self.count += num_steps
         self.batch_size = batch_size
         self.count += self.batch_size
-        # this part here already got an acc score for the 4 images, so no need divide batch size
         self.score = get_accuracy(y_pred, y_true)
         total_score = self.score * self.batch_size
         self.sum += total_score
