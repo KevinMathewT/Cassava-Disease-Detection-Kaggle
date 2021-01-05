@@ -12,7 +12,6 @@ from .transforms import *
 
 if USE_TPU:
     import torch_xla.core.xla_model as xm
-    import torch_xla.distributed.parallel_loader as pl
 
 def get_img(path):
     im_bgr = cv2.imread(path)
@@ -227,8 +226,5 @@ def get_loaders(fold):
         train.drop(['fold'], axis=1))
     valid_loader = get_valid_dataloader(
         valid.drop(['fold'], axis=1))
-
-    if USE_TPU:
-        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
 
     return train_loader, valid_loader

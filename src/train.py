@@ -12,6 +12,7 @@ from .loss import FocalCosineLoss
 if USE_TPU:
     import torch_xla.core.xla_model as xm
     import torch_xla.distributed.xla_multiprocessing as xmp
+    import torch_xla.distributed.parallel_loader as pl
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -30,6 +31,9 @@ def run_fold(fold):
     loss_tr                     = FocalCosineLoss(device=device).to(device)
     loss_fn                     = nn.CrossEntropyLoss().to(device)
 
+    if USE_TPU:
+        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
+        
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
                         scheduler=scheduler, schd_batch_update=False)
