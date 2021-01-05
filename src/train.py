@@ -32,7 +32,7 @@ def run_fold(fold):
     loss_fn                     = nn.CrossEntropyLoss().to(device)
 
     if USE_TPU:
-        train_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
+        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
         
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
