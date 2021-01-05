@@ -75,7 +75,7 @@ class FocalCosineLoss(nn.Module):
         self.gamma = gamma
         self.xent = xent
         self.reduction = reduction
-        self.y = torch.Tensor([1]).cuda()
+        self.y = torch.Tensor([1])
         
     def forward(self, input, target):
         cosine_loss = F.cosine_embedding_loss(input, F.one_hot(target, num_classes=input.size(-1)), self.y, reduction=self.reduction)
