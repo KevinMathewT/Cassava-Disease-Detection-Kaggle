@@ -48,7 +48,7 @@ def run_fold(fold):
     torch.cuda.empty_cache()
 
 def _mp_fn(rank, flags):
-    torch.set_default_tensor_type("torch.FloatTensor")
+    # torch.set_default_tensor_type("torch.FloatTensor")
     a = run_fold(2)
 
 def train():
