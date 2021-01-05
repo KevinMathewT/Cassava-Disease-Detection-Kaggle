@@ -27,12 +27,8 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
     pbar = enumerate(train_loader)
 
     for step, (imgs, image_labels) in pbar:
-        if not USE_TPU:
-            imgs = imgs.to(device).float()
-            image_labels = image_labels.to(device).long()
-        if USE_TPU:
-            imgs = imgs.to(device, dtype=torch.float32)
-            image_labels = image_labels.to(device, dtype=torch.int64)
+        imgs = imgs.to(device, dtype=torch.float32)
+        image_labels = image_labels.to(device, dtype=torch.int64)
         curr_batch_size = imgs.size(0)
 
         # print(image_labels.shape, exam_label.shape)
@@ -64,7 +60,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
                 if USE_TPU:
-                    xm.optimizer_step(optimizer)
+                    xm.optimizer_step(optimizer, barrier=True)
                 else:
                     optimizer.step()
                 optimizer.zero_grad()
@@ -102,12 +98,8 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
     pbar = enumerate(valid_loader)
 
     for step, (imgs, image_labels) in pbar:
-        if not USE_TPU:
-            imgs = imgs.to(device).float()
-            image_labels = image_labels.to(device).long()
-        if USE_TPU:
-            imgs = imgs.to(device, dtype=torch.float32)
-            image_labels = image_labels.to(device, dtype=torch.int64)
+        imgs = imgs.to(device, dtype=torch.float32)
+        image_labels = image_labels.to(device, dtype=torch.int64)
 
         image_preds = model(imgs)
         image_preds_all += [torch.argmax(image_preds,
@@ -145,6 +137,7 @@ def get_net(name, pretrained=False):
 
     if USE_TPU:
         import torch_xla.distributed.xla_multiprocessing as xmp
+        print("Model Wrapped")
         net = xmp.MpModelWrapper(net)
     return net
 
