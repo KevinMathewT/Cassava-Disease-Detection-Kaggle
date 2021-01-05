@@ -11,6 +11,7 @@ from .loss import FocalCosineLoss
 
 if USE_TPU:
     import torch_xla.core.xla_model as xm
+    import torch_xla.distributed.xla_multiprocessing as xmp
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -48,7 +49,7 @@ def run_fold(fold):
     torch.cuda.empty_cache()
 
 def _mp_fn(rank, flags):
-    # torch.set_default_tensor_type("torch.FloatTensor")
+    torch.set_default_tensor_type("torch.FloatTensor")
     a = run_fold(2)
 
 def train():
@@ -66,9 +67,7 @@ def train():
             parallel = Parallel(n_jobs=n_jobs, backend="threading")
             parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
     
-    if USE_TPU:
-        import torch_xla.distributed.xla_multiprocessing as xmp
-        
+    if USE_TPU:        
         os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 

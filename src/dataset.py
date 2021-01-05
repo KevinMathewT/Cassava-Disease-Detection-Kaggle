@@ -10,6 +10,9 @@ from .config import *
 from .utils import *
 from .transforms import *
 
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
+    import torch_xla.distributed.parallel_loader as pl
 
 def get_img(path):
     im_bgr = cv2.imread(path)
@@ -166,25 +169,53 @@ class CassavaDataset(Dataset):
 
 
 def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
-    return DataLoader(
-        CassavaDataset(train, data_root, transforms=get_train_transforms(
-        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
-        batch_size=TRAIN_BATCH_SIZE,
-        pin_memory=False,
-        drop_last=False,
-        num_workers=CPU_WORKERS,
-        shuffle=True)
+    if USE_TPU:
+        train_sampler = torch.utils.data.distributed.DistributedSampler(
+            train,
+            num_replicas=xm.xrt_world_size(),  # divide dataset among this many replicas
+            rank=xm.get_ordinal(),  # which replica/device/core
+            shuffle=True)
+        return DataLoader(
+            CassavaDataset(train, data_root, transforms=get_train_transforms(
+            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            batch_size=TRAIN_BATCH_SIZE,
+            sampler=train_sampler,
+            drop_last=False,
+            num_workers=CPU_WORKERS)
+    else:
+        return DataLoader(
+            CassavaDataset(train, data_root, transforms=get_train_transforms(
+            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            batch_size=TRAIN_BATCH_SIZE,
+            pin_memory=False,
+            drop_last=False,
+            num_workers=CPU_WORKERS,
+            shuffle=True)
 
 
 def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
-    return DataLoader(
-        CassavaDataset(valid, data_root, transforms=get_valid_transforms(
-        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
-        batch_size=VALID_BATCH_SIZE,
-        pin_memory=False,
-        drop_last=False,
-        num_workers=CPU_WORKERS,
-        shuffle=False)
+    if USE_TPU:
+        valid_sampler = torch.utils.data.distributed.DistributedSampler(
+            valid,
+            num_replicas=xm.xrt_world_size(),
+            rank=xm.get_ordinal(),
+            shuffle=False)
+        return DataLoader(
+            CassavaDataset(valid, data_root, transforms=get_valid_transforms(
+            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            batch_size=VALID_BATCH_SIZE,
+            sampler=valid_sampler,
+            drop_last=False,
+            num_workers=CPU_WORKERS)
+    else:
+        return DataLoader(
+            CassavaDataset(valid, data_root, transforms=get_valid_transforms(
+            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            batch_size=VALID_BATCH_SIZE,
+            pin_memory=False,
+            drop_last=False,
+            num_workers=CPU_WORKERS,
+            shuffle=False)
 
 
 def get_loaders(fold):
@@ -196,5 +227,8 @@ def get_loaders(fold):
         train.drop(['fold'], axis=1))
     valid_loader = get_valid_dataloader(
         valid.drop(['fold'], axis=1))
+
+    if USE_TPU:
+        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
 
     return train_loader, valid_loader

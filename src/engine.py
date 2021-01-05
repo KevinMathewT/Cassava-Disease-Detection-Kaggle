@@ -14,6 +14,7 @@ from .utils import AccuracyMeter, AverageLossMeter
 
 if USE_TPU:
     import torch_xla.core.xla_model as xm
+    import torch_xla.distributed.xla_multiprocessing as xmp
 
 
 def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device, scaler, scheduler=None, schd_batch_update=False):
@@ -67,7 +68,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
                 if scheduler is not None and schd_batch_update:
                     scheduler.step()
-            
+
             running_loss.update(
                 curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
             running_accuracy.update(
@@ -80,7 +81,6 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             print_fn(description)
 
         # break
-
     if scheduler is not None and not schd_batch_update:
         scheduler.step()
 
@@ -136,13 +136,15 @@ def get_net(name, pretrained=False):
         net = nets[name](pretrained=pretrained)
 
     if USE_TPU:
-        import torch_xla.distributed.xla_multiprocessing as xmp
         print("Model Wrapped")
         net = xmp.MpModelWrapper(net)
     return net
 
 
 def get_optimizer_and_scheduler(net, dataloader):
+    if USE_TPU:
+        LEARNING_RATE = LEARNING_RATE * xm.xrt_world_size()
+
     # Optimizers
     if OPTIMIZER == "Adam":
         optimizer = torch.optim.Adam(
@@ -190,7 +192,7 @@ def get_optimizer_and_scheduler(net, dataloader):
             last_epoch=-1)
     elif SCHEDULER == "StepLR":
         scheduler = torch.optim.lr_scheduler.StepLR(
-            optimizer, 
+            optimizer,
             step_size=2,
             gamma=0.1)
     else:
@@ -205,7 +207,6 @@ def get_device(n):
     if not USE_GPU and not USE_TPU:
         return torch.device('cpu')
     elif USE_TPU:
-        import torch_xla.core.xla_model as xm
         if not PARALLEL_FOLD_TRAIN:
             return xm.xla_device()
         else:
