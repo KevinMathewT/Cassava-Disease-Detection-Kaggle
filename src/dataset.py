@@ -179,15 +179,15 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
             batch_size=TRAIN_BATCH_SIZE,
             sampler=train_sampler,
-            drop_last=False,
-            num_workers=CPU_WORKERS)
+            drop_last=True,
+            num_workers=CPU_WORKERS,
+            shuffle=True)
     else:
         return DataLoader(
             CassavaDataset(train, data_root, transforms=get_train_transforms(
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
             batch_size=TRAIN_BATCH_SIZE,
-            pin_memory=False,
-            drop_last=False,
+            drop_last=True,
             num_workers=CPU_WORKERS,
             shuffle=True)
 
@@ -204,15 +204,15 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
             batch_size=VALID_BATCH_SIZE,
             sampler=valid_sampler,
-            drop_last=False,
-            num_workers=CPU_WORKERS)
+            drop_last=True,
+            num_workers=CPU_WORKERS,
+            shuffle=False)
     else:
         return DataLoader(
             CassavaDataset(valid, data_root, transforms=get_valid_transforms(
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
             batch_size=VALID_BATCH_SIZE,
-            pin_memory=False,
-            drop_last=False,
+            drop_last=True,
             num_workers=CPU_WORKERS,
             shuffle=False)
 

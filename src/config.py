@@ -54,12 +54,12 @@ CPU_WORKERS           = 4
 
 TRAIN_BATCH_SIZE    //= ACCUMULATE_ITERATION
 VALID_BATCH_SIZE    //= ACCUMULATE_ITERATION
-# if not PARALLEL_FOLD_TRAIN:
-#     if USE_TPU:
-#         TRAIN_BATCH_SIZE //= TPUS
-#         VALID_BATCH_SIZE //= TPUS
-#     elif USE_GPU:
-#         TRAIN_BATCH_SIZE //= GPUS
-#         VALID_BATCH_SIZE //= GPUS
+if not PARALLEL_FOLD_TRAIN:
+    if USE_TPU:
+        TRAIN_BATCH_SIZE //= TPUS
+        VALID_BATCH_SIZE //= TPUS
+    elif USE_GPU:
+        TRAIN_BATCH_SIZE //= GPUS
+        VALID_BATCH_SIZE //= GPUS
 
 seed_everything(SEED)
