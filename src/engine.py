@@ -142,28 +142,27 @@ def get_net(name, pretrained=False):
 
 
 def get_optimizer_and_scheduler(net, dataloader):
-    if USE_TPU:
-        LEARNING_RATE = LEARNING_RATE * xm.xrt_world_size()
+    m = xm.xrt_world_size() if USE_TPU else 1
 
     # Optimizers
     if OPTIMIZER == "Adam":
         optimizer = torch.optim.Adam(
             params=net.parameters(),
-            lr=LEARNING_RATE,
+            lr=LEARNING_RATE * m,
             weight_decay=1e-5
         )
     elif OPTIMIZER == "AdamW":
         optimizer = optim.AdamW(
-            net.parameters(), lr=LEARNING_RATE, weight_decay=0.001)
+            net.parameters(), lr=LEARNING_RATE * m, weight_decay=0.001)
     elif OPTIMIZER == "AdaBelief":
         optimizer = AdaBelief(net.parameters(
-        ), lr=LEARNING_RATE, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
+        ), lr=LEARNING_RATE * m, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
     elif OPTIMIZER == "RangerAdaBelief":
         optimizer = RangerAdaBelief(
-            net.parameters(), lr=LEARNING_RATE, eps=1e-12, betas=(0.9, 0.999), print_change_log=False)
+            net.parameters(), lr=LEARNING_RATE * m, eps=1e-12, betas=(0.9, 0.999), print_change_log=False)
     else:
         optimizer = optim.SGD(
-            net.parameters(), lr=LEARNING_RATE)
+            net.parameters(), lr=LEARNING_RATE * m)
 
     # Schedulers
     if SCHEDULER == "ReduceLROnPlateau":
