@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from vision_transformer_pytorch import VisionTransformer
+# from vision_transformer_pytorch import VisionTransformer
 
 import timm
 from ..config import *
