@@ -33,9 +33,9 @@ def run_fold(fold):
 
     if USE_TPU:
         train_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
-
+        
     for epoch in range(MAX_EPOCHS):
-        train_one_epoch(fold, epoch, net, loss_tr, optimizer, device, scaler=scaler,
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
                         scheduler=scheduler, schd_batch_update=False)
         with torch.no_grad():
             valid_one_epoch(fold, epoch, net, loss_fn, valid_loader,
