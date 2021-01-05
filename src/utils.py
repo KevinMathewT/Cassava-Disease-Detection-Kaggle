@@ -35,13 +35,13 @@ def create_dirs():
         print(config.WEIGHTS_PATH)
         os.mkdir(config.WEIGHTS_PATH)
         print(f"Created Folder {config.WEIGHTS_PATH}")
-    except:
-        print("Error:", sys.exc_info()[0])
+    except FileExistsError:
+        print(f"Folder {config.WEIGHTS_PATH} already made")
     try:
         os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{config.NET}'))
         print(f"Created Folder {os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}")
-    except:
-        print("Oops!", sys.exc_info()[0], "occurred.")
+    except FileExistsError:
+        print(f"Folder {os.path.join(config.WEIGHTS_PATH, f'{config.NET}')} already made")
 
 class AverageLossMeter:
     def __init__(self):
