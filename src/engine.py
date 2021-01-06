@@ -58,7 +58,6 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         else:
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
-            print("Loss:", loss.item())
             loss.backward()
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
@@ -71,14 +70,12 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 if scheduler is not None and schd_batch_update:
                     scheduler.step()
 
-            print("Before: ", running_loss.avg)
             running_loss.update(
                 curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
             running_accuracy.update(
                 y_pred=image_preds.detach().cpu(),
                 y_true=image_labels.detach().cpu(),
                 batch_size=curr_batch_size)
-            print("After: ", running_loss.avg)
 
         if USE_TPU:
             loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
