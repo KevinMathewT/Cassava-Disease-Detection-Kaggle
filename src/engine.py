@@ -58,6 +58,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         else:
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
+            print(loss.item())
             loss.backward()
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
