@@ -60,8 +60,11 @@ class AverageLossMeter:
         self.avg = self.running_total_loss / self.count
 
 class AccuracyMeter:
-    def __init__(self):        
+    z = 0
+    def __init__(self):
         self.reset()
+        self.z += 1
+        print(self.z)
         
     def reset(self):
         self.score = 0
