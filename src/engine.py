@@ -26,6 +26,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
     running_accuracy = AccuracyMeter()
     total_steps = len(train_loader)
     pbar = enumerate(train_loader)
+    optimizer.zero_grad()
 
     for step, (imgs, image_labels) in pbar:
         imgs = imgs.to(device, dtype=torch.float32)
