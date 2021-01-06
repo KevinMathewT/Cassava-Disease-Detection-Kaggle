@@ -72,8 +72,9 @@ def train():
             parallel = Parallel(n_jobs=n_jobs, backend="threading")
             parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
     
-    if USE_TPU:        
-        os.environ["XLA_USE_BF16"] = "1"
+    if USE_TPU:
+        if MIXED_PRECISION_TRAIN:
+            os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 
         FLAGS = {}

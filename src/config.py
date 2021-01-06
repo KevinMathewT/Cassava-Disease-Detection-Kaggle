@@ -27,8 +27,8 @@ MIXED_PRECISION_TRAIN = True
 H                     = 224
 W                     = 224
 
-OPTIMIZER             = "AdamW"
-SCHEDULER             = "StepLR"
+OPTIMIZER             = "Adam"
+SCHEDULER             = "CosineAnnealingLR"
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 
@@ -46,20 +46,20 @@ NET                   = 'SEResNeXt50_32x4d_BH'
 
 PRETRAINED            = True
 LEARNING_VERBOSE      = True
-VERBOSE_STEP          = 1
+VERBOSE_STEP          = 100
 
 USE_SUBSET            = False
 SUBSET_SIZE           = TRAIN_BATCH_SIZE * 1
 CPU_WORKERS           = 4
 
-# TRAIN_BATCH_SIZE    //= ACCUMULATE_ITERATION
-# VALID_BATCH_SIZE    //= ACCUMULATE_ITERATION
-# if not PARALLEL_FOLD_TRAIN:
-#     if USE_TPU:
-#         TRAIN_BATCH_SIZE //= TPUS
-#         VALID_BATCH_SIZE //= TPUS
-#     elif USE_GPU:
-#         TRAIN_BATCH_SIZE //= GPUS
-#         VALID_BATCH_SIZE //= GPUS
+TRAIN_BATCH_SIZE    //= ACCUMULATE_ITERATION
+VALID_BATCH_SIZE    //= ACCUMULATE_ITERATION
+if not PARALLEL_FOLD_TRAIN:
+    if USE_TPU:
+        TRAIN_BATCH_SIZE //= TPUS
+        VALID_BATCH_SIZE //= TPUS
+    elif USE_GPU:
+        TRAIN_BATCH_SIZE //= GPUS
+        VALID_BATCH_SIZE //= GPUS
 
 seed_everything(SEED)
