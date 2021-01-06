@@ -59,12 +59,14 @@ class AverageLossMeter:
         self.count += batch_size
         self.avg = self.running_total_loss / self.count
 
+z = 0
+
 class AccuracyMeter:
-    z = 0
     def __init__(self):
+        global z
         self.reset()
-        self.z += 1
-        print(self.z)
+        z += 1
+        print(z)
         
     def reset(self):
         self.score = 0
