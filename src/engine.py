@@ -84,7 +84,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             acc = running_accuracy.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps):
             description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {loss:.4f} | Accuracy: {acc:.4f}'
-            print_fn(description)
+            print_fn(description, end="\r", flush=True)
 
         # break
     if scheduler is not None and not schd_batch_update:
