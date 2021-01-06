@@ -78,8 +78,10 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 batch_size=curr_batch_size)
 
         if USE_TPU:
-            loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
-            acc = xm.mesh_reduce('loss_reduce', running_accuracy.avg, lambda x: sum(x) / len(x))
+            loss = xm.mesh_reduce(
+                'loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
+            acc = xm.mesh_reduce(
+                'loss_reduce', running_accuracy.avg, lambda x: sum(x) / len(x))
         else:
             loss = running_loss.avg
             acc = running_accuracy.avg
@@ -120,7 +122,8 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
         sample_num += image_labels.shape[0]
 
         if USE_TPU:
-            loss = xm.mesh_reduce('loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
+            loss = xm.mesh_reduce(
+                'loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
         else:
             loss = running_loss.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)) or ((step + 1) == 1):
@@ -132,10 +135,12 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
     if USE_TPU:
-        acc = xm.mesh_reduce('loss_reduce', accuracy_score(image_targets_all, image_preds_all), lambda x: sum(x) / len(x))
+        acc = xm.mesh_reduce('loss_reduce', accuracy_score(
+            image_targets_all, image_preds_all), lambda x: sum(x) / len(x))
     else:
         acc = accuracy_score(image_targets_all, image_preds_all)
-    print_fn(f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {acc:.4f}')
+    print_fn(
+        f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {acc:.4f}')
 
     if scheduler is not None:
         if schd_loss_update:
@@ -164,7 +169,8 @@ def get_optimizer_and_scheduler(net, dataloader):
         optimizer = torch.optim.Adam(
             params=net.parameters(),
             lr=LEARNING_RATE * m,
-            weight_decay=1e-5
+            weight_decay=1e-5,
+            amsgrad=False
         )
     elif OPTIMIZER == "AdamW":
         optimizer = optim.AdamW(
