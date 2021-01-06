@@ -46,7 +46,7 @@ NET                   = 'SEResNeXt50_32x4d_BH'
 
 PRETRAINED            = True
 LEARNING_VERBOSE      = True
-VERBOSE_STEP          = 10
+VERBOSE_STEP          = 100
 
 USE_SUBSET            = False
 SUBSET_SIZE           = TRAIN_BATCH_SIZE * 1
