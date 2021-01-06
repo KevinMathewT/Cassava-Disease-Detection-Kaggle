@@ -180,8 +180,7 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
             batch_size=TRAIN_BATCH_SIZE,
             sampler=train_sampler,
             drop_last=True,
-            num_workers=CPU_WORKERS,
-            shuffle=True)
+            num_workers=CPU_WORKERS)
     else:
         return DataLoader(
             CassavaDataset(train, data_root, transforms=get_train_transforms(
@@ -205,8 +204,7 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
             batch_size=VALID_BATCH_SIZE,
             sampler=valid_sampler,
             drop_last=True,
-            num_workers=CPU_WORKERS,
-            shuffle=False)
+            num_workers=CPU_WORKERS)
     else:
         return DataLoader(
             CassavaDataset(valid, data_root, transforms=get_valid_transforms(
