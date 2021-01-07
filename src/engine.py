@@ -130,7 +130,7 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
         else:
             loss = running_loss.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)) or ((step + 1) == 1):
-            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Loss: {loss:.4f}'
+            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Validation Loss: {loss:.4f}'
             print_fn(description)
 
         # break

@@ -1,3 +1,4 @@
+import time
 from joblib import Parallel, delayed
 
 import torch
@@ -23,28 +24,31 @@ def run_fold(fold):
     print_fn(f"Training Fold: {fold}")
 
     global net
-    train_loader, valid_loader  = get_loaders(fold)
-    device                      = get_device(n=fold+1)
-    if USE_TPU:
-        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
-    net                         = net.to(device)
-    scaler                      = torch.cuda.amp.GradScaler() if not USE_TPU else None
+    train_loader, valid_loader = get_loaders(fold)
+    device = get_device(n=fold+1)
+    mp_device_loader = pl.MpDeviceLoader(
+        train_loader, device, fixed_batch_size=True) if USE_TPU else None
+    net = net.to(device)
+    scaler = torch.cuda.amp.GradScaler() if not USE_TPU else None
     # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     # loss_tr                     = FocalCosineLoss(device=device).to(device)
     # loss_tr                     = SmoothCrossEntropyLoss(smoothing=0.1).to(device)
-    loss_tr                     = bi_tempered_logistic_loss
-    loss_fn                     = nn.CrossEntropyLoss().to(device)
-    optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
-        
+    loss_tr = bi_tempered_logistic_loss
+    loss_fn = nn.CrossEntropyLoss().to(device)
+    optimizer, scheduler = get_optimizer_and_scheduler(
+        net=net, dataloader=train_loader)
+
     for epoch in range(MAX_EPOCHS):
+        epoch_start = time.time()
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
                         scheduler=scheduler, schd_batch_update=False)
         with torch.no_grad():
             valid_one_epoch(fold, epoch, net, loss_fn, valid_loader,
                             device, scheduler=None, schd_loss_update=False)
+        print_fn(f"Time Taken for Epoch {epoch}: {time.time() - epoch_start}")
 
         if USE_TPU:
-             xm.save(net.state_dict(
+            xm.save(net.state_dict(
             ), os.path.join(WEIGHTS_PATH, f'{NET}/{NET}_fold_{fold}_{epoch}.bin'))
         else:
             torch.save(net.state_dict(
@@ -54,9 +58,11 @@ def run_fold(fold):
     del net, optimizer, train_loader, valid_loader, scheduler
     torch.cuda.empty_cache()
 
+
 def _mp_fn(rank, flags):
     torch.set_default_tensor_type("torch.FloatTensor")
     a = run_fold(0)
+
 
 def train():
     print_fn = print
@@ -74,7 +80,7 @@ def train():
             n_jobs = FOLDS
             parallel = Parallel(n_jobs=n_jobs, backend="threading")
             parallel(delayed(run_fold)(fold) for fold in range(FOLDS))
-    
+
     if USE_TPU:
         if MIXED_PRECISION_TRAIN:
             os.environ["XLA_USE_BF16"] = "1"
