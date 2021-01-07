@@ -5,6 +5,9 @@ from vision_transformer_pytorch import VisionTransformer
 import timm
 from ..config import *
 
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
+
 
 def l2_norm(input, axis=1):
     norm = torch.norm(input, 2, axis, True)
@@ -53,6 +56,7 @@ class SEResNeXt50_32x4d_BH(nn.Module):
 
         return x
 
+
 class ResNeXt50_32x4d_BH(nn.Module):
     name = "ResNeXt50_32x4d_BH"
 
@@ -73,11 +77,15 @@ class ResNeXt50_32x4d_BH(nn.Module):
 
     def forward(self, x):
         x = self.net(x)
+        print(xm.get_ordinal(), "X:", torch.any(x.isnan()))
         x = self.avg_pool(x)
+        print(xm.get_ordinal(), "X:", torch.any(x.isnan()))
         x = x.view(x.size(0), -1)
+        print(xm.get_ordinal(), "X:", torch.any(x.isnan()))
         # x = self.fea_bn(x)
         # fea = self.dropout(fea)
         x = self.binary_head(x)
+        print(xm.get_ordinal(), "X:", torch.any(x.isnan()))
         # x = self.fc(x)
 
         return x
