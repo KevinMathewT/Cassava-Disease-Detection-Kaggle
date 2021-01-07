@@ -40,16 +40,18 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         self.fea_bn.bias.requires_grad_(False)
         self.binary_head = BinaryHead(N_CLASSES, emb_size=2048, s=1)
         self.dropout = nn.Dropout(p=0.2)
+        self.fc = nn.Linear(in_features=2048, out_features=N_CLASSES)
 
     def forward(self, x):
-        img_feature = self.net(x)
-        img_feature = self.avg_pool(img_feature)
-        img_feature = img_feature.view(img_feature.size(0), -1)
-        fea = self.fea_bn(img_feature)
+        x = self.net(x)
+        x = self.avg_pool(x)
+        x = x.view(x.size(0), -1)
+        # x = self.fea_bn(x)
         # fea = self.dropout(fea)
-        output = self.binary_head(fea)
+        x = self.binary_head(x)
+        # x = self.fc(x)
 
-        return output
+        return x
 
 class ResNeXt50_32x4d_BH(nn.Module):
     name = "ResNeXt50_32x4d_BH"
