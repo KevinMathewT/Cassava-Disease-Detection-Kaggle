@@ -25,17 +25,16 @@ def run_fold(fold):
     global net
     train_loader, valid_loader  = get_loaders(fold)
     device                      = get_device(n=fold+1)
+    if USE_TPU:
+        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
     net                         = net.to(device)
-    scaler                      = torch.cuda.amp.GradScaler()
-    optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
+    scaler                      = torch.cuda.amp.GradScaler() if not USE_TPU else None
     # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     # loss_tr                     = FocalCosineLoss(device=device).to(device)
     # loss_tr                     = SmoothCrossEntropyLoss(smoothing=0.1).to(device)
     loss_tr                     = bi_tempered_logistic_loss
     loss_fn                     = nn.CrossEntropyLoss().to(device)
-
-    if USE_TPU:
-        mp_device_loader = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True)
+    optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
         
     for epoch in range(MAX_EPOCHS):
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
