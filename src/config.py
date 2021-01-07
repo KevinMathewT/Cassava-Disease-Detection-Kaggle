@@ -28,9 +28,9 @@ H                     = 512
 W                     = 512
 
 OPTIMIZER             = "Adam"
-# SCHEDULER             = "CosineAnnealingWarmRestarts"
+SCHEDULER             = "CosineAnnealingWarmRestarts"
 # SCHEDULER             = "CosineAnnealingLR"
-SCHEDULER             = "OneCycleLR"
+# SCHEDULER             = "OneCycleLR"
 # SCHEDULER             = "CosineAnnealingWarmRestarts"
 # SCHEDULER             = "CosineAnnealingWarmRestarts"
 # SCHEDULER             = "CosineAnnealingWarmRestarts"
