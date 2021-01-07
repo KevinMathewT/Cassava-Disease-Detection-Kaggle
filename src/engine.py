@@ -57,9 +57,9 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
         else:
             image_preds = model(imgs)
-            print("Outputs:", torch.any(image_preds.isnan()))
+            print(xm.get_ordinal(), "Outputs:", torch.any(image_preds.isnan()))
             loss = loss_fn(image_preds, image_labels)
-            print("Loss:", torch.any(loss.isnan()))
+            print(xm.get_ordinal(), "Loss:", torch.any(loss.isnan()))
             loss.backward()
             # print("Loss: ", loss.item())
 
