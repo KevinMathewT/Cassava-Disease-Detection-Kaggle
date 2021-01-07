@@ -38,10 +38,9 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         # self.fea_bn.bias.requires_grad_(False)
         # self.binary_head = BinaryHead(N_CLASSES, emb_size=2048, s=1)
         self.fc = nn.Sequential(nn.Linear(2048, N_CLASSES))
-        self.dropout = nn.Dropout(p=0.2)
+        # self.dropout = nn.Dropout(p=0.2)
 
     def forward(self, x):
-        print(x.device)
         x = self.net(x)
         # x = self.avg_pool(x).to(x.device)
         # x = img_feature.view(x.size(0), -1).to(x.device)
