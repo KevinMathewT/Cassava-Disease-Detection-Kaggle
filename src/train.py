@@ -9,8 +9,6 @@ from .config import *
 from .utils import *
 from .loss import FocalCosineLoss, SmoothCrossEntropyLoss, bi_tempered_logistic_loss
 
-net = None
-
 if USE_TPU:
     import torch_xla.core.xla_model as xm
     import torch_xla.distributed.xla_multiprocessing as xmp
@@ -24,6 +22,7 @@ def run_fold(fold):
     print_fn = print if not USE_TPU else xm.master_print
     print_fn(f"Training Fold: {fold}")
 
+    global net
     train_loader, valid_loader  = get_loaders(fold)
     device                      = get_device(n=fold+1)
     net                         = net.to(device)
@@ -82,7 +81,6 @@ def train():
         if MIXED_PRECISION_TRAIN:
             os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
-        global net
         net = get_net(name=NET, pretrained=PRETRAINED)
 
         FLAGS = {}
