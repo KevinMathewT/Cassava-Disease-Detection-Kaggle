@@ -63,24 +63,24 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             loss.backward()
         #     # print("Loss: ", loss.item())
 
-        #     if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
-        #         if USE_TPU:
-        #             xm.optimizer_step(optimizer, barrier=True)
-        #         else:
-        #             optimizer.step()
-        #         if scheduler is not None and schd_batch_update:
-        #             scheduler.step()
-        #         optimizer.zero_grad()
+            if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
+                if USE_TPU:
+                    xm.optimizer_step(optimizer, barrier=True)
+                # else:
+                #     optimizer.step()
+                # if scheduler is not None and schd_batch_update:
+                #     scheduler.step()
+                # optimizer.zero_grad()
 
-        #     running_loss.update(
-        #         curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
-        #     running_accuracy.update(
-        #         y_pred=image_preds.detach().cpu(),
-        #         y_true=image_labels.detach().cpu(),
-        #         batch_size=curr_batch_size)
+            running_loss.update(
+                curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
+            running_accuracy.update(
+                y_pred=image_preds.detach().cpu(),
+                y_true=image_labels.detach().cpu(),
+                batch_size=curr_batch_size)
 
-        #     # print("Loss Update:", running_loss.avg)
-        #     # print("Acc Update:", running_loss.avg)
+            # print("Loss Update:", running_loss.avg)
+            # print("Acc Update:", running_loss.avg)
 
         # if USE_TPU:
         #     loss = xm.mesh_reduce(
