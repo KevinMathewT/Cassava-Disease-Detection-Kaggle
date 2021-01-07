@@ -77,7 +77,7 @@ class ResNeXt50_32x4d_BH(nn.Module):
 
     def forward(self, x):
         x = self.net(x)
-        print(xm.get_ordinal(), 1, "X:", torch.any(x.isnan()))
+        # print(xm.get_ordinal(), 1, "X:", torch.any(x.isnan()))
         x = self.avg_pool(x)
         # print(xm.get_ordinal(), 2, "X:", torch.any(x.isnan()))
         x = x.view(x.size(0), -1)
