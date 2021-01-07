@@ -101,9 +101,9 @@ class GeneralizedCassavaClassifier(nn.Module):
         return x
 
 class SEResNeXt50_32x4d_B(nn.Module):
-    name = "SEResNeXt50_32x4d_B"
     def __init__(self, pretrained=True):
         super().__init__()
+        self.name = "SEResNeXt50_32x4d_B"
         self.model_arch = "seresnext50_32x4d"
         self.net = timm.create_model(self.model_arch, pretrained=pretrained)
         model_list = list(self.net.children())
