@@ -57,9 +57,9 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
         else:
             image_preds = model(imgs)
-            print(xm.get_ordinal(), "Outputs:", torch.any(image_preds.isnan()))
+            # print(xm.get_ordinal(), "Outputs:", torch.any(image_preds.isnan()))
             loss = loss_fn(image_preds, image_labels)
-            print(xm.get_ordinal(), "Loss:", torch.any(loss.isnan()))
+            # print(xm.get_ordinal(), "Loss:", torch.any(loss.isnan()))
             loss.backward()
         #     # print("Loss: ", loss.item())
 
@@ -79,8 +79,8 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 y_true=image_labels.detach().cpu(),
                 batch_size=curr_batch_size)
 
-            print("Loss Update:", running_loss.avg)
-            print("Acc Update:", running_loss.avg)
+            # print("Loss Update:", running_loss.avg)
+            # print("Acc Update:", running_loss.avg)
 
         if USE_TPU:
             loss = xm.mesh_reduce(
