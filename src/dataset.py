@@ -13,6 +13,7 @@ from .transforms import *
 if USE_TPU:
     import torch_xla.core.xla_model as xm
 
+
 def get_img(path):
     im_bgr = cv2.imread(path)
     im_rgb = im_bgr[:, :, ::-1]
@@ -169,14 +170,15 @@ class CassavaDataset(Dataset):
 
 def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
     if USE_TPU:
+        train_dataset = CassavaDataset(train, data_root, transforms=get_train_transforms(
+        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
         train_sampler = torch.utils.data.distributed.DistributedSampler(
-            train,
+            train_dataset,
             num_replicas=xm.xrt_world_size(),  # divide dataset among this many replicas
             rank=xm.get_ordinal(),  # which replica/device/core
             shuffle=True)
         return DataLoader(
-            CassavaDataset(train, data_root, transforms=get_train_transforms(
-            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            train_dataset,
             batch_size=TRAIN_BATCH_SIZE,
             sampler=train_sampler,
             drop_last=True,
@@ -193,14 +195,15 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
 
 def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
     if USE_TPU:
+        valid_dataset = CassavaDataset(valid, data_root, transforms=get_valid_transforms(
+            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
         valid_sampler = torch.utils.data.distributed.DistributedSampler(
-            valid,
+            valid_dataset,
             num_replicas=xm.xrt_world_size(),
             rank=xm.get_ordinal(),
             shuffle=False)
         return DataLoader(
-            CassavaDataset(valid, data_root, transforms=get_valid_transforms(
-            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            valid_dataset,
             batch_size=VALID_BATCH_SIZE,
             sampler=valid_sampler,
             drop_last=True,

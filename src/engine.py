@@ -228,6 +228,7 @@ def get_optimizer_and_scheduler(net, dataloader):
 def get_device(n):
     if not PARALLEL_FOLD_TRAIN:
         n = 0
+        
     if not USE_GPU and not USE_TPU:
         return torch.device('cpu')
     elif USE_TPU:
