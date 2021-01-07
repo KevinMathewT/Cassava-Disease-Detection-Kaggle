@@ -31,8 +31,14 @@ class SEResNeXt50_32x4d_BH(nn.Module):
     def __init__(self, pretrained=False):
         super().__init__()
         self.model_arch = "seresnext50_32x4d"
-        self.net = nn.Sequential(*list(
-            timm.create_model(self.model_arch, pretrained=pretrained).children())[:-1])
+        self.net = timm.create_model(self.model_arch, pretrained=pretrained)
+        model_list = list(self.net.children())
+        model_list[-1] = nn.Identity(
+            in_features=model_list[-1].in_features,
+            out_features=N_CLASSES,
+            bias=True
+        )
+        self.net = nn.Sequential(*model_list)
         # self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
         # self.fea_bn = nn.BatchNorm1d(2048)
         # self.fea_bn.bias.requires_grad_(False)
