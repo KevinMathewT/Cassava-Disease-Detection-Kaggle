@@ -100,8 +100,29 @@ class GeneralizedCassavaClassifier(nn.Module):
         x = self.fc(x)
         return x
 
+class SEResNeXt50_32x4d_B(nn.Module):
+    name = "SEResNeXt50_32x4d_B"
+    def __init__(self, pretrained=True):
+        super().__init__()
+        self.model_arch = "seresnext50_32x4d"
+        self.net = timm.create_model(self.model_arch, pretrained=pretrained)
+        model_list = list(self.net.children())
+        model_list[-1] = nn.Identity(
+            in_features=model_list[-1].in_features,
+            out_features=N_CLASSES,
+            bias=True
+        )
+        self.net = nn.Sequential(*model_list)
+        self.fc = nn.Sequential(nn.Linear(2048, N_CLASSES))
+
+    def forward(self, x):
+        x = self.net(x)
+        x = self.fc(x)
+        return x
+
 
 nets = {
     "SEResNeXt50_32x4d_BH": SEResNeXt50_32x4d_BH,
     "ViTBase16_BH": ViTBase16_BH,
+    "SEResNeXt50_32x4d_B": SEResNeXt50_32x4d_B
 }
