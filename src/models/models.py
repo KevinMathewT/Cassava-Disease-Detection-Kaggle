@@ -1,3 +1,4 @@
+from timm.models.xception import xception
 import torch
 import torch.nn as nn
 from vision_transformer_pytorch import VisionTransformer
@@ -28,7 +29,7 @@ class BinaryHead(nn.Module):
 class SEResNeXt50_32x4d_BH(nn.Module):
     name = "SEResNeXt50_32x4d_BH"
 
-    def __init__(self, pretrained=False):
+    def __init__(self, pretrained=True):
         super().__init__()
         self.model_arch = "seresnext50_32x4d"
         self.net = timm.create_model(self.model_arch, pretrained=pretrained)
@@ -52,15 +53,14 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         # x = img_feature.view(x.size(0), -1).to(x.device)
         # x = self.fea_bn(x).to(x.device)
         # x = self.dropout(x)
-        output = self.fc(x)
-
-        return output
+        x = self.fc(x)
+        return x
 
 
 class ViTBase16_BH(nn.Module):
     name = "ViTBase16_BH"
 
-    def __init__(self, pretrained=False):
+    def __init__(self, pretrained=True):
         super().__init__()
         # self.model_arch = "vit_base_patch16_224"
         # self.net = timm.create_model("vit_base_patch16_224")
@@ -81,10 +81,11 @@ class ViTBase16_BH(nn.Module):
 
 
 class GeneralizedCassavaClassifier(nn.Module):
-    def __init__(self, model_arch, n_class=N_CLASSES, pretrained=False):
+    def __init__(self, model_arch, n_class=N_CLASSES, pretrained=True):
         super().__init__()
         self.name = model_arch
-        self.net = timm.create_model(model_arch, pretrained=pretrained)
+        self.model_arch = model_arch
+        self.net = timm.create_model(self.model_arch, pretrained=pretrained)
         model_list = list(self.net.children())
         model_list[-1] = nn.Identity(
             in_features=model_list[-1].in_features,
