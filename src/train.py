@@ -24,7 +24,7 @@ def run_fold(fold):
 
     train_loader, valid_loader  = get_loaders(fold)
     device                      = get_device(n=fold+1)
-    net                         = get_net(name=NET, pretrained=PRETRAINED).to(device)
+    net                         = net.to(device)
     scaler                      = torch.cuda.amp.GradScaler()
     optimizer, scheduler        = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
     # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
@@ -63,6 +63,8 @@ def train():
     print_fn(f"Training Model : {NET}")
 
     if not USE_TPU:
+        global net
+        net = get_net(name=NET, pretrained=PRETRAINED)
         if not PARALLEL_FOLD_TRAIN:
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
@@ -78,6 +80,8 @@ def train():
         if MIXED_PRECISION_TRAIN:
             os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
+        global net
+        net = get_net(name=NET, pretrained=PRETRAINED)
 
         FLAGS = {}
         xmp.spawn(_mp_fn, args=(FLAGS,), nprocs=8, start_method="fork")
