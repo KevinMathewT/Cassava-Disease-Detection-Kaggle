@@ -61,7 +61,7 @@ def run_fold(fold):
 
 def _mp_fn(rank, flags):
     torch.set_default_tensor_type("torch.FloatTensor")
-    for fold in [0, 1]:
+    for fold in [2, 3]:
         a = run_fold(fold)
 
 
@@ -76,7 +76,7 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            for fold in [0, 1]:
+            for fold in [2, 3]:
                 run_fold(fold)
 
         if PARALLEL_FOLD_TRAIN:
