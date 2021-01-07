@@ -30,6 +30,7 @@ class SEResNeXt50_32x4d_BH(nn.Module):
     def __init__(self, pretrained=False):
         super().__init__()
         self.model_arch = "seresnext50_32x4d"
+        self.model = timm.create_model(self.model_arch, pretrained=pretrained)
         model_list = list(self.model.children())
         model_list[-1] = nn.Identity()
         model_list[-2] = nn.Identity()
@@ -56,6 +57,7 @@ class ResNeXt50_32x4d_BH(nn.Module):
     def __init__(self, pretrained=False):
         super().__init__()
         self.model_arch = "resnext50_32x4d"
+        self.model = timm.create_model(self.model_arch, pretrained=pretrained)
         model_list = list(self.model.children())
         model_list[-1] = nn.Identity()
         model_list[-2] = nn.Identity()
