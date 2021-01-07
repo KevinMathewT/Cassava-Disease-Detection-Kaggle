@@ -60,7 +60,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             print(xm.get_ordinal(), "Outputs:", torch.any(image_preds.isnan()))
             loss = loss_fn(image_preds, image_labels)
             print(xm.get_ordinal(), "Loss:", torch.any(loss.isnan()))
-        #     loss.backward()
+            loss.backward()
         #     # print("Loss: ", loss.item())
 
         #     if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
