@@ -64,7 +64,7 @@ def train():
 
     if not USE_TPU:
         if not PARALLEL_FOLD_TRAIN:
-            for fold in range(FOLDS):
+            for fold in range(2, FOLDS):
                 run_fold(fold)
 
             # run_fold(0)
