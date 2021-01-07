@@ -64,10 +64,10 @@ def train():
 
     if not USE_TPU:
         if not PARALLEL_FOLD_TRAIN:
-            for fold in range(2, FOLDS):
-                run_fold(fold)
+            # for fold in range(2, FOLDS):
+            #     run_fold(fold)
 
-            # run_fold(0)
+            run_fold(0)
 
         if PARALLEL_FOLD_TRAIN:
             n_jobs = FOLDS
