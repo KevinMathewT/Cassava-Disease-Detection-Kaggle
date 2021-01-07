@@ -14,8 +14,8 @@ TRAIN_FOLDS           = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
 # WEIGHTS_PATH          = "/content/drive/My Drive" # For Colab
 # WEIGHTS_PATH          = "/vol/weights/" # For EC2
-USE_GPU               = True
-USE_TPU               = False
+USE_GPU               = False
+USE_TPU               = True
 GPUS                  = 1
 TPUS                  = 8 # Basically TPU Nodes
 PARALLEL_FOLD_TRAIN   = False
@@ -38,11 +38,11 @@ TRAIN_BATCH_SIZE      = 32
 VALID_BATCH_SIZE      = 32
 ACCUMULATE_ITERATION  = 1
 
-# NET                   = 'SEResNeXt50_32x4d_B'
+NET                   = 'SEResNeXt50_32x4d_B'
+# NET                   = "ResNeXt50_32x4d_BH"
 # NET                   = "ViTBase16_BH"
 # NET                   = 'resnext50_32x4d'
 # NET                   = 'seresnext50_32x4d'
-NET                   = "ResNeXt50_32x4d_BH"
 # NET                   = 'tf_efficientnet_b4_ns'
 # NET                   = 'gluon_resnet18_v1b'
 

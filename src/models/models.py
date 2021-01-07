@@ -76,7 +76,7 @@ class ResNeXt50_32x4d_BH(nn.Module):
         x = self.avg_pool(x)
         x = x.view(x.size(0), -1)
         # x = self.fea_bn(x)
-        # # fea = self.dropout(fea)
+        # fea = self.dropout(fea)
         x = self.binary_head(x)
         # x = self.fc(x)
 
