@@ -9,6 +9,8 @@ from .config import *
 from .utils import *
 from .loss import FocalCosineLoss, SmoothCrossEntropyLoss, bi_tempered_logistic_loss
 
+net = None
+
 if USE_TPU:
     import torch_xla.core.xla_model as xm
     import torch_xla.distributed.xla_multiprocessing as xmp
