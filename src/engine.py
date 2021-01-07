@@ -63,9 +63,9 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             loss.backward()
         #     # print("Loss: ", loss.item())
 
-            if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
-                if USE_TPU:
-                    xm.optimizer_step(optimizer, barrier=True)
+            # if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
+            #     if USE_TPU:
+            #         xm.optimizer_step(optimizer, barrier=True)
                 # else:
                 #     optimizer.step()
                 # if scheduler is not None and schd_batch_update:
