@@ -37,7 +37,6 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         self.fea_bn = nn.BatchNorm1d(2048)
         self.fea_bn.bias.requires_grad_(False)
         self.binary_head = BinaryHead(N_CLASSES, emb_size=2048, s=1)
-        self.s = torch.tensor(s)
         self.fc = nn.Sequential(nn.Linear(2048, N_CLASSES))
         self.dropout = nn.Dropout(p=0.2)
 
