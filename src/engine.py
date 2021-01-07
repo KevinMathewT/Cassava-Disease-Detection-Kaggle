@@ -59,7 +59,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             image_preds = model(imgs)
             loss = loss_fn(image_preds, image_labels)
             loss.backward()
-            print("Loss: ", loss.item())
+            # print("Loss: ", loss.item())
 
             if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
                 if USE_TPU:
@@ -77,8 +77,8 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 y_true=image_labels.detach().cpu(),
                 batch_size=curr_batch_size)
 
-            print("Loss Update:", running_loss.avg)
-            print("Acc Update:", running_loss.avg)
+            # print("Loss Update:", running_loss.avg)
+            # print("Acc Update:", running_loss.avg)
 
         if USE_TPU:
             loss = xm.mesh_reduce(
@@ -164,8 +164,9 @@ def get_net(name, pretrained=False):
 
 
 def get_optimizer_and_scheduler(net, dataloader):
+    print_fn = print if not USE_TPU else xm.master_print
     m = xm.xrt_world_size() if USE_TPU else 1
-    print(f"World Size: {m}")
+    print_fn(f"World Size: {m}")
 
     # Optimizers
     if OPTIMIZER == "Adam":
