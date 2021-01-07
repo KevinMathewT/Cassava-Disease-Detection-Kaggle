@@ -34,7 +34,7 @@ SCHEDULER             = "OneCycleLR"
 # SCHEDULER             = "CosineAnnealingWarmRestarts"
 # SCHEDULER             = "CosineAnnealingWarmRestarts"
 # SCHEDULER             = "CosineAnnealingWarmRestarts"
-LEARNING_RATE         = 1e-3
+LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 
 N_CLASSES             = 5
