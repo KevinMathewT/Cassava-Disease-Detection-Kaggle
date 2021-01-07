@@ -41,7 +41,8 @@ ACCUMULATE_ITERATION  = 1
 # NET                   = 'SEResNeXt50_32x4d_B'
 # NET                   = "ViTBase16_BH"
 # NET                   = 'resnext50_32x4d'
-NET                   = 'seresnext50_32x4d'
+# NET                   = 'seresnext50_32x4d'
+NET                   = "ResNeXt50_32x4d_BH"
 # NET                   = 'tf_efficientnet_b4_ns'
 # NET                   = 'gluon_resnet18_v1b'
 
