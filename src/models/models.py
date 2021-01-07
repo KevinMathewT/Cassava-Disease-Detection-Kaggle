@@ -76,7 +76,7 @@ class ResNeXt50_32x4d_BH(nn.Module):
         # x = self.fea_bn(x)
         # # fea = self.dropout(fea)
         x = self.binary_head(x)
-        x = self.fc(x)
+        # x = self.fc(x)
 
         return x
 
