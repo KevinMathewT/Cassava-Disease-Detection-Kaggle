@@ -70,7 +70,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 #     optimizer.step()
                 # if scheduler is not None and schd_batch_update:
                 #     scheduler.step()
-                # optimizer.zero_grad()
+                optimizer.zero_grad()
 
             running_loss.update(
                 curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
