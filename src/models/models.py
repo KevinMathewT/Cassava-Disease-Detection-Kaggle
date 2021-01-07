@@ -7,8 +7,8 @@ from ..config import *
 
 
 def l2_norm(input, axis=1):
-    norm = torch.norm(input, 2, axis, True)
-    output = torch.div(input, norm)
+    norm = torch.norm(input, 2, axis, True).to(input.device)
+    output = torch.div(input, norm).to(input.device)
     return output
 
 
