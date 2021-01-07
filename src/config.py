@@ -28,8 +28,13 @@ H                     = 512
 W                     = 512
 
 OPTIMIZER             = "Adam"
-SCHEDULER             = "CosineAnnealingWarmRestarts"
-LEARNING_RATE         = 3e-4
+# SCHEDULER             = "CosineAnnealingWarmRestarts"
+# SCHEDULER             = "CosineAnnealingLR"
+SCHEDULER             = "OneCycleLR"
+# SCHEDULER             = "CosineAnnealingWarmRestarts"
+# SCHEDULER             = "CosineAnnealingWarmRestarts"
+# SCHEDULER             = "CosineAnnealingWarmRestarts"
+LEARNING_RATE         = 1e-3
 MAX_EPOCHS            = 15
 
 N_CLASSES             = 5
