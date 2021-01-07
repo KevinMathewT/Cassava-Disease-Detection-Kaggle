@@ -91,7 +91,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             loss = running_loss.avg
             acc = running_accuracy.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps) or ((step + 1) == 1):
-            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1}/{total_steps}] Loss: {loss:.4f} | Accuracy: {acc:.4f}'
+            description = f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}][{step + 1:>3d}/{total_steps}] Loss: {loss:.4f} | Accuracy: {acc:.4f} | Time: {time.time() - t}'
             print_fn(description, flush=True)
 
         # break
