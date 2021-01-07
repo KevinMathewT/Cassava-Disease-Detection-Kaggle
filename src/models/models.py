@@ -40,12 +40,13 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         self.dropout = nn.Dropout(p=0.2)
 
     def forward(self, x):
-        img_feature = self.net(x)
-        img_feature = self.avg_pool(img_feature)
-        img_feature = img_feature.view(img_feature.size(0), -1)
-        fea = self.fea_bn(img_feature)
+        print(x.device)
+        img_feature = self.net(x).to(x.device)
+        img_feature = self.avg_pool(img_feature).to(x.device)
+        img_feature = img_feature.view(img_feature.size(0), -1).to(x.device)
+        fea = self.fea_bn(img_feature).to(x.device)
         # fea = self.dropout(fea)
-        output = self.binary_head(fea)
+        output = self.binary_head(fea).to(x.device)
 
         return output
 
