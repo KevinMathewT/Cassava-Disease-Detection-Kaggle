@@ -37,6 +37,8 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         self.fea_bn = nn.BatchNorm1d(2048)
         self.fea_bn.bias.requires_grad_(False)
         self.binary_head = BinaryHead(N_CLASSES, emb_size=2048, s=1)
+        self.s = torch.tensor(s)
+        self.fc = nn.Sequential(nn.Linear(2048, N_CLASSES))
         self.dropout = nn.Dropout(p=0.2)
 
     def forward(self, x):
@@ -46,7 +48,7 @@ class SEResNeXt50_32x4d_BH(nn.Module):
         img_feature = img_feature.view(img_feature.size(0), -1).to(x.device)
         fea = self.fea_bn(img_feature).to(x.device)
         # fea = self.dropout(fea)
-        output = self.binary_head(fea).to(x.device)
+        output = self.fc(fea)
 
         return output
 
