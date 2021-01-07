@@ -80,15 +80,17 @@ class GeneralizedCassavaClassifier(nn.Module):
         self.name = model_arch
         self.net = timm.create_model(model_arch, pretrained=pretrained)
         model_list = list(self.net.children())
-        model_list[-1] = nn.Linear(
+        model_list[-1] = nn.Identity(
             in_features=model_list[-1].in_features,
             out_features=n_class,
             bias=True
         )
         self.net = nn.Sequential(*model_list)
+        self.fc = nn.Sequential(nn.Linear(2048, n_class))
 
     def forward(self, x):
         x = self.net(x)
+        x = self.fc(x)
         return x
 
 
