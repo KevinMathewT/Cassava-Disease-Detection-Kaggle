@@ -60,7 +60,7 @@ class ResNeXt50_32x4d_BH(nn.Module):
         self.model = timm.create_model(self.model_arch, pretrained=pretrained)
         model_list = list(self.model.children())
         model_list[-1] = nn.Identity()
-        model_list[-2] = nn.Identity()
+        # model_list[-2] = nn.Identity()
         self.net = nn.Sequential(*model_list)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
         self.fea_bn = nn.BatchNorm1d(2048)
