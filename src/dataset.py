@@ -170,6 +170,7 @@ class CassavaDataset(Dataset):
 
 def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
     if USE_TPU:
+        print("This one")
         train_dataset = CassavaDataset(train, data_root, transforms=get_train_transforms(
         ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
         train_sampler = torch.utils.data.distributed.DistributedSampler(
@@ -195,6 +196,7 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
 
 def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
     if USE_TPU:
+        print("This one")
         valid_dataset = CassavaDataset(valid, data_root, transforms=get_valid_transforms(
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
         valid_sampler = torch.utils.data.distributed.DistributedSampler(
