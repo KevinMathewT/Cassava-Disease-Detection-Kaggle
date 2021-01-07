@@ -15,11 +15,12 @@ def l2_norm(input, axis=1):
 class BinaryHead(nn.Module):
     def __init__(self, num_class=N_CLASSES, emb_size=2048, s=16.0):
         super(BinaryHead, self).__init__()
-        self.s = s
+        self.s = torch.tensor(s)
         self.fc = nn.Sequential(nn.Linear(emb_size, num_class))
 
     def forward(self, fea):
-        fea = l2_norm(fea)
+        self.s = self.s.to(fea.device)
+        fea = l2_norm(fea).to(fea.device)
         logit = self.fc(fea) * self.s
         return logit
 
@@ -76,17 +77,17 @@ class GeneralizedCassavaClassifier(nn.Module):
     def __init__(self, model_arch, n_class=N_CLASSES, pretrained=False):
         super().__init__()
         self.name = model_arch
-        self.model = timm.create_model(model_arch, pretrained=pretrained)
-        model_list = list(self.model.children())
+        self.net = timm.create_model(model_arch, pretrained=pretrained)
+        model_list = list(self.net.children())
         model_list[-1] = nn.Linear(
             in_features=model_list[-1].in_features,
             out_features=n_class,
             bias=True
         )
-        self.model = nn.Sequential(*model_list)
+        self.net = nn.Sequential(*model_list)
 
     def forward(self, x):
-        x = self.model(x)
+        x = self.net(x)
         return x
 
 
