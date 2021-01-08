@@ -160,8 +160,6 @@ def get_net(name, pretrained=False):
     else:
         net = nets[name](pretrained=pretrained)
 
-    if USE_TPU:
-        net = xmp.MpModelWrapper(net)
     return net
 
 

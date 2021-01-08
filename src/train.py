@@ -25,6 +25,7 @@ def run_fold(fold):
     print_fn(f"Mixed Precision Training:    {MIXED_PRECISION_TRAIN}")
 
     global net
+    net = xmp.MpModelWrapper(net) if USE_TPU else net
     train_loader, valid_loader = get_loaders(fold)
     device = get_device(n=fold+1)
     mp_device_loader = pl.MpDeviceLoader(
