@@ -91,7 +91,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             loss = running_loss.avg
             acc = running_accuracy.avg
         if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps) or ((step + 1) == 1):
-            description = f'[{fold}/{FOLDS - 1}][{epoch:>2d}/{MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d:>2d}] Loss: {loss:.4f} | Accuracy: {acc:.4f} | Time: {time.time() - t:.4f}'
+            description = f'[{fold}/{FOLDS - 1}][{epoch:>2d}/{MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d}] Loss: {loss:.4f} | Accuracy: {acc:.4f} | Time: {time.time() - t:.4f}'
             print_fn(description, flush=True)
 
         # break
@@ -237,14 +237,14 @@ def get_device(n):
         n = 0
 
     if not USE_GPU and not USE_TPU:
-        print_fn("Device:                       CPU")
+        print_fn("Device:                      CPU")
         return torch.device('cpu')
     elif USE_TPU:
-        print_fn("Device:                       TPU")
+        print_fn("Device:                      TPU")
         if not PARALLEL_FOLD_TRAIN:
             return xm.xla_device()
         else:
             return xm.xla_device(n)
     elif USE_GPU:
-        print_fn("Device:                       GPU")
+        print_fn("Device:                      GPU")
         return torch.device('cuda:' + str(n))
