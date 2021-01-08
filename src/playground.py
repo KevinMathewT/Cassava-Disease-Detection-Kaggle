@@ -30,6 +30,7 @@ print("Here")
 net = net.to(device)
 print("Here")
 if USE_TPU:
+    print("This one")
     net.load_state_dict(xser.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
 else:
     net.load_state_dict(torch.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
