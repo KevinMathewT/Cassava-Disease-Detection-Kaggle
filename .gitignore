@@ -141,6 +141,7 @@ cython_debug/
 bash_scripts/
 input/cassava-leaf-disease-classification/
 src/models/*/
+generated/weights/
 
 *.pem
 tb_logs/

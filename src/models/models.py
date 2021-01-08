@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
-from vision_transformer_pytorch import VisionTransformer
 
 import timm
+from vision_transformer_pytorch import VisionTransformer
+
 from ..config import *
 
 if USE_TPU:
