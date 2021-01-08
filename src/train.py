@@ -21,8 +21,8 @@ warnings.filterwarnings("ignore")
 
 def run_fold(fold):
     print_fn = print if not USE_TPU else xm.master_print
-    print_fn(f"Training Fold:           {fold}")
-    print_fn(f"Mixed Precision Training:{MIXED_PRECISION_TRAIN}")
+    print_fn(f"Training Fold:               {fold}")
+    print_fn(f"Mixed Precision Training:    {MIXED_PRECISION_TRAIN}")
 
     global net
     train_loader, valid_loader = get_loaders(fold)
@@ -70,7 +70,7 @@ def _mp_fn(rank, flags):
 
 def train():
     print_fn = print
-    print_fn(f"Training Model:          {NET}")
+    print_fn(f"Training Model:              {NET}")
 
     if not USE_TPU:
         if not PARALLEL_FOLD_TRAIN:
