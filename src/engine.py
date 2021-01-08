@@ -165,7 +165,8 @@ def get_net(name, pretrained=False):
 
 def get_optimizer_and_scheduler(net, dataloader):
     print_fn = print if not USE_TPU else xm.master_print
-    m = xm.xrt_world_size() if USE_TPU else 1
+    # m = xm.xrt_world_size() if USE_TPU else 1
+    m = 1
     print_fn(f"World Size:                  {m}")
 
     # Optimizers
