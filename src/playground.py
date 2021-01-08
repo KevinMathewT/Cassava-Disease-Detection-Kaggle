@@ -27,7 +27,7 @@ dataloader = DataLoader(dataset,
                         shuffle=False)
 device = get_device(n=0)
 net = get_net(name=NET, pretrained=False)
-net.load_state_dict(torch.load("./generated/weights\SEResNeXt50_32x4d_BH/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
+net.load_state_dict(torch.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
 net = net.to(device)
 
 preds = np.empty((0, 5), dtype=np.float64)
