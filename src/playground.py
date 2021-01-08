@@ -13,9 +13,6 @@ from src.config import *
 from src.utils import *
 from src.loss import FocalCosineLoss, SmoothCrossEntropyLoss, bi_tempered_logistic_loss
 
-if USE_TPU:
-    import torch_xla.utils.serialization as xser
-
 # from IPython.display import FileLinks
 # FileLinks(WEIGHTS_PATH)
 
@@ -30,7 +27,7 @@ print("Here")
 net = net.to(device)
 print("Here")
 if USE_TPU:
-    print("This one")
+    import torch_xla.utils.serialization as xser
     net.load_state_dict(xser.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
 else:
     net.load_state_dict(torch.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
