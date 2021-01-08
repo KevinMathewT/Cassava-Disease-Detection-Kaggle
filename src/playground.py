@@ -17,11 +17,17 @@ from src.loss import FocalCosineLoss, SmoothCrossEntropyLoss, bi_tempered_logist
 # FileLinks(WEIGHTS_PATH)
 
 df = pd.read_csv(TRAIN_FOLDS)
+print("Here")
 dataloader = get_infer_dataloader(infer=df)
+print("Here")
 device = get_device(n=0)
+print("Here")
 net = get_net(name=NET, pretrained=False)
+print("Here")
 net.load_state_dict(torch.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin"))
+print("Here")
 net = net.to(device)
+print("Here")
 
 preds = np.empty((0, 5), dtype=np.float64)
 for images, labels in tqdm(dataloader):
