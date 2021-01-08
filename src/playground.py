@@ -33,7 +33,7 @@ net = net.to(device)
 preds = np.empty((0, 5), dtype=np.float64)
 for images, labels in tqdm(dataloader):
     images, labels = images.to(device), labels.to(device)
-    predictions = net(images).detach().cpu().numpy()
+    predictions = net(images).cpu().numpy()
     preds = np.concatenate([preds, predictions], axis=0)
     
 print(preds.shape)
