@@ -217,29 +217,32 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
             num_workers=CPU_WORKERS,
             shuffle=False)
 
+
 def get_infer_dataloader(infer, data_root=TRAIN_IMAGES_DIR):
-    if USE_TPU:
-        valid_dataset = CassavaDataset(infer, data_root, transforms=get_valid_transforms(
+    OK = False
+    if USE_TPU and OK:
+        infer_dataset = CassavaDataset(infer, data_root, transforms=get_valid_transforms(
         ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
-        valid_sampler = torch.utils.data.distributed.DistributedSampler(
-            valid_dataset,
+        infer_sampler = torch.utils.data.distributed.DistributedSampler(
+            infer_dataset,
             num_replicas=xm.xrt_world_size(),
             rank=xm.get_ordinal(),
             shuffle=False)
         return DataLoader(
-            valid_dataset,
+            infer_dataset,
             batch_size=VALID_BATCH_SIZE,
-            sampler=valid_sampler,
+            sampler=infer_sampler,
             num_workers=CPU_WORKERS,
             drop_last=False)
     else:
         return DataLoader(
-            CassavaDataset(valid, data_root, transforms=get_valid_transforms(
+            CassavaDataset(infer, data_root, transforms=get_valid_transforms(
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
             batch_size=VALID_BATCH_SIZE,
             drop_last=True,
             num_workers=CPU_WORKERS,
             shuffle=False)
+
 
 def get_loaders(fold):
     train_folds = pd.read_csv(TRAIN_FOLDS)
