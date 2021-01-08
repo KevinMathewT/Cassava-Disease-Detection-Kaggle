@@ -30,7 +30,7 @@ def run_fold(fold):
     mp_device_loader = pl.MpDeviceLoader(
         train_loader, device, fixed_batch_size=True) if USE_TPU else None
     net = net.to(device)
-    scaler = torch.cuda.amp.GradScaler() if not USE_TPU else None
+    scaler = torch.cuda.amp.GradScaler() if not USE_TPU and MIXED_PRECISION_TRAIN else None
     # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
     # loss_tr                     = FocalCosineLoss(device=device).to(device)
     # loss_tr                     = SmoothCrossEntropyLoss(smoothing=0.1).to(device)
