@@ -23,7 +23,6 @@ from src.loss import FocalCosineLoss, SmoothCrossEntropyLoss, bi_tempered_logist
 # device = get_device(n=0)
 # print("Here")
 net = get_net(name=NET, pretrained=False)
-print(net)
 # print("Here")
 # net = net.to(device)
 # print("Here")
