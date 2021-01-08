@@ -230,7 +230,7 @@ def get_infer_dataloader(infer, data_root=TRAIN_IMAGES_DIR):
             shuffle=False)
         return DataLoader(
             infer_dataset,
-            batch_size=64,
+            batch_size=32,
             sampler=infer_sampler,
             num_workers=CPU_WORKERS,
             drop_last=False)
@@ -238,7 +238,7 @@ def get_infer_dataloader(infer, data_root=TRAIN_IMAGES_DIR):
         return DataLoader(
             CassavaDataset(infer, data_root, transforms=get_valid_transforms(
             ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
-            batch_size=64,
+            batch_size=32,
             drop_last=False,
             num_workers=CPU_WORKERS,
             shuffle=False)
