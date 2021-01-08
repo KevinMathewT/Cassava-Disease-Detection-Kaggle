@@ -35,8 +35,9 @@ for images, labels in tqdm(dataloader):
     preds = np.concatenate([preds, predictions], axis=0)
     break
     
+
 print(preds.shape)
-ids = df["image_id"].to_numpy().reshape(-1, 1)
+ids = df["image_id"].to_numpy()[:128].reshape(-1, 1)
 preds = np.concatenate([ids, preds], axis=1)
 print(preds.shape)
 preds = pd.DataFrame(preds, cols=['id', '0', '1', '2', '3', '4'])
