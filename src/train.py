@@ -21,7 +21,8 @@ warnings.filterwarnings("ignore")
 
 def run_fold(fold):
     print_fn = print if not USE_TPU else xm.master_print
-    print_fn(f"Training Fold: {fold}")
+    print_fn(f"Training Fold:           {fold}")
+    print_fn(f"Mixed Precision Training:{MIXED_PRECISION_TRAIN}")
 
     global net
     train_loader, valid_loader = get_loaders(fold)
@@ -62,21 +63,23 @@ def run_fold(fold):
 def _mp_fn(rank, flags):
     torch.set_default_tensor_type("torch.FloatTensor")
     for fold in [2, 3]:
+        global net
+        net = get_net(name=NET, pretrained=PRETRAINED)
         a = run_fold(fold)
 
 
 def train():
     print_fn = print
-    print_fn(f"Training Model : {NET}")
+    print_fn(f"Training Model:          {NET}")
 
     if not USE_TPU:
-        global net
-        net = get_net(name=NET, pretrained=PRETRAINED)
         if not PARALLEL_FOLD_TRAIN:
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
             for fold in [2, 3]:
+                global net
+                net = get_net(name=NET, pretrained=PRETRAINED)
                 run_fold(fold)
 
         if PARALLEL_FOLD_TRAIN:
@@ -88,7 +91,6 @@ def train():
         if MIXED_PRECISION_TRAIN:
             os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
-        net = get_net(name=NET, pretrained=PRETRAINED)
 
         FLAGS = {}
         xmp.spawn(_mp_fn, args=(FLAGS,), nprocs=8, start_method="fork")

@@ -171,6 +171,8 @@ def get_optimizer_and_scheduler(net, dataloader):
     print_fn(f"World Size: {m}")
 
     # Optimizers
+
+    print_fn(f"Optimizer:               {OPTIMIZER}")
     if OPTIMIZER == "Adam":
         optimizer = torch.optim.Adam(
             params=net.parameters(),
@@ -192,6 +194,8 @@ def get_optimizer_and_scheduler(net, dataloader):
             net.parameters(), lr=LEARNING_RATE * m)
 
     # Schedulers
+
+    print_fn(f"Scheduler:               {SCHEDULER}")
     if SCHEDULER == "ReduceLROnPlateau":
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
@@ -228,15 +232,19 @@ def get_optimizer_and_scheduler(net, dataloader):
 
 
 def get_device(n):
+    print_fn = print if not USE_TPU else xm.master_print
     if not PARALLEL_FOLD_TRAIN:
         n = 0
 
     if not USE_GPU and not USE_TPU:
+        print_fn("Device:                   CPU")
         return torch.device('cpu')
     elif USE_TPU:
+        print_fn("Device:                   TPU")
         if not PARALLEL_FOLD_TRAIN:
             return xm.xla_device()
         else:
             return xm.xla_device(n)
     elif USE_GPU:
+        print_fn("Device:                   GPU")
         return torch.device('cuda:' + str(n))
