@@ -63,7 +63,7 @@ def run_fold(fold):
 
 def _mp_fn(rank, flags):
     torch.set_default_tensor_type("torch.FloatTensor")
-    for fold in [0, 4]:
+    for fold in [1, 3]:
         global net
         net = get_net(name=NET, pretrained=PRETRAINED)
         a = run_fold(fold)
@@ -78,7 +78,7 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            for fold in [0, 4]:
+            for fold in [1, 3]:
                 global net
                 net = get_net(name=NET, pretrained=PRETRAINED)
                 run_fold(fold)
