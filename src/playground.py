@@ -13,14 +13,19 @@ from src.config import *
 from src.utils import *
 from src.loss import FocalCosineLoss, SmoothCrossEntropyLoss, bi_tempered_logistic_loss
 
-# from IPython.display import FileLinks
-# FileLinks(WEIGHTS_PATH)
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
+    import torch_xla.distributed.xla_multiprocessing as xmp
+    import torch_xla.distributed.parallel_loader as pl
+
+os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 
 df = pd.read_csv(TRAIN_FOLDS)
 dataloader = get_infer_dataloader(infer=df)
 device = get_device(n=0)
 net = get_net(name=NET, pretrained=False)
 net.load_state_dict(torch.load("../input/model-weights/SEResNeXt50_32x4d_BH_fold_2_11.bin", map_location=torch.device('cpu')))
+net = xmp.MpModelWrapper(net) if USE_TPU else net
 net = net.to(device)
 
 preds = np.empty((0, 5), dtype=np.float64)
