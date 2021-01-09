@@ -245,5 +245,5 @@ def get_device(n):
         else:
             return xm.xla_device(n)
     elif USE_GPU:
-        print_fn(f"Device:                      GPU {torch.cuda.get_device_name(0)}")
+        print_fn(f"Device:                      GPU ({torch.cuda.get_device_name(0)})")
         return torch.device('cuda:' + str(n))
