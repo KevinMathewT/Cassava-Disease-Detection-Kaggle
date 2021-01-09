@@ -88,22 +88,20 @@ class ViTBase16_BH(nn.Module):
 
     def __init__(self, pretrained=False):
         super().__init__()
-        # self.model_arch = "vit_base_patch16_224"
-        # self.net = timm.create_model("vit_base_patch16_224")
-        self.net = VisionTransformer.from_name('ViT-B_16', num_classes=5)
-        self.net.head = nn.Linear(in_features=768, out_features=768, bias=True)
+        self.net = timm.create_model("vit_base_patch16_224", pretrained=False)
+        self.net.norm = nn.Identity()
+        self.net.head = nn.Identity()
         self.fea_bn = nn.BatchNorm1d(768)
         self.fea_bn.bias.requires_grad_(False)
         self.binary_head = BinaryHead(N_CLASSES, emb_size=768, s=1)
         self.dropout = nn.Dropout(p=0.2)
 
     def forward(self, x):
-        img_feature = self.net(x)
-        fea = self.fea_bn(img_feature)
+        x = self.net(x)
+        x = self.fea_bn(x)
         # fea = self.dropout(fea)
-        output = self.binary_head(fea)
-
-        return output
+        x = self.binary_head(x)
+        return x
 
 
 class GeneralizedCassavaClassifier(nn.Module):

@@ -56,10 +56,67 @@
 
 # print(f'Result: y = {a.item()} + {b.item()} x + {c.item()} x^2 + {d.item()} x^3')
 
-from src.utils import create_dirs
-from src.config import NET
+# from src.config import *
+# from src.utils import *
 
-print(NET)
-NET = "kevin"
-print(NET)
-create_dirs()
+# print(NET)
+# config.NET = "kevin"
+# print(NET)
+# create_dirs()
+
+from timm.models.xception import Xception
+import torch
+import torch.nn as nn
+
+import timm
+from vision_transformer_pytorch import VisionTransformer
+
+def l2_norm(input, axis=1):
+    norm = torch.norm(input, 2, axis, True)
+    output = torch.div(input, norm)
+    return output
+
+
+class BinaryHead(nn.Module):
+    def __init__(self, num_class=5, emb_size=2048, s=16.0):
+        super(BinaryHead, self).__init__()
+        self.s = s
+        self.fc = nn.Sequential(nn.Linear(emb_size, num_class))
+
+    def forward(self, fea):
+        fea = l2_norm(fea)
+        logit = self.fc(fea) * self.s
+        return logit
+
+# net = timm.create_model("vit_base_patch16_224", pretrained=False)
+# net.norm = nn.Identity()
+# net.head = nn.Identity()
+# print(net)
+N_CLASSES = 5
+# x = torch.ones((2, 3, 224, 224))
+# print(net(x).shape)
+
+class ViTBase16_BH(nn.Module):
+    name = "ViTBase16_BH"
+
+    def __init__(self, pretrained=False):
+        super().__init__()
+        self.net = timm.create_model("vit_base_patch16_224", pretrained=False)
+        self.net.norm = nn.Identity()
+        self.net.head = nn.Identity()
+        self.fea_bn = nn.BatchNorm1d(768)
+        self.fea_bn.bias.requires_grad_(False)
+        self.binary_head = BinaryHead(N_CLASSES, emb_size=768, s=1)
+        self.dropout = nn.Dropout(p=0.2)
+
+    def forward(self, x):
+        x = self.net(x)
+        x = self.fea_bn(x)
+        # fea = self.dropout(fea)
+        x = self.binary_head(x)
+        return x
+
+
+net = ViTBase16_BH(pretrained=False)
+x = torch.ones((2, 3, 224, 224))
+print(net(x).shape)

@@ -32,16 +32,16 @@ def get_accuracy(predictions, targets, normalize=True):
 
 def create_dirs():
     try:
-        print(WEIGHTS_PATH)
-        os.mkdir(WEIGHTS_PATH)
-        print(f"Created Folder \'{WEIGHTS_PATH}\'")
+        print(config.WEIGHTS_PATH)
+        os.mkdir(config.WEIGHTS_PATH)
+        print(f"Created Folder \'{config.WEIGHTS_PATH}\'")
     except FileExistsError:
-        print(f"Folder \'{WEIGHTS_PATH}\' already exists.")
+        print(f"Folder \'{config.WEIGHTS_PATH}\' already exists.")
     try:
-        os.mkdir(os.path.join(WEIGHTS_PATH, f'{NET}'))
-        print(f"Created Folder \'{os.path.join(WEIGHTS_PATH, f'{NET}')}\'")
+        os.mkdir(os.path.join(config.WEIGHTS_PATH, f'{config.NET}'))
+        print(f"Created Folder \'{os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}\'")
     except FileExistsError:
-        print(f"Folder \'{os.path.join(WEIGHTS_PATH, f'{NET}')}\' already exists.")
+        print(f"Folder \'{os.path.join(config.WEIGHTS_PATH, f'{config.NET}')}\' already exists.")
 
 class AverageLossMeter:
     def __init__(self):
