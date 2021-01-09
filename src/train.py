@@ -87,6 +87,7 @@ def train():
             config.NET = "ViTBase16_BH"
             config.H   = 224
             config.W   = 224
+            config.ACCUMULATE_ITERATION = 1
 
             for fold in [0]:
                 global net
