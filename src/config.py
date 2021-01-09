@@ -40,13 +40,8 @@ TRAIN_BATCH_SIZE      = 32
 VALID_BATCH_SIZE      = 32
 ACCUMULATE_ITERATION  = 2
 
-# NET                   = 'SEResNeXt50_32x4d_BH'
-NET                   = "ResNeXt50_32x4d_BH"
-# NET                   = "ViTBase16_BH"
-# NET                   = 'resnext50_32x4d'
-# NET                   = 'seresnext50_32x4d'
-# NET                   = 'tf_efficientnet_b4_ns'
-# NET                   = 'gluon_resnet18_v1b'
+NET                   = "ResNeXt50_32x4d_BH" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, 
+                                             #  resnext50_32x4d, seresnext50_32x4d, tf_efficientnet_b4_ns, gluon_resnet18_v1b]
 
 PRETRAINED            = True
 LEARNING_VERBOSE      = True
