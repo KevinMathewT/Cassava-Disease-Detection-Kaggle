@@ -89,6 +89,7 @@ def train():
             config.W   = 224
 
             for fold in [0]:
+                global net
                 net = get_net(name=NET, pretrained=PRETRAINED)
                 run_fold(fold)
 
