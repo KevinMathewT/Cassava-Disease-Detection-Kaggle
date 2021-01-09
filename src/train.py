@@ -88,6 +88,8 @@ def train():
             config.H   = 224
             config.W   = 224
             config.ACCUMULATE_ITERATION = 1
+            config.TRAIN_BATCH_SIZE = 32
+            config.VALID_BATCH_SIZE = 32
 
             for fold in [0]:
                 global net
