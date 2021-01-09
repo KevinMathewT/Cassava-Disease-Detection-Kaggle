@@ -1,111 +1,65 @@
-# # # # # import torch
+# # -*- coding: utf-8 -*-
+# import torch
+# import math
 
-# # # # # from .config import *
-# # # # # from .engine import get_net
+# dtype = torch.float
+# device = torch.device("cpu")
+# # device = torch.device("cuda:0")  # Uncomment this to run on GPU
 
-# # # # # net = get_net(name=NET, fold=0, pretrained=False)
-# # # # # net.load_state_dict(torch.load("D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\src\models\gluon_resnet18_v1b\cldc-net=gluon_resnet18_v1b-fold=0-epoch=001-val_loss_epoch=1.6823.ckpt")["state_dict"])
+# # Create Tensors to hold input and outputs.
+# # By default, requires_grad=False, which indicates that we do not need to
+# # compute gradients with respect to these Tensors during the backward pass.
+# x = torch.linspace(-math.pi, math.pi, 2000, device=device, dtype=dtype)
+# y = torch.sin(x)
 
-# # # # # print(net)
+# # Create random Tensors for weights. For a third order polynomial, we need
+# # 4 weights: y = a + b x + c x^2 + d x^3
+# # Setting requires_grad=True indicates that we want to compute gradients with
+# # respect to these Tensors during the backward pass.
+# a = torch.randn((), device=device, dtype=dtype, requires_grad=True)
+# b = torch.randn((), device=device, dtype=dtype, requires_grad=True)
+# c = torch.randn((), device=device, dtype=dtype, requires_grad=True)
+# d = torch.randn((), device=device, dtype=dtype, requires_grad=True)
 
-# # # # # from joblib import Parallel, delayed
-# # # # # from math import sqrt
-# # # # # from time import sleep
+# learning_rate = 1e-6
+# for t in range(2000):
+#     # Forward pass: compute predicted y using operations on Tensors.
+#     y_pred = a + b * x + c * x ** 2 + d * x ** 3
 
-# # # # # x = 10
+#     # Compute and print loss using operations on Tensors.
+#     # Now loss is a Tensor of shape (1,)
+#     # loss.item() gets the scalar value held in the loss.
+#     loss = (y_pred - y).pow(2).sum()
+#     if t % 100 == 99:
+#         print(t, loss.item())
 
-# # # # # def f(i):
-# # # # #     print(f"Called {i}")
-# # # # #     sleep((x - i))
-# # # # #     print(f"Finished {i}")
-# # # # #     return i
+#     # Use autograd to compute the backward pass. This call will compute the
+#     # gradient of loss with respect to all Tensors with requires_grad=True.
+#     # After this call a.grad, b.grad. c.grad and d.grad will be Tensors holding
+#     # the gradient of the loss with respect to a, b, c, d respectively.
+#     loss.backward()
 
-# # # # # print(Parallel(n_jobs=10)(delayed(f)(i) for i in range(x)))
+#     # Manually update weights using gradient descent. Wrap in torch.no_grad()
+#     # because weights have requires_grad=True, but we don't need to track this
+#     # in autograd.
+#     with torch.no_grad():
+#         a -= learning_rate * a.grad
+#         b -= learning_rate * b.grad
+#         c -= learning_rate * c.grad
+#         d -= learning_rate * d.grad
 
-# # import timm
-# # import pprint
-# # import torch
-# # import torch.nn as nn
-# # from vision_transformer_pytorch import VisionTransformer
+#         # Manually zero the gradients after updating weights
+#         a.grad = None
+#         b.grad = None
+#         c.grad = None
+#         d.grad = None
 
-# # # pp = pprint.PrettyPrinter(indent=4)
-# # # list = timm.list_models()
+# print(f'Result: y = {a.item()} + {b.item()} x + {c.item()} x^2 + {d.item()} x^3')
 
-# # # pp.pprint(list)
+from src.utils import create_dirs
+from src.config import NET
 
-# # # from prettytable import PrettyTable
-
-# # # def count_parameters(model):
-# # #     table = PrettyTable(["Modules", "Parameters"])
-# # #     total_params = 0
-# # #     for name, parameter in model.named_parameters():
-# # #         if not parameter.requires_grad: continue
-# # #         param = parameter.numel()
-# # #         table.add_row([name, param])
-# # #         total_params+=param
-# # #     # print(table)
-# # #     print(f"Total Trainable Params: {total_params}")
-# # #     return total_params
-
-# # # class Identity(nn.Module):
-# # #     def __init__(self, _modules=None, _forward_pre_hooks=None, _forward_hooks=None, _backward_hooks=None):
-# # #         self._modules = _modules
-# # #         self._forward_pre_hooks = _forward_pre_hooks
-# # #         self._forward_hooks = _forward_hooks
-# # #         self._backward_hooks = _backward_hooks
-# # #         return
-
-# # #     def forward(self, x):
-# # #         return x
-
-# # # class Identity(nn.Module):
-# # #     def __init__(self):
-# # #         super().__init__()
-
-# # #     def forward(self, x):
-# # #         return x
-
-# # model = VisionTransformer.from_name('ViT-B_16')
-# # # model.norm = Identity(_modules={}, _forward_pre_hooks={}, _forward_hooks={}, _backward_hooks={})
-# # # model.head = Identity(_modules={}, _forward_pre_hooks={}, _forward_hooks={}, _backward_hooks={})
-# # # model.head = nn.Linear()
-# # model = nn.Sequential(*list(model.children()))
-# # # model = timm.create_model("seresnext50_32x4d")
-# # # model = nn.Sequential(*list(
-# # #             timm.create_model("vit_base_patch16_224").children()))
-# # # avg_pool = nn.AdaptiveAvgPool2d((1, 1))
-
-# # # count_parameters(model)
-# # print(model)
-
-# # batch = torch.ones(4, 3, 224, 224)
-# # # batch = avg_pool(batch)
-# # out = model(batch)
-# # print(out.size())
-
-# # # import numpy as np
-
-# # # cutmix_params = {}
-# # # cutmix_params['alpha'] = 1
-# # # print(np.clip(np.random.beta(
-# # #     cutmix_params['alpha'], cutmix_params['alpha']), 0.6, 0.7))
-
-# # # import torch
-
-# # # from .engine import get_net
-# # # from .config import *
-
-# # # device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-# # # net = get_net(name=NET, pretrained=PRETRAINED).to(device)
-# # # net.load_state_dict(torch.load(f'D:\Kevin\Machine Learning\Cassava Leaf Disease Classification\src\models\weights\\tf_efficientnet_b4_ns\\tf_efficientnet_b4_ns_fold_0_0'))
-
-# # # print(net)
-
-# for i in range(1, 5):
-#     print(i)
-
-import torch
-
-a = torch.tensor(16)
-
-print(a)
+print(NET)
+NET = "kevin"
+print(NET)
+create_dirs()

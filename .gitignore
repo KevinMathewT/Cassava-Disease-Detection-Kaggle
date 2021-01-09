@@ -142,6 +142,7 @@ bash_scripts/
 input/cassava-leaf-disease-classification/
 src/models/*/
 generated/weights/
+generated/links.txt
 
 *.pem
 tb_logs/

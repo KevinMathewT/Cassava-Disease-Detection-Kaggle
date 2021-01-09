@@ -20,25 +20,26 @@ warnings.filterwarnings("ignore")
 
 
 def run_fold(fold):
+    create_dirs()
     print_fn = print if not USE_TPU else xm.master_print
     print_fn(f"Training Fold:               {fold}")
     print_fn(f"Mixed Precision Training:    {MIXED_PRECISION_TRAIN}")
 
     global net
-    net = xmp.MpModelWrapper(net) if USE_TPU else net
-    train_loader, valid_loader = get_loaders(fold)
-    device = get_device(n=fold+1)
-    mp_device_loader = pl.MpDeviceLoader(
-        train_loader, device, fixed_batch_size=True) if USE_TPU else None
-    net = net.to(device)
-    scaler = torch.cuda.amp.GradScaler() if not USE_TPU and MIXED_PRECISION_TRAIN else None
-    # loss_tr                     = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
-    # loss_tr                     = FocalCosineLoss(device=device).to(device)
-    # loss_tr                     = SmoothCrossEntropyLoss(smoothing=0.1).to(device)
-    loss_tr = bi_tempered_logistic_loss
-    loss_fn = nn.CrossEntropyLoss().to(device)
-    optimizer, scheduler = get_optimizer_and_scheduler(
-        net=net, dataloader=train_loader)
+    net                             = xmp.MpModelWrapper(net) if USE_TPU else net
+    train_loader, valid_loader      = get_loaders(fold)
+    device                          = get_device(n=fold+1)
+    mp_device_loader                = pl.MpDeviceLoader(train_loader, 
+                                                        device, fixed_batch_size=True) if USE_TPU else None
+    net                             = net.to(device)
+    scaler                          = torch.cuda.amp.GradScaler() if not USE_TPU and MIXED_PRECISION_TRAIN else None
+    # loss_tr                         = nn.CrossEntropyLoss().to(device)  # MyCrossEntropyLoss().to(device)
+    # loss_tr                         = FocalCosineLoss(device=device).to(device)
+    # loss_tr                         = SmoothCrossEntropyLoss(smoothing=0.1).to(device)
+    loss_tr                         = bi_tempered_logistic_loss
+    loss_fn                         = nn.CrossEntropyLoss().to(device)
+    optimizer, scheduler            = get_optimizer_and_scheduler(net=net, 
+                                                                  dataloader=train_loader)
 
     for epoch in range(MAX_EPOCHS):
         epoch_start = time.time()
@@ -98,5 +99,4 @@ def train():
 
 
 if __name__ == "__main__":
-    create_dirs()
     train()

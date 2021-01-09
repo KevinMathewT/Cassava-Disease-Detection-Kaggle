@@ -236,14 +236,14 @@ def get_device(n):
         n = 0
 
     if not USE_GPU and not USE_TPU:
-        print_fn("Device:                      CPU")
+        print_fn(f"Device:                      CPU")
         return torch.device('cpu')
     elif USE_TPU:
-        print_fn("Device:                      TPU")
+        print_fn(f"Device:                      TPU")
         if not PARALLEL_FOLD_TRAIN:
             return xm.xla_device()
         else:
             return xm.xla_device(n)
     elif USE_GPU:
-        print_fn("Device:                      GPU")
+        print_fn(f"Device:                      GPU {torch.cuda.get_device_name(0)}")
         return torch.device('cuda:' + str(n))
