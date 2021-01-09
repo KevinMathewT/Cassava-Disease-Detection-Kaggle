@@ -23,6 +23,7 @@ def run_fold(fold):
     create_dirs()
     print_fn = print if not USE_TPU else xm.master_print
     print_fn(f"Training Fold:               {fold}")
+    print_fn(f"Image Dimensions:            {H}x{W}")
     print_fn(f"Mixed Precision Training:    {MIXED_PRECISION_TRAIN}")
 
     global net
