@@ -1,7 +1,13 @@
+from src.config import TRAIN_CRITERION
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.modules.loss import _WeightedLoss
+
+from .config import *
+
+if USE_TPU:
+    import torch_xla.core.xla_model as xm
 
 
 class SmoothBCEwLogits(_WeightedLoss):
@@ -374,10 +380,30 @@ def bi_tempered_logistic_loss(activations,
         return loss_values.mean()
 
 
-def get_train_criterion():
-    # return nn.CrossEntropyLoss()
-    return FocalCosineLoss()
+def get_train_criterion(device):
+    print_fn = print if not USE_TPU else xm.master_print
+    print_fn(f"Training Criterion:          {TRAIN_CRITERION}")
+    if TRAIN_CRITERION == "BiTemperedLogisticLoss":
+        return bi_tempered_logistic_loss
+    elif TRAIN_CRITERION == "SoftmaxCrossEntropy":
+        return nn.CrossEntropyLoss().to(device)
+    elif TRAIN_CRITERION == "FocalCosineLoss":
+        return FocalCosineLoss(device=device).to(device)
+    elif TRAIN_CRITERION == "SmoothCrossEntropyLoss":
+        return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
+    else:
+        return nn.CrossEntropyLoss().to(device)
 
-
-def get_valid_criterion():
-    return nn.CrossEntropyLoss()
+def get_valid_criterion(device):
+    print_fn = print if not USE_TPU else xm.master_print
+    print_fn(f"Validation Criterion:        {TRAIN_CRITERION}")
+    if TRAIN_CRITERION == "BiTemperedLogisticLoss":
+        return bi_tempered_logistic_loss
+    elif TRAIN_CRITERION == "SoftmaxCrossEntropy":
+        return nn.CrossEntropyLoss().to(device)
+    elif TRAIN_CRITERION == "FocalCosineLoss":
+        return FocalCosineLoss(device=device).to(device)
+    elif TRAIN_CRITERION == "SmoothCrossEntropyLoss":
+        return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
+    else:
+        return nn.CrossEntropyLoss().to(device)

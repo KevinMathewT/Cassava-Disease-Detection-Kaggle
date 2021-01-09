@@ -27,13 +27,9 @@ MIXED_PRECISION_TRAIN = False
 H                     = 512
 W                     = 512
 
-OPTIMIZER             = "Adam"
-SCHEDULER             = "CosineAnnealingWarmRestarts"
-# SCHEDULER             = "CosineAnnealingLR"
-# SCHEDULER             = "OneCycleLR"
-# SCHEDULER             = "CosineAnnealingWarmRestarts"
-# SCHEDULER             = "CosineAnnealingWarmRestarts"
-# SCHEDULER             = "CosineAnnealingWarmRestarts"
+OPTIMIZER             = "Adam" # [Adam, AdamW, AdaBelief, RangerAdaBelief]
+SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
+TRAIN_CRITERION       = "BiTemperedLogisticLoss" # [SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss]
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 
