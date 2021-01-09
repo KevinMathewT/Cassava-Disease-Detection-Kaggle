@@ -79,20 +79,16 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            # for fold in [0]:
-            #     global net
-            #     net = get_net(name=NET, pretrained=PRETRAINED)
-            #     run_fold(fold)
+            for fold in [0]:
+                global net
+                net = get_net(name=NET, pretrained=PRETRAINED)
+                run_fold(fold)
 
             config.NET = "ViTBase16_BH"
             config.H   = 224
             config.W   = 224
-            config.ACCUMULATE_ITERATION = 1
-            config.TRAIN_BATCH_SIZE = 32
-            config.VALID_BATCH_SIZE = 32
 
             for fold in [0]:
-                global net
                 net = get_net(name=NET, pretrained=PRETRAINED)
                 run_fold(fold)
 
