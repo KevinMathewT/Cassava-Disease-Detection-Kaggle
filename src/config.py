@@ -44,8 +44,8 @@ VALID_BATCH_SIZE      = 32
 ACCUMULATE_ITERATION  = 2
 
 # NET                   = 'SEResNeXt50_32x4d_BH'
-# NET                   = "ResNeXt50_32x4d_BH"
-NET                   = "ViTBase16_BH"
+NET                   = "ResNeXt50_32x4d_BH"
+# NET                   = "ViTBase16_BH"
 # NET                   = 'resnext50_32x4d'
 # NET                   = 'seresnext50_32x4d'
 # NET                   = 'tf_efficientnet_b4_ns'

@@ -79,10 +79,10 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            for fold in [0]:
-                global net
-                net = get_net(name=NET, pretrained=PRETRAINED)
-                run_fold(fold)
+            # for fold in [0]:
+            #     global net
+            #     net = get_net(name=NET, pretrained=PRETRAINED)
+            #     run_fold(fold)
 
             config.NET = "ViTBase16_BH"
             config.H   = 224
