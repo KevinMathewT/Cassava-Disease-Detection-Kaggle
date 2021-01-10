@@ -1,4 +1,3 @@
-from src.config import TRAIN_CRITERION
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -457,36 +456,36 @@ class TaylorCrossEntropyLoss(nn.Module):
 
 
 def get_train_criterion(device):
-    print_fn = print if not USE_TPU else xm.master_print
-    print_fn(f"Training Criterion:          {TRAIN_CRITERION}")
-    if TRAIN_CRITERION == "BiTemperedLogisticLoss":
+    print_fn = print if not config.USE_TPU else xm.master_print
+    print_fn(f"Training Criterion:          {config.TRAIN_CRITERION}")
+    if config.TRAIN_CRITERION == "BiTemperedLogisticLoss":
         return bi_tempered_logistic_loss
-    elif TRAIN_CRITERION == "SoftmaxCrossEntropy":
+    elif config.TRAIN_CRITERION == "SoftmaxCrossEntropy":
         return nn.CrossEntropyLoss().to(device)
-    elif TRAIN_CRITERION == "FocalCosineLoss":
+    elif config.TRAIN_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
-    elif TRAIN_CRITERION == "LabelSmoothingCrossEntropy":
+    elif config.TRAIN_CRITERION == "LabelSmoothingCrossEntropy":
         return LabelSmoothingCrossEntropy().to(device)
-    elif TRAIN_CRITERION == "SmoothCrossEntropyLoss":
+    elif config.TRAIN_CRITERION == "SmoothCrossEntropyLoss":
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
-    elif TRAIN_CRITERION == "TaylorCrossEntropyLoss":
+    elif config.TRAIN_CRITERION == "TaylorCrossEntropyLoss":
         return TaylorCrossEntropyLoss().to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
 
 
 def get_valid_criterion(device):
-    print_fn = print if not USE_TPU else xm.master_print
-    print_fn(f"Validation Criterion:        {VALID_CRITERION}")
-    if VALID_CRITERION == "BiTemperedLogisticLoss":
+    print_fn = print if not config.USE_TPU else xm.master_print
+    print_fn(f"Validation Criterion:        {config.VALID_CRITERION}")
+    if config.VALID_CRITERION == "BiTemperedLogisticLoss":
         return bi_tempered_logistic_loss
-    elif VALID_CRITERION == "SoftmaxCrossEntropy":
+    elif config.VALID_CRITERION == "SoftmaxCrossEntropy":
         return nn.CrossEntropyLoss().to(device)
-    elif VALID_CRITERION == "FocalCosineLoss":
+    elif config.VALID_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
-    elif VALID_CRITERION == "SmoothCrossEntropyLoss":
+    elif config.VALID_CRITERION == "SmoothCrossEntropyLoss":
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
-    elif TRAIN_CRITERION == "TaylorCrossEntropyLoss":
+    elif config.VALID_CRITERION == "TaylorCrossEntropyLoss":
         return TaylorCrossEntropyLoss().to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
