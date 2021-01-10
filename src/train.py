@@ -10,7 +10,7 @@ from . import config
 from .utils import *
 from .loss import get_train_criterion, get_valid_criterion
 
-if USE_TPU:
+if config.USE_TPU:
     import torch_xla.core.xla_model as xm
     import torch_xla.distributed.xla_multiprocessing as xmp
     import torch_xla.distributed.parallel_loader as pl
