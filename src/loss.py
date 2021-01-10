@@ -125,7 +125,7 @@ class RandomLoss(nn.Module):
     def __init__(self, device):
         super().__init__()
         softmax_cross_entropy = MyCrossEntropyLoss().to(device)
-        label_smoothing_cross_entropy = LabelSmoothingCrossEntropy(
+        label_smoothing_cross_entropy = SmoothCrossEntropyLoss(
             epsilon=0.2).to(device)
         self.losses = [label_smoothing_cross_entropy, softmax_cross_entropy]
 
