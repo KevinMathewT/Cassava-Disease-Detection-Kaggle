@@ -94,7 +94,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             description = f'[{fold}/{config.FOLDS - 1}][{epoch:>2d}/{config.MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d}] Loss: {loss:.4f} | Accuracy: {acc:.4f} | Time: {time.time() - t:.4f}'
             print_fn(description, flush=True)
 
-        break
+        # break
     if scheduler is not None and not schd_batch_update:
         scheduler.step()
 

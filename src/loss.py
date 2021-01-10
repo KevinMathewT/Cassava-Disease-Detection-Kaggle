@@ -82,7 +82,7 @@ class SmoothCrossEntropyLoss(_WeightedLoss):
         return targets
 
     def forward(self, inputs, targets):
-        targets = torch.argmax(targets, 1)
+        targets = torch.argmax(targets, 1) if config.ONE_HOT_LABEL else targets
         targets = SmoothCrossEntropyLoss._smooth_one_hot(targets, inputs.size(-1),
                                                          self.smoothing)
         lsm = F.log_softmax(inputs, -1)
