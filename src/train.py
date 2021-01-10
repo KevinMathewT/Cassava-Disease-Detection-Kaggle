@@ -76,6 +76,7 @@ def _mp_fn(rank, flags):
 
 def train():
     torch.cuda.empty_cache()
+    global NET
     if not USE_TPU:
         if not PARALLEL_FOLD_TRAIN:
             # for fold in range(2, FOLDS):
@@ -86,7 +87,7 @@ def train():
                 net = get_net(name=NET, pretrained=PRETRAINED)
                 run_fold(fold)
 
-            config.NET = "tf_efficientnet_b3_ns"
+            NET = "tf_efficientnet_b3_ns"
 
             for fold in [0]:
                 net = get_net(name=NET, pretrained=PRETRAINED)
