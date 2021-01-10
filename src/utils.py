@@ -32,7 +32,6 @@ def get_accuracy(predictions, targets, normalize=True):
 
 def create_dirs():
     try:
-        print(config.WEIGHTS_PATH)
         os.mkdir(config.WEIGHTS_PATH)
         print(f"Created Folder \'{config.WEIGHTS_PATH}\'")
     except FileExistsError:

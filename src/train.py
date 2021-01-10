@@ -22,9 +22,13 @@ warnings.filterwarnings("ignore")
 def run_fold(fold):
     create_dirs()
     print_fn = print if not USE_TPU else xm.master_print
+    print_fn(f"___________________________________________________")
     print_fn(f"Training Fold:               {fold}")
     print_fn(f"Image Dimensions:            {H}x{W}")
     print_fn(f"Mixed Precision Training:    {MIXED_PRECISION_TRAIN}")
+    print_fn(f"Training Batch Size:         {TRAIN_BATCH_SIZE}")
+    print_fn(f"Validation Batch Size:       {VALID_BATCH_SIZE}")
+    print_fn(f"Accumulate Iteration:        {ACCUMULATE_ITERATION}")
 
     global net
     net                                     = xmp.MpModelWrapper(net) if USE_TPU else net
@@ -58,6 +62,7 @@ def run_fold(fold):
     #torch.save(model.cnn_model.state_dict(),'{}/cnn_model_fold_{}_{}'.format(CFG['model_path'], fold, CFG['tag']))
     del net, optimizer, train_loader, valid_loader, scheduler
     torch.cuda.empty_cache()
+    print_fn(f"___________________________________________________")
 
 
 def _mp_fn(rank, flags):
