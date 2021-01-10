@@ -82,6 +82,7 @@ class SmoothCrossEntropyLoss(_WeightedLoss):
         return targets
 
     def forward(self, inputs, targets):
+        targets = torch.argmax(targets, 1)
         targets = SmoothCrossEntropyLoss._smooth_one_hot(targets, inputs.size(-1),
                                                          self.smoothing)
         lsm = F.log_softmax(inputs, -1)
@@ -475,7 +476,7 @@ def get_train_criterion(device):
     print_fn(f"Training Criterion:          {config.TRAIN_CRITERION}")
     if config.TRAIN_CRITERION == "BiTemperedLogisticLoss":
         return bi_tempered_logistic_loss
-    elif config.TRAIN_CRITERION == "SoftmaxCrossEntropy": # For One Hot Labels
+    elif config.TRAIN_CRITERION == "SoftmaxCrossEntropy":  # For One Hot Labels
         return MyCrossEntropyLoss().to(device)
     elif config.TRAIN_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
@@ -496,7 +497,7 @@ def get_valid_criterion(device):
     print_fn(f"Validation Criterion:        {config.VALID_CRITERION}")
     if config.VALID_CRITERION == "BiTemperedLogisticLoss":
         return bi_tempered_logistic_loss
-    elif config.VALID_CRITERION == "SoftmaxCrossEntropy": # For One Hot Labels
+    elif config.VALID_CRITERION == "SoftmaxCrossEntropy":  # For One Hot Labels
         return MyCrossEntropyLoss().to(device)
     elif config.VALID_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
