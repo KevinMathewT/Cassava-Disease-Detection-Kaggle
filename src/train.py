@@ -87,7 +87,8 @@ def train():
             #     net = get_net(name=NET, pretrained=PRETRAINED)
             #     run_fold(fold)
 
-            config.NET = "tf_efficientnet_b4_ns"
+            global NET
+            NET = "tf_efficientnet_b4_ns"
 
             for fold in [0]:
                 global net
