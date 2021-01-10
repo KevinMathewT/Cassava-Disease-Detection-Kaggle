@@ -26,6 +26,10 @@ SEED                  = 719
 FOLDS                 = 5
 MIXED_PRECISION_TRAIN = False
 
+DO_DEPTH_MASKING      = False
+DO_FMIX               = False
+DO_CUTMIX             = False
+
 H                     = 512
 W                     = 512
 

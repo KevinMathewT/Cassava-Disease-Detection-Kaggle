@@ -97,12 +97,52 @@ def cutmix(img, target, labels, df, transforms, cutmix_params, data_root):
     #assert False
 
 
+class MonocularDepthImageMasking:
+    def __init__(self):
+        self.midas = torch.hub.load("intel-isl/MiDaS", "MiDaS")
+        self.midas.cuda().eval()
+        self.midas_transforms = torch.hub.load("intel-isl/MiDaS", "transforms")
+        self.transform = self.midas_transforms.default_transform
+
+    def get_depth(self, img):
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        input_batch = self.transform(img).to("cuda")
+        with torch.no_grad():
+            prediction = self.midas(input_batch)
+            prediction = torch.nn.functional.interpolate(
+                prediction.unsqueeze(1),
+                size=img.shape[:2],
+                mode="bicubic",
+            ).squeeze()
+        output = prediction.cpu().numpy()
+        img_min = np.min(output)
+        img_max = np.max(output)
+        return output > ((img_min+img_max)/3)
+
+    def crop_image(self, image, depth):
+        depth = depth.astype(int)
+        mask_3d = np.stack((depth, depth, depth), axis=2)
+        masked_arr = np.where(mask_3d == 1, image, mask_3d).astype(np.uint8)
+        c = np.where(masked_arr != [0, 0, 0])
+        x_max = max(c[1])
+        x_min = min(c[1])
+        y_max = max(c[0])
+        y_min = min(c[0])
+        image = masked_arr[y_min:y_max, x_min:x_max]
+        return image
+
+    def __call__(self, image):
+        process = image
+        depth = self.get_depth(process)
+        image = self.crop_image(image, depth)
+        return image
+
+
 class CassavaDataset(Dataset):
     def __init__(self, df, data_root,
                  transforms=None,
                  output_label=True,
                  one_hot_label=False,
-                 do_fmix=False,
                  fmix_params={
                      'alpha': 1.,
                      'decay_power': 3.,
@@ -110,7 +150,6 @@ class CassavaDataset(Dataset):
                      'max_soft': True,
                      'reformulate': False
                  },
-                 do_cutmix=False,
                  cutmix_params={
                      'alpha': 1,
                  }
@@ -120,13 +159,14 @@ class CassavaDataset(Dataset):
         self.df = df.reset_index(drop=True).copy()
         self.transforms = transforms
         self.data_root = data_root
-        self.do_fmix = do_fmix
         self.fmix_params = fmix_params
-        self.do_cutmix = do_cutmix
         self.cutmix_params = cutmix_params
 
         self.output_label = output_label
         self.one_hot_label = one_hot_label
+
+        if DO_DEPTH_MASKING:
+            self.masker = MonocularDepthImageMasking()
 
         if output_label == True:
             self.labels = self.df['label'].values
@@ -149,14 +189,17 @@ class CassavaDataset(Dataset):
         img = get_img("{}/{}".format(self.data_root,
                                      self.df.loc[index]['image_id']))
 
+        if DO_DEPTH_MASKING:
+            img = self.masker(img)
+
         if self.transforms:
             img = self.transforms(image=img)['image']
 
-        if self.do_fmix and np.random.uniform(0., 1., size=1)[0] > 0.5:
+        if DO_FMIX and np.random.uniform(0., 1., size=1)[0] > 0.5:
             img, target = fmix(img, target, self.labels, self.df,
                                self.transforms, self.fmix_params, self.data_root)
 
-        if self.do_cutmix and np.random.uniform(0., 1., size=1)[0] > 0.5:
+        if DO_CUTMIX and np.random.uniform(0., 1., size=1)[0] > 0.5:
             img, target = fmix(img, target, self.labels, self.df,
                                self.transforms, self.fmix_params, self.data_root)
 

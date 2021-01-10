@@ -11,6 +11,13 @@ from .config import *
 from .utils import *
 from src import config
 
+class MonocularDepthImageMasking(object):
+    def __init__(self):
+        self.threshold = config.THRESHOLD
+
+    def __call__(self, image):
+        image = (image <= self.threshold).type('torch.FloatTensor')
+        return image
 
 # def get_train_transforms():
 #     # return Compose([

@@ -81,13 +81,12 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            global NET
-            for fold in [0]:
+            for fold in []:
                 global net
                 net = get_net(name=NET, pretrained=PRETRAINED)
                 run_fold(fold)
 
-            NET = "tf_efficientnet_b3_ns"
+            config.NET = "tf_efficientnet_b3_ns"
 
             for fold in [0]:
                 net = get_net(name=NET, pretrained=PRETRAINED)
