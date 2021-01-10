@@ -1,5 +1,8 @@
 import os
-from .utils import seed_everything
+import random
+import numpy as np
+
+import torch
 
 # INPUT_PATH            = "./input"  # PC and EC2
 INPUT_PATH            = "../input" # Kaggle
@@ -21,7 +24,6 @@ TPUS                  = 8 # Basically TPU Nodes
 PARALLEL_FOLD_TRAIN   = False
 SEED                  = 719
 FOLDS                 = 5
-SEEDS                 = 1
 MIXED_PRECISION_TRAIN = False
 
 H                     = 512
@@ -40,7 +42,7 @@ TRAIN_BATCH_SIZE      = 32
 VALID_BATCH_SIZE      = 32
 ACCUMULATE_ITERATION  = 2
 
-NET                   = "ResNeXt50_32x4d_BH" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, 
+NET                   = "seresnext50_32x4d" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, 
                                              #  resnext50_32x4d, seresnext50_32x4d, tf_efficientnet_b4_ns, gluon_resnet18_v1b]
 
 PRETRAINED            = True
@@ -60,5 +62,15 @@ if not PARALLEL_FOLD_TRAIN:
     elif USE_GPU:
         TRAIN_BATCH_SIZE //= GPUS
         VALID_BATCH_SIZE //= GPUS
+
+
+def seed_everything(seed):
+    random.seed(seed)
+    os.environ['PYTHONHASHSEED'] = str(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = True
 
 seed_everything(SEED)
