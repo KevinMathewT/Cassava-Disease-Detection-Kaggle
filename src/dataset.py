@@ -68,7 +68,7 @@ def fmix(img, target, labels, df, transforms, fmix_params, data_root):
         #assert self.output_label==True and self.one_hot_label==True
 
         # mix target
-        rate = mask.sum() / H / W
+        rate = mask.sum() / config.H / config.W
         target = rate * target + (1. - rate) * labels[fmix_ix]
         #print(target, mask, img)
         #assert False
@@ -85,11 +85,11 @@ def cutmix(img, target, labels, df, transforms, cutmix_params, data_root):
 
         lam = np.clip(np.random.beta(
             cutmix_params['alpha'], cutmix_params['alpha']), 0.3, 0.4)
-        bbx1, bby1, bbx2, bby2 = rand_bbox((H, W), lam)
+        bbx1, bby1, bbx2, bby2 = rand_bbox((config.H, config.W), lam)
 
         img[:, bbx1:bbx2, bby1:bby2] = cmix_img[:, bbx1:bbx2, bby1:bby2]
 
-        rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (H * W))
+        rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (config.H * config.W))
         target = rate * target + (1. - rate) * labels[cmix_ix]
 
     #print('-', img.sum())
@@ -146,7 +146,7 @@ class CassavaDataset(Dataset):
                  fmix_params={
                      'alpha': 1.,
                      'decay_power': 3.,
-                     'shape': (H, W),
+                     'shape': (config.H, config.W),
                      'max_soft': True,
                      'reformulate': False
                  },
