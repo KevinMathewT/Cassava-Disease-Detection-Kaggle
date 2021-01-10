@@ -92,6 +92,8 @@ def cutmix(img, target, labels, df, transforms, cutmix_params, data_root):
         rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (config.H * config.W))
         target = rate * target + (1. - rate) * labels[cmix_ix]
 
+        return img, target, labels
+
     #print('-', img.sum())
     # print(target)
     #assert False
