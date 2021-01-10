@@ -77,20 +77,20 @@ def fmix(img, target, labels, df, transforms, fmix_params, data_root):
 def cutmix(img, target, labels, df, transforms, cutmix_params, data_root):
     #print(img.sum(), img.shape)
     with torch.no_grad():
-        cmix_ix = np.random.choice(df.index, size=1)[0]
-        cmix_img = get_img(
-            "{}/{}".format(data_root, df.iloc[cmix_ix]['image_id']))
-        if transforms:
-            cmix_img = transforms(image=cmix_img)['image']
+        # cmix_ix = np.random.choice(df.index, size=1)[0]
+        # cmix_img = get_img(
+        #     "{}/{}".format(data_root, df.iloc[cmix_ix]['image_id']))
+        # if transforms:
+        #     cmix_img = transforms(image=cmix_img)['image']
 
-        lam = np.clip(np.random.beta(
-            cutmix_params['alpha'], cutmix_params['alpha']), 0.3, 0.4)
-        bbx1, bby1, bbx2, bby2 = rand_bbox((config.H, config.W), lam)
+        # lam = np.clip(np.random.beta(
+        #     cutmix_params['alpha'], cutmix_params['alpha']), 0.3, 0.4)
+        # bbx1, bby1, bbx2, bby2 = rand_bbox((config.H, config.W), lam)
 
-        img[:, bbx1:bbx2, bby1:bby2] = cmix_img[:, bbx1:bbx2, bby1:bby2]
+        # img[:, bbx1:bbx2, bby1:bby2] = cmix_img[:, bbx1:bbx2, bby1:bby2]
 
-        rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (config.H * config.W))
-        target = rate * target + (1. - rate) * labels[cmix_ix]
+        # rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (config.H * config.W))
+        # target = rate * target + (1. - rate) * labels[cmix_ix]
 
         return img, target, labels
 
