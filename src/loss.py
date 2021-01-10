@@ -5,7 +5,7 @@ from torch.nn.modules.loss import _WeightedLoss
 
 from . import config
 
-if USE_TPU:
+if config.USE_TPU:
     import torch_xla.core.xla_model as xm
 
 
