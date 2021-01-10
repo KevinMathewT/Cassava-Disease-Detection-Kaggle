@@ -1,3 +1,4 @@
+from numpy import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -118,6 +119,19 @@ class LabelSmoothingCrossEntropy(nn.Module):
         loss = reduce_loss(-log_preds.sum(dim=-1), self.reduction)
         nll = F.nll_loss(log_preds, target, reduction=self.reduction)
         return linear_combination(loss/n, nll, self.epsilon)
+
+
+class RandomLoss(nn.Module):
+    def __init__(self, device):
+        super().__init__()
+        softmax_cross_entropy = MyCrossEntropyLoss().to(device)
+        label_smoothing_cross_entropy = LabelSmoothingCrossEntropy(
+            epsilon=0.2).to(device)
+        self.losses = [label_smoothing_cross_entropy, softmax_cross_entropy]
+
+    def forward(self, preds, target):
+        loss = random.choice(self.losses)
+        return loss(preds, target)
 
 
 class CosineLoss(nn.Module):
@@ -471,6 +485,8 @@ def get_train_criterion(device):
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
     elif config.TRAIN_CRITERION == "TaylorCrossEntropyLoss":
         return TaylorCrossEntropyLoss().to(device)
+    elif config.TRAIN_CRITERION == "RandomChoice":
+        return RandomLoss(device).to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
 
@@ -488,5 +504,7 @@ def get_valid_criterion(device):
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
     elif config.VALID_CRITERION == "TaylorCrossEntropyLoss":
         return TaylorCrossEntropyLoss().to(device)
+    elif config.VALID_CRITERION == "RandomChoice":
+        return RandomLoss(device).to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
