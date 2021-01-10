@@ -75,6 +75,7 @@ def _mp_fn(rank, flags):
 
 
 def train():
+    torch.cuda.empty_cache()
     if not USE_TPU:
         if not PARALLEL_FOLD_TRAIN:
             # for fold in range(2, FOLDS):
