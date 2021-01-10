@@ -99,6 +99,27 @@ class SmoothCrossEntropyLoss(_WeightedLoss):
         return loss
 
 
+def linear_combination(x, y, epsilon):
+    return epsilon * x + (1 - epsilon) * y
+
+def reduce_loss(loss, reduction='mean'):
+    return loss.mean() if reduction=='mean' else loss.sum() if reduction=='sum' else loss
+
+
+class LabelSmoothingCrossEntropy(nn.Module):
+    def __init__(self, epsilon:float=0.1, reduction='mean'):
+        super().__init__()
+        self.epsilon = epsilon
+        self.reduction = reduction
+    
+    def forward(self, preds, target):
+        n = preds.size()[-1]
+        log_preds = F.log_softmax(preds, dim=-1)
+        loss = reduce_loss(-log_preds.sum(dim=-1), self.reduction)
+        nll = F.nll_loss(log_preds, target, reduction=self.reduction)
+        return linear_combination(loss/n, nll, self.epsilon)
+
+
 class CosineLoss(nn.Module):
     def __init__(self, xent=.1, reduction="mean"):
         super(CosineLoss, self).__init__()
@@ -380,6 +401,61 @@ def bi_tempered_logistic_loss(activations,
         return loss_values.mean()
 
 
+class TaylorSoftmax(nn.Module):
+    '''
+    This is the autograd version
+    '''
+
+    def __init__(self, dim=1, n=2):
+        super(TaylorSoftmax, self).__init__()
+        assert n % 2 == 0
+        self.dim = dim
+        self.n = n
+
+    def forward(self, x):
+        '''
+        usage similar to nn.Softmax:
+            >>> mod = TaylorSoftmax(dim=1, n=4)
+            >>> inten = torch.randn(1, 32, 64, 64)
+            >>> out = mod(inten)
+        '''
+        fn = torch.ones_like(x)
+        denor = 1.
+        for i in range(1, self.n+1):
+            denor *= i
+            fn = fn + x.pow(i) / denor
+        out = fn / fn.sum(dim=self.dim, keepdims=True)
+        return out
+
+
+##
+# version 1: use torch.autograd
+class TaylorCrossEntropyLoss(nn.Module):
+    '''
+    This is the autograd version
+    '''
+
+    def __init__(self, n=2, ignore_index=-1, reduction='mean'):
+        super(TaylorCrossEntropyLoss, self).__init__()
+        assert n % 2 == 0
+        self.taylor_softmax = TaylorSoftmax(dim=1, n=n)
+        self.reduction = reduction
+        self.ignore_index = ignore_index
+
+    def forward(self, logits, labels):
+        '''
+        usage similar to nn.CrossEntropyLoss:
+            >>> crit = TaylorCrossEntropyLoss(n=4)
+            >>> inten = torch.randn(1, 10, 64, 64)
+            >>> label = torch.randint(0, 10, (1, 64, 64))
+            >>> out = crit(inten, label)
+        '''
+        log_probs = self.taylor_softmax(logits).log()
+        loss = F.nll_loss(log_probs, labels, reduction=self.reduction,
+                          ignore_index=self.ignore_index)
+        return loss
+
+
 def get_train_criterion(device):
     print_fn = print if not USE_TPU else xm.master_print
     print_fn(f"Training Criterion:          {TRAIN_CRITERION}")
@@ -389,10 +465,15 @@ def get_train_criterion(device):
         return nn.CrossEntropyLoss().to(device)
     elif TRAIN_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
+    elif TRAIN_CRITERION == "LabelSmoothingCrossEntropy":
+        return LabelSmoothingCrossEntropy().to(device)
     elif TRAIN_CRITERION == "SmoothCrossEntropyLoss":
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
+    elif TRAIN_CRITERION == "TaylorCrossEntropyLoss":
+        return TaylorCrossEntropyLoss().to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
+
 
 def get_valid_criterion(device):
     print_fn = print if not USE_TPU else xm.master_print
@@ -405,5 +486,7 @@ def get_valid_criterion(device):
         return FocalCosineLoss(device=device).to(device)
     elif VALID_CRITERION == "SmoothCrossEntropyLoss":
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
+    elif TRAIN_CRITERION == "TaylorCrossEntropyLoss":
+        return TaylorCrossEntropyLoss().to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
