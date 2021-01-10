@@ -6,7 +6,7 @@ import torch.nn as nn
 
 from .dataset import get_loaders
 from .engine import get_device, get_net, get_optimizer_and_scheduler, train_one_epoch, valid_one_epoch
-from .config import *
+from . import config
 from .utils import *
 from .loss import get_train_criterion, get_valid_criterion
 
