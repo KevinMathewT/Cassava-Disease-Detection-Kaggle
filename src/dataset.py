@@ -214,7 +214,7 @@ class CassavaDataset(Dataset):
 def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
     if USE_TPU:
         train_dataset = CassavaDataset(train, data_root, transforms=get_train_transforms(
-        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
+        ), output_label=True, one_hot_label=False)
         train_sampler = torch.utils.data.distributed.DistributedSampler(
             train_dataset,
             num_replicas=xm.xrt_world_size(),  # divide dataset among this many replicas
@@ -229,7 +229,7 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
     else:
         return DataLoader(
             CassavaDataset(train, data_root, transforms=get_train_transforms(
-            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            ), output_label=True, one_hot_label=False),
             batch_size=TRAIN_BATCH_SIZE,
             drop_last=True,
             num_workers=CPU_WORKERS,
@@ -239,7 +239,7 @@ def get_train_dataloader(train, data_root=TRAIN_IMAGES_DIR):
 def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
     if USE_TPU:
         valid_dataset = CassavaDataset(valid, data_root, transforms=get_valid_transforms(
-        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
+        ), output_label=True, one_hot_label=False)
         valid_sampler = torch.utils.data.distributed.DistributedSampler(
             valid_dataset,
             num_replicas=xm.xrt_world_size(),
@@ -254,7 +254,7 @@ def get_valid_dataloader(valid, data_root=TRAIN_IMAGES_DIR):
     else:
         return DataLoader(
             CassavaDataset(valid, data_root, transforms=get_valid_transforms(
-            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            ), output_label=True, one_hot_label=False),
             batch_size=VALID_BATCH_SIZE,
             drop_last=True,
             num_workers=CPU_WORKERS,
@@ -265,7 +265,7 @@ def get_infer_dataloader(infer, data_root=TRAIN_IMAGES_DIR):
     OK = False
     if USE_TPU and OK:
         infer_dataset = CassavaDataset(infer, data_root, transforms=get_valid_transforms(
-        ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False)
+        ), output_label=True, one_hot_label=False)
         infer_sampler = torch.utils.data.distributed.DistributedSampler(
             infer_dataset,
             num_replicas=xm.xrt_world_size(),
@@ -280,7 +280,7 @@ def get_infer_dataloader(infer, data_root=TRAIN_IMAGES_DIR):
     else:
         return DataLoader(
             CassavaDataset(infer, data_root, transforms=get_valid_transforms(
-            ), output_label=True, one_hot_label=False, do_fmix=False, do_cutmix=False),
+            ), output_label=True, one_hot_label=False),
             batch_size=32,
             drop_last=False,
             num_workers=CPU_WORKERS,
