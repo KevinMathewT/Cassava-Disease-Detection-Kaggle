@@ -197,7 +197,7 @@ class CassavaDataset(Dataset):
                                self.transforms, self.fmix_params, self.data_root)
 
         if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
-            img, target = fmix(img, target, self.labels, self.df,
+            img, target = cutmix(img, target, self.labels, self.df,
                                self.transforms, self.fmix_params, self.data_root)
 
         # do label smoothing
