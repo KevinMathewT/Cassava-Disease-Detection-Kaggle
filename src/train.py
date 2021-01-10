@@ -81,17 +81,17 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            for fold in [0]:
-                global net
-                net = get_net(name=config.NET, pretrained=config.PRETRAINED)
-                run_fold(fold)
+            # for fold in [0]:
+            #     global net
+            #     net = get_net(name=config.NET, pretrained=config.PRETRAINED)
+            #     run_fold(fold)
 
             config.NET = "vit_base_patch16_224"
             config.H = 224
             config.W = 224
 
             for fold in [0]:
-                # global net
+                global net
                 net = get_net(name=config.NET, pretrained=config.PRETRAINED)
                 run_fold(fold)
 
