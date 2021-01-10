@@ -42,7 +42,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                     curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
                 running_accuracy.update(
                     y_pred=image_preds.detach().cpu(),
-                    y_true=image_labels.detach().cpu(),
+                    y_true=image_labels.detach().cpu() if not config.ONE_HOT_LABEL else torch.argmax(image_labels, 1).detach().cpu(),
                     batch_size=curr_batch_size)
 
             scaler.scale(loss).backward()
@@ -76,7 +76,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 curr_batch_avg_loss=loss.item(), batch_size=curr_batch_size)
             running_accuracy.update(
                 y_pred=image_preds.detach().cpu(),
-                y_true=image_labels.detach().cpu(),
+                y_true=image_labels.detach().cpu() if not config.ONE_HOT_LABEL else torch.argmax(image_labels, 1).detach().cpu(),
                 batch_size=curr_batch_size)
 
             # print("Loss Update:", running_loss.avg)
@@ -118,7 +118,7 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
         image_preds = model(imgs)
         image_preds_all += [torch.argmax(image_preds,
                                          1).detach().cpu().numpy()]
-        image_targets_all += [image_labels.detach().cpu().numpy()]
+        image_targets_all += [image_labels.detach().cpu().numpy() if not config.ONE_HOT_LABEL else torch.argmax(image_labels, 1).detach().cpu().numpy()]
 
         loss = loss_fn(image_preds, image_labels)
 
