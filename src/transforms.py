@@ -7,9 +7,8 @@ from albumentations import (
 from albumentations.pytorch import ToTensorV2
 import cv2
 
-from .config import *
+from . import config
 from .utils import *
-from src import config
 
 class MonocularDepthImageMasking(object):
     def __init__(self):

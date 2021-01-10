@@ -8,7 +8,7 @@ from torch import optim
 from adabelief_pytorch import AdaBelief
 from ranger_adabelief import RangerAdaBelief
 
-from .config import *
+from . import config
 from .models.models import *
 from .utils import AccuracyMeter, AverageLossMeter
 

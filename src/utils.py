@@ -9,7 +9,7 @@ from torch.nn.functional import normalize
 
 from torch.utils.data import DataLoader, Dataset
 
-from .config import *
+from . import config
 from .transforms import *
     
 def get_img(path):
