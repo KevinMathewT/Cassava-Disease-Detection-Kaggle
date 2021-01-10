@@ -12,7 +12,7 @@ from . import config
 from .models.models import *
 from .utils import AccuracyMeter, AverageLossMeter
 
-if USE_TPU:
+if config.USE_TPU:
     import torch_xla.core.xla_model as xm
     import torch_xla.distributed.xla_multiprocessing as xmp
 
@@ -20,7 +20,7 @@ if USE_TPU:
 def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device, scaler, scheduler=None, schd_batch_update=False):
     model.train()
 
-    print_fn = print if not USE_TPU else xm.master_print
+    print_fn = print if not config.USE_TPU else xm.master_print
     t = time.time()
     running_loss = AverageLossMeter()
     running_accuracy = AccuracyMeter()
@@ -34,7 +34,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         curr_batch_size = imgs.size(0)
 
         # print(image_labels.shape, exam_label.shape)
-        if (not USE_TPU) and MIXED_PRECISION_TRAIN:
+        if (not config.USE_TPU) and config.MIXED_PRECISION_TRAIN:
             with torch.cuda.amp.autocast():
                 image_preds = model(imgs)
                 loss = loss_fn(image_preds, image_labels)
@@ -47,7 +47,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
             scaler.scale(loss).backward()
 
-            if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
+            if ((step + 1) % config.ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
                 scaler.step(optimizer)
                 scaler.update()
                 optimizer.zero_grad()
@@ -63,8 +63,8 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             loss.backward()
         #     # print("Loss: ", loss.item())
 
-            if ((step + 1) % ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
-                if USE_TPU:
+            if ((step + 1) % config.ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
+                if config.USE_TPU:
                     xm.optimizer_step(optimizer, barrier=True)
                 else:
                     optimizer.step()
@@ -82,7 +82,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
             # print("Loss Update:", running_loss.avg)
             # print("Acc Update:", running_loss.avg)
 
-        if USE_TPU:
+        if config.USE_TPU:
             loss = xm.mesh_reduce(
                 'train_loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
             acc = xm.mesh_reduce(
@@ -90,8 +90,8 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
         else:
             loss = running_loss.avg
             acc = running_accuracy.avg
-        if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == total_steps) or ((step + 1) == 1):
-            description = f'[{fold}/{FOLDS - 1}][{epoch:>2d}/{MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d}] Loss: {loss:.4f} | Accuracy: {acc:.4f} | Time: {time.time() - t:.4f}'
+        if ((config.LEARNING_VERBOSE and (step + 1) % config.VERBOSE_STEP == 0)) or ((step + 1) == total_steps) or ((step + 1) == 1):
+            description = f'[{fold}/{config.FOLDS - 1}][{epoch:>2d}/{config.MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d}] Loss: {loss:.4f} | Accuracy: {acc:.4f} | Time: {time.time() - t:.4f}'
             print_fn(description, flush=True)
 
         # break
@@ -102,7 +102,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False):
     model.eval()
 
-    print_fn = print if not USE_TPU else xm.master_print
+    print_fn = print if not config.USE_TPU else xm.master_print
     t = time.time()
     running_loss = AverageLossMeter()
     sample_num = 0
@@ -126,26 +126,26 @@ def valid_one_epoch(fold, epoch, model, loss_fn, valid_loader, device, scheduler
                             batch_size=image_labels.shape[0])
         sample_num += image_labels.shape[0]
 
-        if USE_TPU:
+        if config.USE_TPU:
             loss = xm.mesh_reduce(
                 'valid_loss_reduce', running_loss.avg, lambda x: sum(x) / len(x))
         else:
             loss = running_loss.avg
-        if ((LEARNING_VERBOSE and (step + 1) % VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)) or ((step + 1) == 1):
-            description = f'[{fold}/{FOLDS - 1}][{epoch:>2d}/{MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d}] Validation Loss: {loss:.4f}'
+        if ((config.LEARNING_VERBOSE and (step + 1) % config.VERBOSE_STEP == 0)) or ((step + 1) == len(valid_loader)) or ((step + 1) == 1):
+            description = f'[{fold}/{config.FOLDS - 1}][{epoch:>2d}/{config.MAX_EPOCHS - 1}][{step + 1:>4d}/{total_steps:>4d}] Validation Loss: {loss:.4f}'
             print_fn(description)
 
         # break
 
     image_preds_all = np.concatenate(image_preds_all)
     image_targets_all = np.concatenate(image_targets_all)
-    if USE_TPU:
+    if config.USE_TPU:
         acc = xm.mesh_reduce('valid_acc_reduce', accuracy_score(
             image_targets_all, image_preds_all), lambda x: sum(x) / len(x))
     else:
         acc = accuracy_score(image_targets_all, image_preds_all)
     print_fn(
-        f'[{fold}/{FOLDS - 1}][{epoch}/{MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {acc:.4f}')
+        f'[{fold}/{config.FOLDS - 1}][{epoch}/{config.MAX_EPOCHS - 1}] Validation Multi-Class Accuracy = {acc:.4f}')
 
     if scheduler is not None:
         if schd_loss_update:
@@ -164,62 +164,62 @@ def get_net(name, pretrained=False):
 
 
 def get_optimizer_and_scheduler(net, dataloader):
-    print_fn = print if not USE_TPU else xm.master_print
+    print_fn = print if not config.USE_TPU else xm.master_print
     # m = xm.xrt_world_size() if USE_TPU else 1
     m = 1
     print_fn(f"World Size:                  {m}")
 
     # Optimizers
 
-    print_fn(f"Optimizer:                   {OPTIMIZER}")
-    if OPTIMIZER == "Adam":
+    print_fn(f"Optimizer:                   {config.OPTIMIZER}")
+    if config.OPTIMIZER == "Adam":
         optimizer = torch.optim.Adam(
             params=net.parameters(),
-            lr=LEARNING_RATE * m,
+            lr=config.LEARNING_RATE * m,
             weight_decay=1e-5,
             amsgrad=False
         )
-    elif OPTIMIZER == "AdamW":
+    elif config.OPTIMIZER == "AdamW":
         optimizer = optim.AdamW(
-            net.parameters(), lr=LEARNING_RATE * m, weight_decay=0.001)
-    elif OPTIMIZER == "AdaBelief":
+            net.parameters(), lr=config.LEARNING_RATE * m, weight_decay=0.001)
+    elif config.OPTIMIZER == "AdaBelief":
         optimizer = AdaBelief(net.parameters(
-        ), lr=LEARNING_RATE * m, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
-    elif OPTIMIZER == "RangerAdaBelief":
+        ), lr=config.LEARNING_RATE * m, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
+    elif config.OPTIMIZER == "RangerAdaBelief":
         optimizer = RangerAdaBelief(
-            net.parameters(), lr=LEARNING_RATE * m, eps=1e-12, betas=(0.9, 0.999), print_change_log=False)
+            net.parameters(), lr=config.LEARNING_RATE * m, eps=1e-12, betas=(0.9, 0.999), print_change_log=False)
     else:
         optimizer = optim.SGD(
-            net.parameters(), lr=LEARNING_RATE * m)
+            net.parameters(), lr=config.LEARNING_RATE * m)
 
     # Schedulers
 
-    print_fn(f"Scheduler:                   {SCHEDULER}")
-    if SCHEDULER == "ReduceLROnPlateau":
+    print_fn(f"Scheduler:                   {config.SCHEDULER}")
+    if config.SCHEDULER == "ReduceLROnPlateau":
         scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
             optimizer,
             patience=0,
             factor=0.1,
-            verbose=LEARNING_VERBOSE)
-    elif SCHEDULER == "CosineAnnealingLR":
+            verbose=config.LEARNING_VERBOSE)
+    elif config.SCHEDULER == "CosineAnnealingLR":
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer, T_max=5, eta_min=0)
-    elif SCHEDULER == "OneCycleLR":
+    elif config.SCHEDULER == "OneCycleLR":
         steps_per_epoch = len(dataloader)
         scheduler = torch.optim.lr_scheduler.OneCycleLR(
             optimizer=optimizer,
             max_lr=1e-2,
-            epochs=MAX_EPOCHS,
+            epochs=config.MAX_EPOCHS,
             steps_per_epoch=steps_per_epoch,
             pct_start=0.25,)
-    elif SCHEDULER == "CosineAnnealingWarmRestarts":
+    elif config.SCHEDULER == "CosineAnnealingWarmRestarts":
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
             optimizer,
             T_0=10,
             T_mult=1,
             eta_min=1e-6,
             last_epoch=-1)
-    elif SCHEDULER == "StepLR":
+    elif config.SCHEDULER == "StepLR":
         scheduler = torch.optim.lr_scheduler.StepLR(
             optimizer,
             step_size=2,
@@ -231,19 +231,20 @@ def get_optimizer_and_scheduler(net, dataloader):
 
 
 def get_device(n):
-    print_fn = print if not USE_TPU else xm.master_print
-    if not PARALLEL_FOLD_TRAIN:
+    print_fn = print if not config.USE_TPU else xm.master_print
+    if not config.PARALLEL_FOLD_TRAIN:
         n = 0
 
-    if not USE_GPU and not USE_TPU:
+    if not config.USE_GPU and not config.USE_TPU:
         print_fn(f"Device:                      CPU")
         return torch.device('cpu')
-    elif USE_TPU:
+    elif config.USE_TPU:
         print_fn(f"Device:                      TPU")
-        if not PARALLEL_FOLD_TRAIN:
+        if not config.PARALLEL_FOLD_TRAIN:
             return xm.xla_device()
         else:
             return xm.xla_device(n)
-    elif USE_GPU:
-        print_fn(f"Device:                      GPU ({torch.cuda.get_device_name(0)})")
+    elif config.USE_GPU:
+        print_fn(
+            f"Device:                      GPU ({torch.cuda.get_device_name(0)})")
         return torch.device('cuda:' + str(n))
