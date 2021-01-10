@@ -86,9 +86,9 @@ def train():
             #     net = get_net(name=config.NET, pretrained=config.PRETRAINED)
             #     run_fold(fold)
 
-            config.NET = "vit_base_patch16_224"
-            config.H = 224
-            config.W = 224
+            config.NET = "seresnext50_32x4d"
+            config.H = 512
+            config.W = 512
 
             for fold in [0]:
                 global net
