@@ -31,7 +31,7 @@ class BinaryHead(nn.Module):
 class SEResNeXt50_32x4d_BH(nn.Module):
     name = "SEResNeXt50_32x4d_BH"
 
-    def __init__(self, pretrained=False):
+    def __init__(self, pretrained=True):
         super().__init__()
         self.model_arch = "seresnext50_32x4d"
         self.net = nn.Sequential(*list(
@@ -56,7 +56,7 @@ class SEResNeXt50_32x4d_BH(nn.Module):
 class ResNeXt50_32x4d_BH(nn.Module):
     name = "ResNeXt50_32x4d_BH"
 
-    def __init__(self, pretrained=False):
+    def __init__(self, pretrained=True):
         super().__init__()
         self.model_arch = "resnext50_32x4d"
         self.model = timm.create_model(self.model_arch, pretrained=pretrained)
@@ -86,9 +86,9 @@ class ResNeXt50_32x4d_BH(nn.Module):
 class ViTBase16_BH(nn.Module):
     name = "ViTBase16_BH"
 
-    def __init__(self, pretrained=False):
+    def __init__(self, pretrained=True):
         super().__init__()
-        self.net = timm.create_model("vit_base_patch16_224", pretrained=False)
+        self.net = timm.create_model("vit_base_patch16_224", pretrained=pretrained)
         self.net.norm = nn.Identity()
         self.net.head = nn.Identity()
         self.fea_bn = nn.BatchNorm1d(768)
@@ -107,9 +107,11 @@ class ViTBase16_BH(nn.Module):
 class ViTBase16(nn.Module):
     name = "ViTBase16"
 
-    def __init__(self, pretrained=False):
+    def __init__(self, pretrained=True):
         super().__init__()
-        self.net = VisionTransformer.from_pretrained('ViT-B_16', num_classes=5)
+        self.model_arch = 'ViT-B_16'
+        self.net = VisionTransformer.from_pretrained(
+            self.model_arch, num_classes=5) if pretrained else VisionTransformer.from_name(self.model_arch, num_classes=5)
 
     def forward(self, x):
         x = self.net(x)
@@ -117,7 +119,7 @@ class ViTBase16(nn.Module):
 
 
 class GeneralizedCassavaClassifier(nn.Module):
-    def __init__(self, model_arch, n_class=config.N_CLASSES, pretrained=False):
+    def __init__(self, model_arch, n_class=config.N_CLASSES, pretrained=True):
         super().__init__()
         self.name = model_arch
         self.model = timm.create_model(model_arch, pretrained=pretrained)
