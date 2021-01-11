@@ -476,8 +476,10 @@ def get_train_criterion(device):
     print_fn(f"Training Criterion:          {config.TRAIN_CRITERION}")
     if config.TRAIN_CRITERION == "BiTemperedLogisticLoss":
         return bi_tempered_logistic_loss
-    elif config.TRAIN_CRITERION == "SoftmaxCrossEntropy":  # For One Hot Labels
+    elif config.TRAIN_CRITERION == "SoftmaxCrossEntropy_OHL":  # For One Hot Labels
         return MyCrossEntropyLoss().to(device)
+    elif config.TRAIN_CRITERION == "SoftmaxCrossEntropy":  # For One Hot Labels
+        return nn.CrossEntropyLoss().to(device)
     elif config.TRAIN_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
     elif config.TRAIN_CRITERION == "LabelSmoothingCrossEntropy":
@@ -497,8 +499,10 @@ def get_valid_criterion(device):
     print_fn(f"Validation Criterion:        {config.VALID_CRITERION}")
     if config.VALID_CRITERION == "BiTemperedLogisticLoss":
         return bi_tempered_logistic_loss
-    elif config.VALID_CRITERION == "SoftmaxCrossEntropy":  # For One Hot Labels
+    elif config.VALID_CRITERION == "SoftmaxCrossEntropy_OHL":  # For One Hot Labels
         return MyCrossEntropyLoss().to(device)
+    elif config.VALID_CRITERION == "SoftmaxCrossEntropy":  # For One Hot Labels
+        return nn.CrossEntropyLoss().to(device)
     elif config.VALID_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
     elif config.VALID_CRITERION == "SmoothCrossEntropyLoss":

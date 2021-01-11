@@ -86,14 +86,12 @@ def train():
                 net = get_net(name=config.NET, pretrained=config.PRETRAINED)
                 run_fold(fold)
 
-            config.NET = "ViTBase16_BH"
-            config.H = 224
-            config.W = 224
+            # config.NET = "tf_efficientnet_b4_ns"
 
-            for fold in [0]:
-                # global net
-                net = get_net(name=config.NET, pretrained=config.PRETRAINED)
-                run_fold(fold)
+            # for fold in [0]:
+            #     # global net
+            #     net = get_net(name=config.NET, pretrained=config.PRETRAINED)
+            #     run_fold(fold)
 
         if config.PARALLEL_FOLD_TRAIN:
             n_jobs = config.FOLDS

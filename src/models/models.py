@@ -104,6 +104,18 @@ class ViTBase16_BH(nn.Module):
         return x
 
 
+class ViTBase16(nn.Module):
+    name = "ViTBase16"
+
+    def __init__(self, pretrained=False):
+        super().__init__()
+        self.net = VisionTransformer.from_name('ViT-B_16', num_classes=5)
+
+    def forward(self, x):
+        x = self.net(x)
+        return x
+
+
 class GeneralizedCassavaClassifier(nn.Module):
     def __init__(self, model_arch, n_class=config.N_CLASSES, pretrained=False):
         super().__init__()
@@ -126,4 +138,5 @@ nets = {
     "SEResNeXt50_32x4d_BH": SEResNeXt50_32x4d_BH,
     "ViTBase16_BH": ViTBase16_BH,
     "ResNeXt50_32x4d_BH": ResNeXt50_32x4d_BH,
+    "ViTBase16": ViTBase16,
 }
