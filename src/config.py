@@ -42,7 +42,7 @@ SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, Cosi
 TRAIN_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
-MAX_EPOCHS            = 15
+MAX_EPOCHS            = 10
 
 N_CLASSES             = 5
 
