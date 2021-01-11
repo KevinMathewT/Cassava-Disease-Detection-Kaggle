@@ -124,19 +124,38 @@ import pprint
 # x = torch.ones((2, 3, 224, 224))
 # print(net(x).shape)
 
-def count_parameters(model):
-    table = PrettyTable(["Modules", "Parameters"])
-    total_params = 0
-    for name, parameter in model.named_parameters():
-        if not parameter.requires_grad: continue
-        param = parameter.numel()
-        table.add_row([name, param])
-        total_params+=param
-    # print(table)
-    print(f"Total Trainable Params: {total_params / 1000000:.1f}M")
-    return total_params
+# def count_parameters(model):
+#     table = PrettyTable(["Modules", "Parameters"])
+#     total_params = 0
+#     for name, parameter in model.named_parameters():
+#         if not parameter.requires_grad: continue
+#         param = parameter.numel()
+#         table.add_row([name, param])
+#         total_params+=param
+#     # print(table)
+#     print(f"Total Trainable Params: {total_params / 1000000:.1f}M")
+#     return total_params
 
-print(timm.list_models("vit*"))
+# print(timm.list_models("vit*"))
+
+# class ViTBase16(nn.Module):
+#     name = "ViTBase16"
+
+#     def __init__(self, pretrained=False):
+#         super().__init__()
+#         self.net = VisionTransformer.from_name('ViT-B_16', num_classes=5)
+
+#     def forward(self, x):
+#         x = self.net(x)
+#         return x
+
+net = VisionTransformer.from_name('ViT-B_16', num_classes=5)
+
+# net = ViTBase16(pretrained=False)
+
+inputs = torch.randn(1, 3, *net.image_size)
+print(inputs.size())
+print(net(inputs).size())
 
 # net = get_net("vit_small_patch16_224")
 # count_parameters(net)
