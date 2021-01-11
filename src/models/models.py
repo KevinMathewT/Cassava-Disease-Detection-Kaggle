@@ -109,7 +109,7 @@ class ViTBase16(nn.Module):
 
     def __init__(self, pretrained=False):
         super().__init__()
-        self.net = VisionTransformer.from_name('ViT-B_16', num_classes=5)
+        self.net = VisionTransformer.from_pretrained('ViT-B_16', num_classes=5)
 
     def forward(self, x):
         x = self.net(x)
