@@ -12,6 +12,9 @@ from torch.utils.data import DataLoader, Dataset
 from . import config
 from .transforms import *
     
+if config.USE_TPU:
+    import torch_xla.core.xla_model as xm
+
 def get_img(path):
     im_bgr = cv2.imread(path, cv2.IMREAD_COLOR)
     im_rgb = cv2.cvtColor(im_bgr, cv2.COLOR_BGR2RGB)
