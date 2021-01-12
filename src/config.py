@@ -34,8 +34,8 @@ DO_CUTMIX             = False
 CUTMIX_PROBABILITY    = 0.5
 
 
-H                     = 512 # [224, 384, 512]
-W                     = 512 # [224, 384, 512]
+H                     = 384 # [224, 384, 512]
+W                     = 384 # [224, 384, 512]
 
 OPTIMIZER             = "AdamW" # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "StepLR" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
@@ -47,8 +47,8 @@ SCHEDULER_BATCH_STEP  = True
 
 N_CLASSES             = 5
 
-TRAIN_BATCH_SIZE      = 2 * 8
-VALID_BATCH_SIZE      = 2 * 8
+TRAIN_BATCH_SIZE      = 16
+VALID_BATCH_SIZE      = 16
 ACCUMULATE_ITERATION  = 2
 
 NET                   = "ViTBase16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16
