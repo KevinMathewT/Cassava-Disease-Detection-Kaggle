@@ -46,8 +46,8 @@ MAX_EPOCHS            = 10
 
 N_CLASSES             = 5
 
-TRAIN_BATCH_SIZE      = 16 * 8
-VALID_BATCH_SIZE      = 16 * 8
+TRAIN_BATCH_SIZE      = 4 * 8
+VALID_BATCH_SIZE      = 4 * 8
 ACCUMULATE_ITERATION  = 1
 
 NET                   = "seresnext50_32x4d" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16
