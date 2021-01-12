@@ -47,12 +47,12 @@ def run_fold(fold):
         epoch_start = time.time()
 
         train_mp_device_loader          = pl.MpDeviceLoader(train_loader, device) if config.USE_TPU else None
-        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=False)
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=False)
         del train_mp_device_loader
         gc.collect()
         
         valid_mp_device_loader          = pl.MpDeviceLoader(valid_loader, device) if config.USE_TPU else None
-        valid_one_epoch(fold, epoch, net, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False)
+        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader, device, scheduler=None, schd_loss_update=False)
         del valid_mp_device_loader
         gc.collect()
 
