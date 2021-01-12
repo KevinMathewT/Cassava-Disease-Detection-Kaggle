@@ -47,8 +47,8 @@ def run_fold(fold):
 
     for epoch in range(config.MAX_EPOCHS):
         epoch_start = time.time()
-        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=False)
-        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader, device, scheduler=None, schd_loss_update=False)
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=False)
+        valid_one_epoch(fold, epoch, net, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False)
         print_fn(f"Time Taken for Epoch {epoch}: {time.time() - epoch_start}")
 
         if config.USE_TPU:
