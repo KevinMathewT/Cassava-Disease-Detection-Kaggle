@@ -26,11 +26,11 @@ SEED                  = 719
 FOLDS                 = 5
 MIXED_PRECISION_TRAIN = False
 
-ONE_HOT_LABEL         = False
+ONE_HOT_LABEL         = True
 DO_DEPTH_MASKING      = False
 DO_FMIX               = False
 FMIX_PROBABILITY      = 0.5
-DO_CUTMIX             = False
+DO_CUTMIX             = True
 CUTMIX_PROBABILITY    = 0.5
 
 
@@ -39,10 +39,10 @@ W                     = 384
 
 OPTIMIZER             = "Adam" # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
-TRAIN_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+TRAIN_CRITERION       = "RandomChoice" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
-MAX_EPOCHS            = 10
+MAX_EPOCHS            = 15
 
 N_CLASSES             = 5
 
