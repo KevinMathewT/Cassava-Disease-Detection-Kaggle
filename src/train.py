@@ -70,6 +70,7 @@ def tpu(rank, flags):
 
 
 def train():
+    global net
     torch.cuda.empty_cache()
     if not config.USE_TPU:
         if not config.PARALLEL_FOLD_TRAIN:
@@ -77,7 +78,6 @@ def train():
             #     run_fold(fold)
             # run_fold(0)
             for fold in [0]:
-                global net
                 net = get_net(name=config.NET, pretrained=config.PRETRAINED)
                 run_fold(fold)
 
@@ -98,7 +98,6 @@ def train():
             os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 
-        global net
         net = get_net(name=config.NET, pretrained=config.PRETRAINED)
 
         for fold in [0]:
