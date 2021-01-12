@@ -35,8 +35,6 @@ def run_fold(fold):
     global net
     train_loader, valid_loader          = get_loaders(fold)
     device                              = get_device(n=fold+1)
-    train_mp_device_loader              = pl.MpDeviceLoader(train_loader, device) if config.USE_TPU else None
-    valid_mp_device_loader              = pl.MpDeviceLoader(valid_loader, device) if config.USE_TPU else None
     net                                 = net.to(device)
     scaler                              = torch.cuda.amp.GradScaler() if not config.USE_TPU and config.MIXED_PRECISION_TRAIN else None
     loss_tr                             = get_train_criterion(device=device)
@@ -47,8 +45,17 @@ def run_fold(fold):
 
     for epoch in range(config.MAX_EPOCHS):
         epoch_start = time.time()
+
+        train_mp_device_loader          = pl.MpDeviceLoader(train_loader, device) if config.USE_TPU else None
         train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=False)
+        del train_mp_device_loader
+        gc.collect()
+        
+        valid_mp_device_loader          = pl.MpDeviceLoader(valid_loader, device) if config.USE_TPU else None
         valid_one_epoch(fold, epoch, net, loss_fn, valid_loader, device, scheduler=None, schd_loss_update=False)
+        del valid_mp_device_loader
+        gc.collect()
+
         print_fn(f"Time Taken for Epoch {epoch}: {time.time() - epoch_start}")
 
         if config.USE_TPU:
