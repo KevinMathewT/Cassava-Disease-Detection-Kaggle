@@ -65,7 +65,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
 
             if ((step + 1) % config.ACCUMULATE_ITERATION == 0) or ((step + 1) == total_steps):
                 if config.USE_TPU:
-                    xm.optimizer_step(optimizer, barrier=True)
+                    xm.optimizer_step(optimizer)
                 else:
                     optimizer.step()
                 if scheduler is not None and schd_batch_update:
@@ -160,13 +160,16 @@ def get_net(name, pretrained=False):
     else:
         net = nets[name](pretrained=pretrained)
 
+    if config.USE_TPU:
+        net = xmp.MpModelWrapper(net)
+
     return net
 
 
 def get_optimizer_and_scheduler(net, dataloader):
     print_fn = print if not config.USE_TPU else xm.master_print
-    # m = xm.xrt_world_size() if USE_TPU else 1
-    m = 1
+    m = xm.xrt_world_size() if config.USE_TPU else 1
+    # m = 1
     print_fn(f"World Size:                  {m}")
 
     # Optimizers

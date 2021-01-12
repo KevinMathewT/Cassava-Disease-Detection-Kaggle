@@ -34,23 +34,23 @@ DO_CUTMIX             = True
 CUTMIX_PROBABILITY    = 0.5
 
 
-H                     = 384
-W                     = 384
+H                     = 512 # [224, 384, 512]
+W                     = 512 # [224, 384, 512]
 
 OPTIMIZER             = "Adam" # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
-TRAIN_CRITERION       = "RandomChoice" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+TRAIN_CRITERION       = "BiTemperedLogisticLoss" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy_OHL" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
-MAX_EPOCHS            = 15
+MAX_EPOCHS            = 10
 
 N_CLASSES             = 5
 
-TRAIN_BATCH_SIZE      = 32
-VALID_BATCH_SIZE      = 32
-ACCUMULATE_ITERATION  = 2
+TRAIN_BATCH_SIZE      = 128 * 8
+VALID_BATCH_SIZE      = 128 * 8
+ACCUMULATE_ITERATION  = 1
 
-NET                   = "ViTBase16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16
+NET                   = "seresnext50_32x4d" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16
                                              #  resnext50_32x4d, seresnext50_32x4d, tf_efficientnet_b4_ns, ['vit_base_patch16_224', 'vit_base_patch16_384', 'vit_base_patch32_384', 'vit_base_resnet26d_224', 'vit_base_resnet50d_224', 'vit_huge_patch16_224', 'vit_huge_patch32_384', 'vit_large_patch16_224', 'vit_large_patch16_384', 'vit_large_patch32_384', 'vit_small_patch16_224', 'vit_small_resnet26d_224', 'vit_small_resnet50d_s3_224']
 
 PRETRAINED            = True

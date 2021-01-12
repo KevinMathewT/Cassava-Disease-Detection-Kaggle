@@ -1,3 +1,4 @@
+import gc
 import time
 from joblib import Parallel, delayed
 
@@ -32,25 +33,22 @@ def run_fold(fold):
     print_fn(f"Accumulate Iteration:        {config.ACCUMULATE_ITERATION}")
 
     global net
-    net                                     = xmp.MpModelWrapper(net) if config.USE_TPU else net
-    train_loader, valid_loader              = get_loaders(fold)
-    device                                  = get_device(n=fold+1)
-    mp_device_loader                        = pl.MpDeviceLoader(train_loader, 
-                                                                device, fixed_batch_size=True) if config.USE_TPU else None
-    net                                     = net.to(device)
-    scaler                                  = torch.cuda.amp.GradScaler() if not config.USE_TPU and config.MIXED_PRECISION_TRAIN else None
-    loss_tr                                 = get_train_criterion(device=device)
-    loss_fn                                 = get_valid_criterion(device=device)
-    optimizer, scheduler                    = get_optimizer_and_scheduler(net=net, 
-                                                                          dataloader=train_loader)
+    train_loader, valid_loader          = get_loaders(fold)
+    device                              = get_device(n=fold+1)
+    train_mp_device_loader              = pl.MpDeviceLoader(train_loader, device) if config.USE_TPU else None
+    valid_mp_device_loader              = pl.MpDeviceLoader(valid_loader, device) if config.USE_TPU else None
+    net                                 = net.to(device)
+    scaler                              = torch.cuda.amp.GradScaler() if not config.USE_TPU and config.MIXED_PRECISION_TRAIN else None
+    loss_tr                             = get_train_criterion(device=device)
+    loss_fn                             = get_valid_criterion(device=device)
+    optimizer, scheduler                = get_optimizer_and_scheduler(net=net, dataloader=train_loader)
+
+    gc.collect()
 
     for epoch in range(config.MAX_EPOCHS):
         epoch_start = time.time()
-        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_loader, device, scaler=scaler,
-                        scheduler=scheduler, schd_batch_update=False)
-        with torch.no_grad():
-            valid_one_epoch(fold, epoch, net, loss_fn, valid_loader,
-                            device, scheduler=None, schd_loss_update=False)
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=False)
+        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader, device, scheduler=None, schd_loss_update=False)
         print_fn(f"Time Taken for Epoch {epoch}: {time.time() - epoch_start}")
 
         if config.USE_TPU:
@@ -66,12 +64,9 @@ def run_fold(fold):
     print_fn(f"___________________________________________________")
 
 
-def _mp_fn(rank, flags):
+def tpu(rank, flags):
     torch.set_default_tensor_type("torch.FloatTensor")
-    for fold in [1, 3]:
-        global net
-        net = get_net(name=config.NET, pretrained=config.PRETRAINED)
-        a = run_fold(fold)
+    a = run_fold(FLAGS['fold'])
 
 
 def train():
@@ -103,8 +98,13 @@ def train():
             os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 
-        FLAGS = {}
-        xmp.spawn(_mp_fn, args=(FLAGS,), nprocs=8, start_method="fork")
+        global net
+        net = get_net(name=config.NET, pretrained=config.PRETRAINED)
+
+        for fold in [0]:
+            global FLAGS
+            FLAGS = {"fold": fold}
+            xmp.spawn(tpu, args=(FLAGS,), nprocs=8, start_method="fork")
 
 
 if __name__ == "__main__":
