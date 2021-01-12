@@ -40,7 +40,7 @@ W                     = 384
 OPTIMIZER             = "Adam" # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
 TRAIN_CRITERION       = "RandomChoice" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
-VALID_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+VALID_CRITERION       = "SoftmaxCrossEntropy_OHL" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 
