@@ -29,8 +29,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
     optimizer.zero_grad()
 
     for step, (imgs, image_labels) in pbar:
-        imgs = imgs.to(device, dtype=torch.float32)
-        image_labels = image_labels.to(device, dtype=torch.int64)
+        imgs, image_labels = imgs.to(device, dtype=torch.float32), image_labels.to(device, dtype=torch.int64)
         curr_batch_size = imgs.size(0)
 
         # print(image_labels.shape, exam_label.shape)
@@ -160,8 +159,8 @@ def get_net(name, pretrained=False):
     else:
         net = nets[name](pretrained=pretrained)
 
-    if config.USE_TPU:
-        net = xmp.MpModelWrapper(net)
+    # if config.USE_TPU:
+    #     net = xmp.MpModelWrapper(net)
 
     return net
 

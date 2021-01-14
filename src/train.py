@@ -46,13 +46,13 @@ def run_fold(fold):
     for epoch in range(config.MAX_EPOCHS):
         epoch_start = time.time()
 
-        train_mp_device_loader          = pl.MpDeviceLoader(train_loader, device) if config.USE_TPU else train_loader
-        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=config.SCHEDULER_BATCH_STEP)
+        train_mp_device_loader          = pl.ParallelLoader(train_loader, device) if config.USE_TPU else train_loader
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader.per_device_loader(device), device, scaler=scaler, scheduler=scheduler, schd_batch_update=config.SCHEDULER_BATCH_STEP)
         del train_mp_device_loader
         gc.collect()
         
-        valid_mp_device_loader          = pl.MpDeviceLoader(valid_loader, device) if config.USE_TPU else valid_loader
-        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader, device, scheduler=None, schd_loss_update=False)
+        valid_mp_device_loader          = pl.ParallelLoader(valid_loader, device) if config.USE_TPU else valid_loader
+        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader.per_device_loader(device), device, scheduler=None, schd_loss_update=False)
         del valid_mp_device_loader
         gc.collect()
 
@@ -72,8 +72,9 @@ def run_fold(fold):
 
 
 def tpu(rank, flags):
-    torch.set_default_tensor_type("torch.FloatTensor")
-    a = run_fold(FLAGS['fold'])
+    global acc_list
+    torch.set_default_tensor_type('torch.FloatTensor')
+    res = run_fold(FLAGS['fold'])
 
 
 def train():
@@ -101,8 +102,8 @@ def train():
             parallel(delayed(run_fold)(fold) for fold in range(config.FOLDS))
 
     if config.USE_TPU:
-        if config.MIXED_PRECISION_TRAIN:
-            os.environ["XLA_USE_BF16"] = "1"
+        # if config.MIXED_PRECISION_TRAIN:
+        os.environ["XLA_USE_BF16"] = "1"
         os.environ["XLA_TENSOR_ALLOCATOR_MAXSIZE"] = "100000000"
 
         net = get_net(name=config.NET, pretrained=config.PRETRAINED)
