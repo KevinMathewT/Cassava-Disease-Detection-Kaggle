@@ -166,4 +166,5 @@ nets = {
     "ViTBase16_BH": ViTBase16_BH,
     "ResNeXt50_32x4d_BH": ResNeXt50_32x4d_BH,
     "ViTBase16": ViTBase16,
+    "ViTLarge16": ViTLarge16,
 }
