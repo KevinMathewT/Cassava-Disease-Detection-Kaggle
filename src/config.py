@@ -31,7 +31,7 @@ ONE_HOT_LABEL         = True
 DO_DEPTH_MASKING      = False
 DO_FMIX               = False
 FMIX_PROBABILITY      = 0.5
-DO_CUTMIX             = False
+DO_CUTMIX             = True
 CUTMIX_PROBABILITY    = 0.5
 
 

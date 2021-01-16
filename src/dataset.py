@@ -198,9 +198,9 @@ class CassavaDataset(Dataset):
             img, target = fmix(img, target, self.labels, self.df,
                                self.transforms, self.fmix_params, self.data_root)
 
-        # if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
-        #     img, target = cutmix(img, target, self.labels, self.df,
-        #                        self.transforms, self.cutmix_params, self.data_root)
+        if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
+            img, target = cutmix(img, target, self.labels, self.df,
+                               self.transforms, self.cutmix_params, self.data_root)
 
         # if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
             # with torch.no_grad():
