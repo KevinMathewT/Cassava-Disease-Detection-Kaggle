@@ -131,7 +131,8 @@ class RandomLoss(nn.Module):
         self.losses = [label_smoothing_cross_entropy, softmax_cross_entropy]
 
     def forward(self, preds, target):
-        loss = random.choice(self.losses)
+        with torch.no_grad():
+            loss = random.choice(self.losses)
         return loss(preds, target)
 
 
