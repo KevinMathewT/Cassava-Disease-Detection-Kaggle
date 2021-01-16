@@ -202,10 +202,10 @@ class CassavaDataset(Dataset):
         #     img, target = cutmix(img, target, self.labels, self.df,
         #                        self.transforms, self.cutmix_params, self.data_root)
 
-        if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
+        # if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
             # with torch.no_grad():
                 # pass
-            cmix_ix = np.random.choice(self.df.index, size=1)[0]
+            # cmix_ix = np.random.choice(self.df.index, size=1)[0]
             # cmix_img = get_img(
             #     "{}/{}".format(self.data_root, self.df.iloc[cmix_ix]['image_id']))
             # if self.transforms:
