@@ -27,7 +27,7 @@ FOLDS                 = 5
 MIXED_PRECISION_TRAIN = False
 DROP_LAST             = True
 
-ONE_HOT_LABEL         = True
+ONE_HOT_LABEL         = False
 DO_DEPTH_MASKING      = False
 DO_FMIX               = False
 FMIX_PROBABILITY      = 0.5
@@ -40,7 +40,7 @@ W                     = 384 # [224, 384, 512]
 
 OPTIMIZER             = "AdamW"  # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "StepLR" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
-TRAIN_CRITERION       = "RandomLoss" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+TRAIN_CRITERION       = "SoftmaxCrossEntropy_OHL" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy_OHL" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 1
