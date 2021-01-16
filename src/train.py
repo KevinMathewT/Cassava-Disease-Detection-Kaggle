@@ -51,8 +51,8 @@ def run_fold(fold):
         del train_mp_device_loader
         gc.collect()
         
-        valid_mp_device_loader          = pl.ParallelLoader(valid_loader, device) if config.USE_TPU else valid_loader
-        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader.per_device_loader(device), device, scheduler=None, schd_loss_update=False)
+        valid_mp_device_loader          = pl.ParallelLoader(valid_loader, device).per_device_loader(device) if config.USE_TPU else valid_loader
+        valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader, device, scheduler=None, schd_loss_update=False)
         del valid_mp_device_loader
         gc.collect()
 
