@@ -46,8 +46,8 @@ def run_fold(fold):
     for epoch in range(config.MAX_EPOCHS):
         epoch_start = time.time()
 
-        train_mp_device_loader          = pl.ParallelLoader(train_loader, device) if config.USE_TPU else train_loader
-        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader.per_device_loader(device), device, scaler=scaler, scheduler=scheduler, schd_batch_update=config.SCHEDULER_BATCH_STEP)
+        train_mp_device_loader          = pl.ParallelLoader(train_loader, device).per_device_loader(device) if config.USE_TPU else train_loader
+        train_one_epoch(fold, epoch, net, loss_tr, optimizer, train_mp_device_loader, device, scaler=scaler, scheduler=scheduler, schd_batch_update=config.SCHEDULER_BATCH_STEP)
         del train_mp_device_loader
         gc.collect()
         
