@@ -26,7 +26,7 @@ SEED                  = 719
 FOLDS                 = 5
 MIXED_PRECISION_TRAIN = False
 
-ONE_HOT_LABEL         = False
+ONE_HOT_LABEL         = True
 DO_DEPTH_MASKING      = False
 DO_FMIX               = False
 FMIX_PROBABILITY      = 0.5
