@@ -25,12 +25,13 @@ PARALLEL_FOLD_TRAIN   = False
 SEED                  = 719
 FOLDS                 = 5
 MIXED_PRECISION_TRAIN = False
+DROP_LAST             = True
 
 ONE_HOT_LABEL         = True
 DO_DEPTH_MASKING      = False
 DO_FMIX               = False
 FMIX_PROBABILITY      = 0.5
-DO_CUTMIX             = False
+DO_CUTMIX             = True
 CUTMIX_PROBABILITY    = 0.5
 
 
@@ -39,7 +40,7 @@ W                     = 384 # [224, 384, 512]
 
 OPTIMIZER             = "AdamW"  # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "StepLR" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
-TRAIN_CRITERION       = "SoftmaxCrossEntropy_OHL" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+TRAIN_CRITERION       = "RandomLoss" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy_OHL" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 1
@@ -48,7 +49,7 @@ SCHEDULER_BATCH_STEP  = True
 N_CLASSES             = 5
 
 TRAIN_BATCH_SIZE      = 32
-VALID_BATCH_SIZE      = 16
+VALID_BATCH_SIZE      = 32
 ACCUMULATE_ITERATION  = 2
 
 NET                   = "ViTBase16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16

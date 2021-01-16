@@ -224,13 +224,13 @@ def get_train_dataloader(train, data_root=config.TRAIN_IMAGES_DIR):
             batch_size=config.TRAIN_BATCH_SIZE,
             sampler=train_sampler,
             num_workers=config.CPU_WORKERS,
-            drop_last=True)
+            drop_last=config.DROP_LAST)
     else:
         return DataLoader(
             CassavaDataset(train, data_root, transforms=get_train_transforms(
             ), output_label=True),
             batch_size=config.TRAIN_BATCH_SIZE,
-            drop_last=True,
+            drop_last=config.DROP_LAST,
             num_workers=config.CPU_WORKERS,
             shuffle=True)
 
@@ -249,13 +249,13 @@ def get_valid_dataloader(valid, data_root=config.TRAIN_IMAGES_DIR):
             batch_size=config.VALID_BATCH_SIZE,
             sampler=valid_sampler,
             num_workers=config.CPU_WORKERS,
-            drop_last=False)
+            drop_last=config.DROP_LAST)
     else:
         return DataLoader(
             CassavaDataset(valid, data_root, transforms=get_valid_transforms(
             ), output_label=True),
             batch_size=config.VALID_BATCH_SIZE,
-            drop_last=True,
+            drop_last=config.DROP_LAST,
             num_workers=config.CPU_WORKERS,
             shuffle=False)
 
