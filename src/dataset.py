@@ -204,20 +204,21 @@ class CassavaDataset(Dataset):
 
         if config.DO_CUTMIX and np.random.random() <= config.CUTMIX_PROBABILITY:
             with torch.no_grad():
-                cmix_ix = np.random.choice(self.df.index, size=1)[0]
-                cmix_img = get_img(
-                    "{}/{}".format(self.data_root, self.df.iloc[cmix_ix]['image_id']))
-                if self.transforms:
-                    cmix_img = self.transforms(image=cmix_img)['image']
+                pass
+                # cmix_ix = np.random.choice(self.df.index, size=1)[0]
+                # cmix_img = get_img(
+                #     "{}/{}".format(self.data_root, self.df.iloc[cmix_ix]['image_id']))
+                # if self.transforms:
+                #     cmix_img = self.transforms(image=cmix_img)['image']
 
-                lam = np.clip(np.random.beta(
-                    self.cutmix_params['alpha'], self.cutmix_params['alpha']), 0.3, 0.4)
-                bbx1, bby1, bbx2, bby2 = rand_bbox((config.H, config.W), lam)
+                # lam = np.clip(np.random.beta(
+                #     self.cutmix_params['alpha'], self.cutmix_params['alpha']), 0.3, 0.4)
+                # bbx1, bby1, bbx2, bby2 = rand_bbox((config.H, config.W), lam)
 
-                img[:, bbx1:bbx2, bby1:bby2] = cmix_img[:, bbx1:bbx2, bby1:bby2]
+                # img[:, bbx1:bbx2, bby1:bby2] = cmix_img[:, bbx1:bbx2, bby1:bby2]
 
-                rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (config.H * config.W))
-                target = rate * target + (1. - rate) * self.labels[cmix_ix]
+                # rate = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (config.H * config.W))
+                # target = rate * target + (1. - rate) * self.labels[cmix_ix]
 
         # do label smoothing
         #print(type(img), type(target))
