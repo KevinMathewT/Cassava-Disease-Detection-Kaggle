@@ -123,6 +123,25 @@ class ViTBase16(nn.Module):
         x = self.net(x)
         return x
 
+class ViTLarge16(nn.Module):
+    name = "ViTLarge16"
+
+    def __init__(self, pretrained=True):
+        super().__init__()
+        # self.model_arch = 'ViT-B_16'
+        # self.net = VisionTransformer.from_pretrained(
+        #     self.model_arch, num_classes=5) if pretrained else VisionTransformer.from_name(self.model_arch, num_classes=5)
+        #print(self.model)
+
+        self.model_arch = 'vit_large_patch16_384'
+        self.net = timm.create_model(self.model_arch, pretrained=pretrained)
+        n_features = self.net.head.in_features
+        self.net.head = nn.Linear(n_features, config.N_CLASSES)
+
+    def forward(self, x):
+        x = self.net(x)
+        return x
+
 
 class GeneralizedCassavaClassifier(nn.Module):
     def __init__(self, model_arch, n_class=config.N_CLASSES, pretrained=True):
