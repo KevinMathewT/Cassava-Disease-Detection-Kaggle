@@ -37,12 +37,12 @@ CUTMIX_PROBABILITY    = 0.5
 H                     = 384 # [224, 384, 512]
 W                     = 384 # [224, 384, 512]
 
-OPTIMIZER             = "AdamW" # [Adam, AdamW, AdaBelief, RangerAdaBelief]
+OPTIMIZER             = "AdamW"  # [Adam, AdamW, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "StepLR" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
 TRAIN_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
-MAX_EPOCHS            = 5
+MAX_EPOCHS            = 1
 SCHEDULER_BATCH_STEP  = True
 
 N_CLASSES             = 5
@@ -60,7 +60,7 @@ VERBOSE_STEP          = 100
 
 USE_SUBSET            = False
 SUBSET_SIZE           = TRAIN_BATCH_SIZE * 1
-CPU_WORKERS           = 0
+CPU_WORKERS           = 4
 
 TRAIN_BATCH_SIZE    //= ACCUMULATE_ITERATION
 VALID_BATCH_SIZE    //= ACCUMULATE_ITERATION
