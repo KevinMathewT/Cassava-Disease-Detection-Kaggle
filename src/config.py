@@ -17,8 +17,8 @@ TRAIN_FOLDS           = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
 # WEIGHTS_PATH          = "/content/drive/My Drive" # For Colab
 # WEIGHTS_PATH          = "/vol/weights/" # For EC2
-USE_GPU               = False # [True, False]
-USE_TPU               = True # [True, False]
+USE_GPU               = True # [True, False]
+USE_TPU               = False # [True, False]
 GPUS                  = 1
 TPUS                  = 8 # Basically TPU Nodes
 PARALLEL_FOLD_TRAIN   = False
@@ -47,9 +47,9 @@ SCHEDULER_BATCH_STEP  = True
 
 N_CLASSES             = 5
 
-TRAIN_BATCH_SIZE      = 10 * 8
-VALID_BATCH_SIZE      = 10 * 8
-ACCUMULATE_ITERATION  = 1
+TRAIN_BATCH_SIZE      = 32
+VALID_BATCH_SIZE      = 16
+ACCUMULATE_ITERATION  = 2
 
 NET                   = "ViTBase16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16
                                              #  resnext50_32x4d, seresnext50_32x4d, tf_efficientnet_b4_ns, ['vit_base_patch16_224', 'vit_base_patch16_384', 'vit_base_patch32_384', 'vit_base_resnet26d_224', 'vit_base_resnet50d_224', 'vit_huge_patch16_224', 'vit_huge_patch32_384', 'vit_large_patch16_224', 'vit_large_patch16_384', 'vit_large_patch32_384', 'vit_small_patch16_224', 'vit_small_resnet26d_224', 'vit_small_resnet50d_s3_224']

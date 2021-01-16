@@ -112,10 +112,10 @@ class ViTBase16(nn.Module):
         # self.model_arch = 'ViT-B_16'
         # self.net = VisionTransformer.from_pretrained(
         #     self.model_arch, num_classes=5) if pretrained else VisionTransformer.from_name(self.model_arch, num_classes=5)
+        #print(self.model)
 
         self.model_arch = 'vit_base_patch16_384'
         self.net = timm.create_model(self.model_arch, pretrained=pretrained)
-        #print(self.model)
         n_features = self.net.head.in_features
         self.net.head = nn.Linear(n_features, config.N_CLASSES)
 
