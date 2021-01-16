@@ -121,7 +121,6 @@ class LabelSmoothingCrossEntropy(nn.Module):
         nll = F.nll_loss(log_preds, target, reduction=self.reduction)
         return linear_combination(loss/n, nll, self.epsilon)
 
-
 class RandomLoss(nn.Module):
     def __init__(self, device):
         super().__init__()
@@ -471,6 +470,39 @@ class TaylorCrossEntropyLoss(nn.Module):
                           ignore_index=self.ignore_index)
         return loss
 
+class LabelSmoothingLoss(nn.Module):
+    def __init__(self, classes=config.N_CLASSES, smoothing=0.0, dim=-1): 
+        super(LabelSmoothingLoss, self).__init__() 
+        self.confidence = 1.0 - smoothing 
+        self.smoothing = smoothing 
+        self.cls = classes 
+        self.dim = dim 
+    def forward(self, pred, target): 
+        """Taylor Softmax and log are already applied on the logits"""
+        #pred = pred.log_softmax(dim=self.dim) 
+        with torch.no_grad(): 
+            true_dist = torch.zeros_like(pred) 
+            true_dist.fill_(self.smoothing / (self.cls - 1)) 
+            true_dist.scatter_(1, target.data.unsqueeze(1), self.confidence) 
+        return torch.mean(torch.sum(-true_dist * pred, dim=self.dim))
+    
+
+class TaylorCrossEntropyLossWithLabelSmoothing(nn.Module):
+    def __init__(self, n=2, ignore_index=-1, reduction='mean', smoothing=0.2):
+        super(TaylorCrossEntropyLoss, self).__init__()
+        assert n % 2 == 0
+        self.taylor_softmax = TaylorSoftmax(dim=1, n=n)
+        self.reduction = reduction
+        self.ignore_index = ignore_index
+        self.lab_smooth = LabelSmoothingLoss(config.N_CLASSES, smoothing=smoothing)
+
+    def forward(self, logits, labels):
+
+        log_probs = self.taylor_softmax(logits).log()
+        #loss = F.nll_loss(log_probs, labels, reduction=self.reduction,
+        #        ignore_index=self.ignore_index)
+        loss = self.lab_smooth(log_probs, labels)
+        return loss
 
 def get_train_criterion(device):
     print_fn = print if not config.USE_TPU else xm.master_print
@@ -491,6 +523,8 @@ def get_train_criterion(device):
         return TaylorCrossEntropyLoss().to(device)
     elif config.TRAIN_CRITERION == "RandomChoice":
         return RandomLoss(device).to(device)
+    elif config.TRAIN_CRITERION == "TaylorCrossEntropyLossWithLabelSmoothing":
+        return TaylorCrossEntropyLossWithLabelSmoothing().to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
 
@@ -506,11 +540,15 @@ def get_valid_criterion(device):
         return nn.CrossEntropyLoss().to(device)
     elif config.VALID_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
+    elif config.TRAIN_CRITERION == "LabelSmoothingCrossEntropy":
+        return LabelSmoothingCrossEntropy().to(device)
     elif config.VALID_CRITERION == "SmoothCrossEntropyLoss":
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
     elif config.VALID_CRITERION == "TaylorCrossEntropyLoss":
         return TaylorCrossEntropyLoss().to(device)
     elif config.VALID_CRITERION == "RandomChoice":
         return RandomLoss(device).to(device)
+    elif config.TRAIN_CRITERION == "TaylorCrossEntropyLossWithLabelSmoothing":
+        return TaylorCrossEntropyLossWithLabelSmoothing().to(device)
     else:
         return nn.CrossEntropyLoss().to(device)
