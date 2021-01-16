@@ -88,7 +88,8 @@ class ViTBase16_BH(nn.Module):
 
     def __init__(self, pretrained=True):
         super().__init__()
-        self.net = timm.create_model("vit_base_patch16_384", pretrained=pretrained)
+        self.net = timm.create_model(
+            "vit_base_patch16_384", pretrained=pretrained)
         self.net.norm = nn.Identity()
         self.net.head = nn.Identity()
         self.fea_bn = nn.BatchNorm1d(768)
@@ -112,7 +113,7 @@ class ViTBase16(nn.Module):
         # self.model_arch = 'ViT-B_16'
         # self.net = VisionTransformer.from_pretrained(
         #     self.model_arch, num_classes=5) if pretrained else VisionTransformer.from_name(self.model_arch, num_classes=5)
-        #print(self.model)
+        # print(self.model)
 
         self.model_arch = 'vit_base_patch16_384'
         self.net = timm.create_model(self.model_arch, pretrained=pretrained)
@@ -123,6 +124,7 @@ class ViTBase16(nn.Module):
         x = self.net(x)
         return x
 
+
 class ViTLarge16(nn.Module):
     name = "ViTLarge16"
 
@@ -131,7 +133,7 @@ class ViTLarge16(nn.Module):
         # self.model_arch = 'ViT-B_16'
         # self.net = VisionTransformer.from_pretrained(
         #     self.model_arch, num_classes=5) if pretrained else VisionTransformer.from_name(self.model_arch, num_classes=5)
-        #print(self.model)
+        # print(self.model)
 
         self.model_arch = 'vit_large_patch16_384'
         self.net = timm.create_model(self.model_arch, pretrained=pretrained)
