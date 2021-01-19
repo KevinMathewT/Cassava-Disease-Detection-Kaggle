@@ -68,7 +68,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 else:
                     optimizer.step()
                 if scheduler is not None and schd_batch_update:
-                    scheduler.step()
+                    scheduler.step(epoch + ((step + 1) / total_steps))
                 optimizer.zero_grad()
 
             running_loss.update(
@@ -158,6 +158,15 @@ def get_net(name, pretrained=False):
         net = GeneralizedCassavaClassifier(name, pretrained=pretrained)
     else:
         net = nets[name](pretrained=pretrained)
+
+    if config.FREEZE_BATCH_NORM:
+        for module in net.modules():
+            if isinstance(module, nn.BatchNorm2d):
+                if hasattr(module, 'weight'):
+                    module.weight.requires_grad_(False)
+                if hasattr(module, 'bias'):
+                    module.bias.requires_grad_(False)
+                module.eval()
 
     if config.USE_TPU:
         net = xmp.MpModelWrapper(net)
