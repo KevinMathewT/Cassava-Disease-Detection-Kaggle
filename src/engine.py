@@ -68,7 +68,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 else:
                     optimizer.step()
                 if scheduler is not None and schd_batch_update:
-                    scheduler.step(epoch + ((step + 1) / total_steps))
+                    scheduler.step(epoch + (step / total_steps))
                 optimizer.zero_grad()
 
             running_loss.update(
@@ -172,73 +172,6 @@ def get_net(name, pretrained=False):
         net = xmp.MpModelWrapper(net)
 
     return net
-
-
-def get_optimizer_and_scheduler(net, dataloader):
-    print_fn = print if not config.USE_TPU else xm.master_print
-    # m = xm.xrt_world_size() if config.USE_TPU else 1
-    m = 1
-    print_fn(f"World Size:                  {m}")
-
-    # Optimizers
-
-    print_fn(f"Optimizer:                   {config.OPTIMIZER}")
-    if config.OPTIMIZER == "Adam":
-        optimizer = torch.optim.Adam(
-            params=net.parameters(),
-            lr=config.LEARNING_RATE * m,
-            weight_decay=1e-5,
-            amsgrad=False
-        )
-    elif config.OPTIMIZER == "AdamW":
-        optimizer = optim.AdamW(
-            net.parameters(), lr=config.LEARNING_RATE * m, weight_decay=0.001)
-    elif config.OPTIMIZER == "AdaBelief":
-        optimizer = AdaBelief(net.parameters(
-        ), lr=config.LEARNING_RATE * m, eps=1e-16, betas=(0.9, 0.999), weight_decouple=True, rectify=False, print_change_log=False)
-    elif config.OPTIMIZER == "RangerAdaBelief":
-        optimizer = RangerAdaBelief(
-            net.parameters(), lr=config.LEARNING_RATE * m, eps=1e-12, betas=(0.9, 0.999), print_change_log=False)
-    else:
-        optimizer = optim.SGD(
-            net.parameters(), lr=config.LEARNING_RATE * m)
-
-    # Schedulers
-
-    print_fn(f"Scheduler:                   {config.SCHEDULER}")
-    if config.SCHEDULER == "ReduceLROnPlateau":
-        scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
-            optimizer,
-            patience=0,
-            factor=0.1,
-            verbose=config.LEARNING_VERBOSE)
-    elif config.SCHEDULER == "CosineAnnealingLR":
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max=5, eta_min=0)
-    elif config.SCHEDULER == "OneCycleLR":
-        steps_per_epoch = len(dataloader)
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(
-            optimizer=optimizer,
-            max_lr=1e-2,
-            epochs=config.MAX_EPOCHS,
-            steps_per_epoch=steps_per_epoch,
-            pct_start=0.25,)
-    elif config.SCHEDULER == "CosineAnnealingWarmRestarts":
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-            optimizer,
-            T_0=10,
-            T_mult=1,
-            eta_min=1e-6,
-            last_epoch=-1)
-    elif config.SCHEDULER == "StepLR":
-        scheduler = torch.optim.lr_scheduler.StepLR(
-            optimizer,
-            step_size=2,
-            gamma=0.1)
-    else:
-        scheduler = None
-
-    return optimizer, scheduler
 
 
 def get_device(n):

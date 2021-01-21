@@ -39,9 +39,12 @@ CUTMIX_PROBABILITY    = 0.5
 H                     = 512 # [224, 384, 512]
 W                     = 512 # [224, 384, 512]
 
-OPTIMIZER             = "Adam"  # [Adam, AdamW, AdaBelief, RangerAdaBelief]
+OPTIMIZER             = "RAdam"  # [Adam, AdamW, RAdam, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
-TRAIN_CRITERION       = "TaylorCrossEntropyLossWithLabelSmoothing" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+SCHEDULER_WARMUP      = True # [True, False]
+WARMUP_EPOCHS         = 1 if SCHEDULER_WARMUP else 0
+WARMUP_FACTOR         = 7 if SCHEDULER_WARMUP else 1
+TRAIN_CRITERION       = "BiTemperedLogisticLoss" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
