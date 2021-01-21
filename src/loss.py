@@ -109,17 +109,26 @@ def reduce_loss(loss, reduction='mean'):
 
 
 class LabelSmoothingCrossEntropy(nn.Module):
-    def __init__(self, epsilon: float = 0.1, reduction='mean'):
-        super().__init__()
-        self.epsilon = epsilon
-        self.reduction = reduction
+    """
+    NLL loss with label smoothing.
+    """
+    def __init__(self, smoothing=0.1):
+        """
+        Constructor for the LabelSmoothing module.
+        :param smoothing: label smoothing factor
+        """
+        super(LabelSmoothingCrossEntropy, self).__init__()
+        assert smoothing < 1.0
+        self.smoothing = smoothing
+        self.confidence = 1. - smoothing
 
-    def forward(self, preds, target):
-        n = preds.size()[-1]
-        log_preds = F.log_softmax(preds, dim=-1)
-        loss = reduce_loss(-log_preds.sum(dim=-1), self.reduction)
-        nll = F.nll_loss(log_preds, target, reduction=self.reduction)
-        return linear_combination(loss/n, nll, self.epsilon)
+    def forward(self, x, target):
+        logprobs = F.log_softmax(x, dim=-1)
+        nll_loss = -logprobs.gather(dim=-1, index=target.unsqueeze(1))
+        nll_loss = nll_loss.squeeze(1)
+        smooth_loss = -logprobs.mean(dim=-1)
+        loss = self.confidence * nll_loss + self.smoothing * smooth_loss
+        return loss.mean()
 
 class RandomLoss(nn.Module):
     def __init__(self, device):
@@ -516,7 +525,7 @@ def get_train_criterion(device):
     elif config.TRAIN_CRITERION == "FocalCosineLoss":
         return FocalCosineLoss(device=device).to(device)
     elif config.TRAIN_CRITERION == "LabelSmoothingCrossEntropy":
-        return LabelSmoothingCrossEntropy().to(device)
+        return LabelSmoothingCrossEntropy(smoothing=0.2).to(device)
     elif config.TRAIN_CRITERION == "SmoothCrossEntropyLoss":
         return SmoothCrossEntropyLoss(smoothing=0.1).to(device)
     elif config.TRAIN_CRITERION == "TaylorCrossEntropyLoss":

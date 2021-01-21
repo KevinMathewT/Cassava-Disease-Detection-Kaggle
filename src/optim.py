@@ -1,4 +1,3 @@
-
 import math
 
 import torch
@@ -33,7 +32,6 @@ class GradualWarmupSchedulerV2(GradualWarmupScheduler):
 
 
 class RAdam(Optimizer):
-
     def __init__(self, params, lr=1e-3, betas=(0.9, 0.999), eps=1e-8, weight_decay=0):
         defaults = dict(lr=lr, betas=betas, eps=eps, weight_decay=weight_decay)
         self.buffer = [[None, None, None] for ind in range(10)]
@@ -121,7 +119,7 @@ def get_optimizer_and_scheduler(net, dataloader):
 
     m /= config.WARMUP_FACTOR
     print_fn(f"Learning Rate Multiplier:    {m}")
-    
+
     print_fn(f"Start Learning Rate:         {config.LEARNING_RATE * m}")
 
     # Optimizers
@@ -175,9 +173,9 @@ def get_optimizer_and_scheduler(net, dataloader):
     elif config.SCHEDULER == "CosineAnnealingWarmRestarts":
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
             optimizer,
-            T_0=14,
+            T_0=config.MAX_EPOCHS - config.WARMUP_EPOCHS,
             T_mult=1,
-            eta_min=0,
+            eta_min=1e-6,
             last_epoch=-1)
     elif config.SCHEDULER == "StepLR":
         scheduler = torch.optim.lr_scheduler.StepLR(
