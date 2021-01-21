@@ -121,6 +121,8 @@ def get_optimizer_and_scheduler(net, dataloader):
 
     m /= config.WARMUP_FACTOR
     print_fn(f"Learning Rate Multiplier:    {m}")
+    
+    print_fn(f"Start Learning Rate:         {config.LEARNING_RATE * m}")
 
     # Optimizers
 
