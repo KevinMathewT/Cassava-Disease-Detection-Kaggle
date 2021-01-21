@@ -59,7 +59,7 @@ def run_fold(fold):
         valid_one_epoch(fold, epoch, net, loss_fn, valid_mp_device_loader, device, scheduler=None, schd_loss_update=False)
         del valid_mp_device_loader
         gc.collect()
-        print_fn(f'[{fold}/{config.FOLDS - 1}][{epoch:>2d}/{config.MAX_EPOCHS - 1:>2d}] Time Taken for Epoch {epoch}: {time.time() - epoch_start}')
+        print_fn(f'[{fold}/{config.FOLDS - 1}][{epoch:>2d}/{config.MAX_EPOCHS - 1:>2d}] Time Taken for Epoch {epoch}: {time.time() - epoch_start} seconds |')
 
         if config.USE_TPU:
             xm.save(net.state_dict(
