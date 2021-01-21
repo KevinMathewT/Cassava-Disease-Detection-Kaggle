@@ -159,15 +159,6 @@ def get_net(name, pretrained=False):
     else:
         net = nets[name](pretrained=pretrained)
 
-    if config.FREEZE_BATCH_NORM:
-        for module in net.modules():
-            if isinstance(module, nn.BatchNorm2d):
-                if hasattr(module, 'weight'):
-                    module.weight.requires_grad_(False)
-                if hasattr(module, 'bias'):
-                    module.bias.requires_grad_(False)
-                module.eval()
-
     if config.USE_TPU:
         net = xmp.MpModelWrapper(net)
 

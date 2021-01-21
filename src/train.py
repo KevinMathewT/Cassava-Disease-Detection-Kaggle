@@ -47,7 +47,7 @@ def run_fold(fold):
     for epoch in range(config.MAX_EPOCHS):
         epoch_start = time.time()
 
-        if epoch < config.FREEZE_BN_EPOCHS:
+        if config.DO_FREEZE_BATCH_NORM and epoch < config.FREEZE_BN_EPOCHS:
             freeze_batchnorm_stats(net)
 
         train_mp_device_loader          = pl.MpDeviceLoader(train_loader, device, fixed_batch_size=True) if config.USE_TPU else train_loader
