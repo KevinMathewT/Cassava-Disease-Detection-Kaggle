@@ -26,7 +26,7 @@ SEED                  = 719
 FOLDS                 = 5
 MIXED_PRECISION_TRAIN = True # [True, False]
 DROP_LAST             = True # [True, False]
-DO_FREEZE_BATCH_NORM  = False # [True, False]
+DO_FREEZE_BATCH_NORM  = True # [True, False]
 FREEZE_BN_EPOCHS      = 5
 
 
