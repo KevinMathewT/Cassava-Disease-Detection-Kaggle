@@ -5,8 +5,8 @@ import numpy as np
 import torch
 
 # INPUT_PATH            = "./input"  # PC and EC2
-INPUT_PATH            = "../input" # Kaggle
-# INPUT_PATH            = "."        # Colab
+# INPUT_PATH            = "../input" # Kaggle
+INPUT_PATH            = "."        # Colab
 GENERATED_FILES_PATH  = "./generated/"
 DATASET_PATH          = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN_IMAGES_DIR      = os.path.join(DATASET_PATH, "train_images")
