@@ -24,7 +24,7 @@ TPUS                  = 8 # Basically TPU Nodes
 PARALLEL_FOLD_TRAIN   = False # [True, False]
 SEED                  = 719
 FOLDS                 = 5
-MIXED_PRECISION_TRAIN = False # [True, False]
+MIXED_PRECISION_TRAIN = True # [True, False]
 DROP_LAST             = True # [True, False]
 FREEZE_BATCH_NORM     = False # [True, False]
 
