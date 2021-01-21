@@ -52,7 +52,7 @@ def train_one_epoch(fold, epoch, model, loss_fn, optimizer, train_loader, device
                 optimizer.zero_grad()
 
                 if scheduler is not None and schd_batch_update:
-                    scheduler.step()
+                    scheduler.step(epoch + (step / total_steps))
 
         else:
             image_preds = model(imgs)
