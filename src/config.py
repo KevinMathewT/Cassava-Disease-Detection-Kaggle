@@ -15,7 +15,7 @@ TRAIN                 = os.path.join(DATASET_PATH, "train.csv")
 TEST                  = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS           = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
 # WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
-WEIGHTS_PATH          = "/content/drive/My Drive" # For Colab
+WEIGHTS_PATH          = "/content/drive/My Drive/weights" # For Colab
 # WEIGHTS_PATH          = "/vol/weights/" # For EC2
 USE_GPU               = True # [True, False]
 USE_TPU               = False # [True, False]
@@ -63,7 +63,7 @@ NET                   = "ViTBase16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH,
 
 PRETRAINED            = True
 LEARNING_VERBOSE      = True
-VERBOSE_STEP          = 100
+VERBOSE_STEP          = 1
 
 USE_SUBSET            = False
 SUBSET_SIZE           = TRAIN_BATCH_SIZE * 1
