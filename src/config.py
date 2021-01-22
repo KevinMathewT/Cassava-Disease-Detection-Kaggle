@@ -38,8 +38,8 @@ DO_CUTMIX             = False
 CUTMIX_PROBABILITY    = 0.5
 
 
-H                     = 384 # [224, 384, 512]
-W                     = 384 # [224, 384, 512]
+H                     = 512 # [224, 384, 512]
+W                     = 512 # [224, 384, 512]
 
 OPTIMIZER             = "RAdam"  # [Adam, AdamW, RAdam, AdaBelief, RangerAdaBelief]
 SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, CosineAnnealingLR, OneCycleLR, CosineAnnealingWarmRestarts, StepLR]
