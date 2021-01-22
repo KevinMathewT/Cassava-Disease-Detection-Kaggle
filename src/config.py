@@ -5,8 +5,8 @@ import numpy as np
 import torch
 
 # INPUT_PATH            = "./input"  # PC and EC2
-INPUT_PATH            = "../input" # Kaggle
-# INPUT_PATH            = "."        # Colab
+# INPUT_PATH            = "../input" # Kaggle
+INPUT_PATH            = "."        # Colab
 GENERATED_FILES_PATH  = "./generated/"
 DATASET_PATH          = os.path.join(INPUT_PATH, "cassava-leaf-disease-classification/")
 TRAIN_IMAGES_DIR      = os.path.join(DATASET_PATH, "train_images")
@@ -14,8 +14,8 @@ TEST_IMAGES_DIR       = os.path.join(DATASET_PATH, "test_images")
 TRAIN                 = os.path.join(DATASET_PATH, "train.csv")
 TEST                  = os.path.join(DATASET_PATH, "sample_submission.csv")
 TRAIN_FOLDS           = os.path.join(GENERATED_FILES_PATH, "train_folds.csv")
-WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
-# WEIGHTS_PATH          = "/content/drive/My Drive/weights" # For Colab
+# WEIGHTS_PATH          = "./generated/weights/" # For PC and Kaggle
+WEIGHTS_PATH          = "/content/drive/My Drive/weights" # For Colab
 # WEIGHTS_PATH          = "/vol/weights/" # For EC2
 USE_GPU               = True # [True, False]
 USE_TPU               = False # [True, False]
