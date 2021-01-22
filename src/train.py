@@ -88,7 +88,7 @@ def train():
             # for fold in range(2, FOLDS):
             #     run_fold(fold)
             # run_fold(0)
-            for fold in [0]:
+            for fold in [1, 2]:
                 net = get_net(name=config.NET, pretrained=config.PRETRAINED)
                 run_fold(fold)
 
