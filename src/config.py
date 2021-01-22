@@ -46,7 +46,7 @@ SCHEDULER             = "CosineAnnealingWarmRestarts" # [ReduceLROnPlateau, Cosi
 SCHEDULER_WARMUP      = True # [True, False]
 WARMUP_EPOCHS         = 1 if SCHEDULER_WARMUP else 0
 WARMUP_FACTOR         = 7 if SCHEDULER_WARMUP else 1
-TRAIN_CRITERION       = "LabelSmoothingCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
+TRAIN_CRITERION       = "BiTemperedLogisticLoss" # [BiTemperedLogisticLoss, LabelSmoothingCrossEntropy, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 VALID_CRITERION       = "SoftmaxCrossEntropy" # [BiTemperedLogisticLoss, SoftmaxCrossEntropy, FocalCosineLoss, SmoothCrossEntropyLoss, TaylorCrossEntropyLoss, RandomChoice]
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
@@ -58,7 +58,7 @@ TRAIN_BATCH_SIZE      = 32
 VALID_BATCH_SIZE      = 16
 ACCUMULATE_ITERATION  = 4
 
-NET                   = "ViTLarge16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16, ViTLarge16
+NET                   = "ViTBase16" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4d_BH, ViTBase16_BH, ViTBase16, ViTLarge16
                                              #  resnext50_32x4d, seresnext50_32x4d, tf_efficientnet_b4_ns, ['vit_base_patch16_224', 'vit_base_patch16_384', 'vit_base_patch32_384', 'vit_base_resnet26d_224', 'vit_base_resnet50d_224', 'vit_huge_patch16_224', 'vit_huge_patch32_384', 'vit_large_patch16_224', 'vit_large_patch16_384', 'vit_large_patch32_384', 'vit_small_patch16_224', 'vit_small_resnet26d_224', 'vit_small_resnet50d_s3_224']
 
 PRETRAINED            = True
