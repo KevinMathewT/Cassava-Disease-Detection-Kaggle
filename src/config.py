@@ -63,7 +63,7 @@ NET                   = "EfficientNetB4" # [SEResNeXt50_32x4d_BH, ResNeXt50_32x4
 
 PRETRAINED            = True
 LEARNING_VERBOSE      = True
-VERBOSE_STEP          = 100
+VERBOSE_STEP          = 1
 
 USE_SUBSET            = False
 SUBSET_SIZE           = TRAIN_BATCH_SIZE * 1
