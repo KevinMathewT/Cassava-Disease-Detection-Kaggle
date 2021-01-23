@@ -145,6 +145,36 @@ class ViTLarge16(nn.Module):
         return x
 
 
+class EfficientNetB4(nn.Module):
+    name = "EfficientNetB4"
+
+    def __init__(self, pretrained=True):
+        super().__init__()
+        self.model_arch = 'tf_efficientnet_b4_ns'
+        self.net = timm.create_model(self.model_arch, pretrained=pretrained)
+        n_features = self.net.classifier.in_features
+        self.net.classifier = nn.Linear(n_features, config.N_CLASSES)
+
+    def forward(self, x):
+        x = self.net(x)
+        return x
+
+
+class EfficientNetB3(nn.Module):
+    name = "EfficientNetB3"
+
+    def __init__(self, pretrained=True):
+        super().__init__()
+        self.model_arch = 'tf_efficientnet_b3_ns'
+        self.net = timm.create_model(self.model_arch, pretrained=pretrained)
+        n_features = self.net.classifier.in_features
+        self.net.classifier = nn.Linear(n_features, config.N_CLASSES)
+
+    def forward(self, x):
+        x = self.net(x)
+        return x
+
+
 class GeneralizedCassavaClassifier(nn.Module):
     def __init__(self, model_arch, n_class=config.N_CLASSES, pretrained=True):
         super().__init__()
@@ -169,4 +199,6 @@ nets = {
     "ResNeXt50_32x4d_BH": ResNeXt50_32x4d_BH,
     "ViTBase16": ViTBase16,
     "ViTLarge16": ViTLarge16,
+    "EfficientNetB4": EfficientNetB4,
+    "EfficientNetB3": EfficientNetB3,
 }
