@@ -16,7 +16,7 @@ My best solution was a single model SEResNeXt50 with a Binary Head.
 To train the model set the configurations in `src/config.py`.
 1. To train on GPUs set `USE_GPU = True` and `USE_TPU = False`, and vice versa for training on TPUs.
    * To train on CPUs set `USE_GPU = False` and `USE_TPU = False`
-   * In my limited experience, training on TPUs gave worse CV and LB scores compared to training on GPUs, all my submissions were GPU trained.
+   * In my limited experience, training on TPUs gave worse CV and LB scores compared to training on GPUs, all my submissions were GPU trained (This was a problem, since I had only Kaggle resources to train my models.)
 2. To use Automatic Mixed Precision set `MIXED_PRECISION_TRAIN = True`, reduces the training time, results were more or less the same.
 3. To Use FMix, or CutMix, set `ONE_HOT_LABEL = True`, and `DO_FMIX = True` or `DO_CUTMIX = True`, and also set the probabilities.
 4. Freezing Batch Normalization layers in the first few epochs improved my scores. To do this, set `DO_FREEZE_BATCH_NORM  = True` and `FREEZE_BN_EPOCHS` to the number of starting epochs to keep frozen.
