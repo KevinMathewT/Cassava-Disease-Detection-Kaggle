@@ -69,6 +69,7 @@ SCHEDULER_BATCH_STEP  = True # [True, False]
 ```
 
 ### Augmentations
+The Albumentations library was used for all Augmentations.
 #### Training
 ```python
 Compose([
