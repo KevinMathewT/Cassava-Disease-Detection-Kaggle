@@ -12,6 +12,21 @@ This solution was top 11%.
 
 My best solution was a single model ResNext50.
 
+## Training
+To train the model set the configurations in `src/config.py`.
+
+The folds have already been generated in `./generated/train_folds.csv`.
+
+You can also change the number of folds and generate it by running:
+```
+python -m src.create_folds
+```
+After the configurations are set, and the folds are ready, train the model by doing:
+```
+python -m src.train
+```
+
+
 ## Training Configurations for ResNext50:
 ```python
 
