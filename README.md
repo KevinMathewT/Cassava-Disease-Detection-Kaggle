@@ -27,7 +27,7 @@ You can also change the number of folds and generate it by running:
 ```
 python -m src.create_folds
 ```
-After the configurations are set, and the folds are ready, train the model by doing:
+After the configurations are set, and the folds are ready, train the model by running:
 ```
 python -m src.train
 ```
