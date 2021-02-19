@@ -14,8 +14,8 @@ My best solution was a single model SEResNeXt50 with a Binary Head.
 
 ## Training
 To train the model set the configurations in `src/config.py`.
-1. To train on GPU set `USE_GPU = True` and `USE_TPU = False`, and vice versa for training on TPUs.
-   * To train on CPU set `USE_GPU = False` and `USE_TPU = False`
+1. To train on GPUs set `USE_GPU = True` and `USE_TPU = False`, and vice versa for training on TPUs.
+   * To train on CPUs set `USE_GPU = False` and `USE_TPU = False`
    * In my limited experience, training on TPUs gave worse CV and LB scores compared to training on GPUs, all my submissions were GPU trained.
 2. To Use FMix, or CutMix, set `ONE_HOT_LABEL = True`, and `DO_FMIX = True` or `DO_CUTMIX = True`, and also set the probabilities.
 3. Freezing Batch Normalization layers in the first few epochs improved my scores. To do this, set `DO_FREEZE_BATCH_NORM  = True` and `FREEZE_BN_EPOCHS` to the number of starting epochs to keep frozen.
