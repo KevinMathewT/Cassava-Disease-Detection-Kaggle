@@ -1,4 +1,4 @@
-# Cassava-Disease-Detection
+# Cassava Disease Detection
 
 My pipeline for the [Cassava Disease Detection](https://www.kaggle.com/c/cassava-leaf-disease-classification/) competition on Kaggle.
 
