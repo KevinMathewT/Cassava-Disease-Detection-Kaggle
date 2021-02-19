@@ -58,14 +58,14 @@ W                     = 512
 
 OPTIMIZER             = "RAdam"
 SCHEDULER             = "CosineAnnealingWarmRestarts"
-SCHEDULER_WARMUP      = True # [True, False]
+SCHEDULER_WARMUP      = True
 WARMUP_EPOCHS         = 1
 WARMUP_FACTOR         = 7
 TRAIN_CRITERION       = "BiTemperedLogisticLoss"
 VALID_CRITERION       = "SoftmaxCrossEntropy"
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
-SCHEDULER_BATCH_STEP  = True # [True, False]
+SCHEDULER_BATCH_STEP  = True
 
 NET                   = "SEResNeXt50_32x4d_BH"
 ```
