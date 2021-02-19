@@ -18,8 +18,8 @@ To train the model set the configurations in `src/config.py`.
    * To train on CPUs set `USE_GPU = False` and `USE_TPU = False`
    * In my limited experience, training on TPUs gave worse CV and LB scores compared to training on GPUs, all my submissions were GPU trained (This was a problem, since I only had Kaggle and Google Colab resources to train my models.)
 2. To use Automatic Mixed Precision set `MIXED_PRECISION_TRAIN = True`, reduces the training time, results were more or less the same.
-3. To Use FMix, or CutMix, set `ONE_HOT_LABEL = True`, and `DO_FMIX = True` or `DO_CUTMIX = True`, and also set the probabilities.
-4. Freezing Batch Normalization layers in the first few epochs improved my scores. To do this, set `DO_FREEZE_BATCH_NORM  = True` and `FREEZE_BN_EPOCHS` to the number of starting epochs to keep frozen.
+3. To use FMix, or CutMix, set `ONE_HOT_LABEL = True`, and `DO_FMIX = True` or `DO_CUTMIX = True`, and also set the probabilities.
+4. Freezing Batch Normalization layers in the first few epochs improved my scores. To do this, set `DO_FREEZE_BATCH_NORM = True` and `FREEZE_BN_EPOCHS` to the number of starting epochs to keep frozen.
 5. Warming up the Learning Rate linearly also improved the score. To do this set `SCHEDULER_WARMUP = True`, and `WARMUP_EPOCHS` and `WARMUP_FACTOR` by with appropriate values.
 
 The folds have already been generated in `./generated/train_folds.csv`.
@@ -101,5 +101,3 @@ Compose([
     ToTensorV2(p=1.0),
 ], p=1.)
 ```
-
-
