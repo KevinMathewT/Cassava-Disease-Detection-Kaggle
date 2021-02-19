@@ -19,7 +19,7 @@ To train the model set the configurations in `src/config.py`.
    * In my limited experience, training on TPUs gave worse CV and LB scores compared to training on GPUs, all my submissions were GPU trained.
 2. To Use FMix, or CutMix, set `ONE_HOT_LABEL = True`, and `DO_FMIX = True` or `DO_CUTMIX = True`, and also set the probabilities.
 3. Freezing Batch Normalization layers in the first few epochs improved my scores. To do this, set `DO_FREEZE_BATCH_NORM  = True` and `FREEZE_BN_EPOCHS` to the number of starting epochs to keep frozen.
-4. Warming up the Learning Rate also improved the score. To do this set `SCHEDULER_WARMUP = True`, and `WARMUP_EPOCHS` and `WARMUP_FACTOR` by with appropriate values.
+4. Warming up the Learning Rate linearly also improved the score. To do this set `SCHEDULER_WARMUP = True`, and `WARMUP_EPOCHS` and `WARMUP_FACTOR` by with appropriate values.
 
 The folds have already been generated in `./generated/train_folds.csv`.
 
