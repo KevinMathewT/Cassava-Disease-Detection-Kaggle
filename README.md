@@ -8,7 +8,7 @@ This solution was top 11%.
 | Model                            | Public | Private |
 | -------------------------------- |:------:| -------:|
 | SEResNeXt50                      | 0.900  | 0.897   |
-| ResNeXt50 + EfficientNextB3      | 0.900  | 0.897   |
+| ResNeXt50 + EfficientNextB3      | 0.900  | 0.896   |
 
 My best solution was a single model ResNext50.
 
