@@ -27,7 +27,7 @@ python -m src.train
 ```
 
 
-## Training Configurations for ResNext50:
+## Training Configurations for ResNeXt50:
 ```python
 
 SEED                  = 719
