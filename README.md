@@ -1,19 +1,25 @@
 # Cassava-Disease-Detection
 
-My pipeline for the [Cassava Disease Detection](https://www.kaggle.com/c/cassava-leaf-disease-classification/leaderboard) competition on Kaggle.
+My pipeline for the [Cassava Disease Detection](https://www.kaggle.com/c/cassava-leaf-disease-classification/) competition on Kaggle.
 
 This solution was top 11%.
 
 ### Leaderboard Scores:
 | Model                            | Public | Private |
 | -------------------------------- |:------:| -------:|
-| SEResNeXt50                      | 0.900  | 0.897   |
+| SEResNeXt50 + Binary Head        | 0.900  | 0.897   |
 | ResNeXt50 + EfficientNextB3      | 0.900  | 0.896   |
 
-My best solution was a single model ResNext50.
+My best solution was a single model SEResNeXt50 with a Binary Head.
 
 ## Training
 To train the model set the configurations in `src/config.py`.
+1. To train on GPU set `USE_GPU = True` and `USE_TPU = False`, and vice versa for training on TPUs.
+   * To train on CPU set `USE_GPU = False` and `USE_TPU = False`
+   * In my limited experience, training on TPUs gave worse CV and LB scores compared to training on GPUs, all my submissions were GPU trained.
+2. To Use FMix, or CutMix, set `ONE_HOT_LABEL = True`, and `DO_FMIX = True` or `DO_CUTMIX = True`, and also set the probabilities.
+3. Freezing Batch Normalization layers in the first few epochs improved my scores. To do this, set `DO_FREEZE_BATCH_NORM  = True` and `FREEZE_BN_EPOCHS` to the number of starting epochs to keep frozen.
+4. Warming up the Learning Rate also improved the score. To do this set `SCHEDULER_WARMUP = True`, and `WARMUP_EPOCHS` and `WARMUP_FACTOR` by with appropriate values.
 
 The folds have already been generated in `./generated/train_folds.csv`.
 
@@ -38,7 +44,7 @@ DO_FREEZE_BATCH_NORM  = True
 FREEZE_BN_EPOCHS      = 5
 
 TRAIN_BATCH_SIZE      = 32
-VALID_BATCH_SIZE      = 8
+VALID_BATCH_SIZE      = 16
 ACCUMULATE_ITERATION  = 2
 
 ONE_HOT_LABEL         = False
