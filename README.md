@@ -66,6 +66,8 @@ VALID_CRITERION       = "SoftmaxCrossEntropy"
 LEARNING_RATE         = 1e-4
 MAX_EPOCHS            = 15
 SCHEDULER_BATCH_STEP  = True # [True, False]
+
+NET                   = "SEResNeXt50_32x4d_BH"
 ```
 
 ### Augmentations
