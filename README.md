@@ -8,7 +8,7 @@ This solution was top 10% (Bronze Medal). Also find CV scores of my other experi
 | Model                            | Public | Private |
 | -------------------------------- |:------:| -------:|
 | SEResNeXt50 + Binary Head        | 0.9009 | 0.8978  |
-| ResNeXt50 + EfficientNextB3      | 0.9007 | 0.8967  |
+| ResNeXt50 + EfficientNetB3       | 0.9007 | 0.8967  |
 
 My best solution was a single model SEResNeXt50 with a Binary Head.
 
