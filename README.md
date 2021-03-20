@@ -1,8 +1,8 @@
 # Cassava Disease Detection
 
-My pipeline for the [Cassava Disease Detection](https://www.kaggle.com/c/cassava-leaf-disease-classification/) competition on Kaggle.
+My top 10% (Bronze Medal) pipeline for the [Cassava Disease Detection](https://www.kaggle.com/c/cassava-leaf-disease-classification/) competition on Kaggle.
 
-This solution was top 10% (Bronze Medal). Also find CV scores of my other experiments [here](https://docs.google.com/spreadsheets/d/16m0PE3l5Dj4jy_UnDohQSN69TMv0e6YIuKTpANuKdqc/edit?usp=sharing).
+Also find CV scores of my other experiments [here](https://docs.google.com/spreadsheets/d/16m0PE3l5Dj4jy_UnDohQSN69TMv0e6YIuKTpANuKdqc/edit?usp=sharing).
 
 ### Leaderboard Scores:
 | Model                            | Public | Private |
